@@ -1,5 +1,7 @@
 # Fitmind server
 
+[![Build Status](https://travis-ci.org/fitmind/server.svg?branch=master)](https://travis-ci.org/fitmind/server)
+
 ## Check Swagger UI
 
 Here you will be able to see the API documentation
