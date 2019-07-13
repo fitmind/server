@@ -1,0 +1,9 @@
+dist
+node_modules
+build
+.idea
+.env
+.env.test
+jest-coverage
+coverage
+yarn-error.log

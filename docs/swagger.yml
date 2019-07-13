@@ -1,0 +1,829 @@
+swagger: "2.0"
+info:
+  title: Fitmind-orch
+  version: "1.0.0"
+schemes:
+  - https
+basePath: /
+produces:
+  - application/json
+
+paths:
+  /health:
+    get:
+      summary: Tests if the server is healthy or not
+      description: Tests if the server is healthy or not
+      tags:
+        - Health
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing a message with the status of the server
+          schema:
+            $ref: "#/definitions/Health"
+        500:
+          description: Internal Server Error
+  /user/register:
+    put:
+      summary: registers a new user
+      parameters: 
+        - in: body
+          schema:
+            $ref: '#/definitions/UserCreationData'
+      description: customer users
+      tags: 
+        - User
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing the information of the user - this will return a filtered user
+          schema:
+            $ref: '#/definitions/UserReturned'
+        400:
+          description: The provided information is invalid, user with that email already exists or insufficient data received in order to create the user
+        500:
+          description: Internal Server Error
+  /user/login:
+    post:
+      summary: logins a user by returning an authentication token
+      parameters: 
+        - in: body
+          schema:
+            $ref: '#/definitions/UserLoginData'
+      description: Returns an authentication token
+      tags: 
+        - User
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Sets an HTTP cookie with the user authentication token
+        400:
+          description: The provided information is invalid or insufficient
+        404:
+          description: A user with that email could not be found
+        500:
+          description: Internal Server Error
+  /user/{userId}:
+    get: 
+      summary: gets a user by ID
+      description: customer users
+      tags: 
+        - User
+      parameters:
+        - $ref: '#/parameters/userId'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing the information of the user
+          schema:
+            $ref: "#/definitions/UserReturned"
+        400:
+          description: The provided user ID is not valid
+        404:
+          description: It was not possible to find a user by that ID
+        500:
+          description: Internal Server Error
+    patch: 
+      summary: updates a user by ID
+      description: customer users
+      tags: 
+        - User
+      parameters:
+        - $ref: '#/parameters/userId'
+        - in: body
+          schema:
+            $ref: '#/definitions/UserCreationData'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing the new information of the user
+          schema:
+            $ref: "#/definitions/UserReturned"
+        400:
+          description: The provided user ID is not valid
+        404:
+          description: It was not possible to find a user by that ID
+        500:
+          description: Internal Server Error
+    delete: 
+      summary: deletes a user by ID
+      description: customer users deletion
+      tags: 
+        - User
+      parameters:
+        - $ref: '#/parameters/userId'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: User deleted successfully
+        400:
+          description: The provided user ID is not valid
+        404:
+          description: It was not possible to find a user by that ID
+        500:
+          description: Internal Server Error
+  
+          /expert/register:
+    
+  /expert/register:
+    put:
+      summary: creates a new expert
+      parameters: 
+        - in: body
+          schema:
+            $ref: '#/definitions/ExpertCreationData'
+      description: expert users
+      tags: 
+        - Expert
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing the information of the expert
+          schema:
+            $ref: '#/definitions/ExpertReturned'
+        400:
+          description: The provided information is invalid, an expert with that email already exists or insufficient information provided in order to create an expert
+        500:
+          description: Internal Server Error
+  /expert/login:
+    post:
+      summary: logins an expert user by returning an authentication token
+      parameters: 
+        - in: body
+          schema:
+            $ref: '#/definitions/ExpertLoginData'
+      description: Returns an authentication token
+      tags: 
+        - Expert
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Sets an HTTP cookie with the user authentication token
+        400:
+          description: The provided information is invalid or insufficient
+        404:
+          description: A expert user with that email could not be found
+        500:
+          description: Internal Server Error
+  /expert/{expertId}:
+    get: 
+      summary: gets a expert by ID
+      description: expert users
+      tags: 
+        - Expert
+      parameters:
+        - $ref: '#/parameters/expertId'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing the information of the user
+          schema:
+            $ref: "#/definitions/ExpertReturned"
+        400:
+          description: The provided expert ID is not valid
+        404:
+          description: It was not possible to find a expert by that ID
+        500:
+          description: Internal Server Error
+    patch: 
+      summary: updates a expert by ID
+      description: expert users
+      tags: 
+        - Expert
+      parameters:
+        - $ref: '#/parameters/expertId'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing the new information of the expert
+          schema:
+            $ref: "#/definitions/ExpertReturned"
+        400:
+          description: The provided expert ID is not valid
+        404:
+          description: It was not possible to find a expert by that ID
+        500:
+          description: Internal Server Error
+    delete: 
+      summary: deletes a expert by ID
+      description: expert users deletion
+      tags: 
+        - Expert
+      parameters:
+        - $ref: '#/parameters/expertId'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Expert deleted successfully
+        400:
+          description: The provided expert ID is not valid
+        404:
+          description: It was not possible to find a expert by that ID
+        500:
+          description: Internal Server Error
+  
+  /expert/admin/pending:
+    get: 
+      summary: gets all experts with a pending approval status - requires admin cookie token 
+      description: all pending expert users admin retrieval
+      tags: 
+        - Expert
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Array containing all pending experts to be approved
+          schema:
+            $ref: "#/definitions/ExpertsPending"
+        400:
+          description: token provided does not match an admin user
+        500:
+          description: Internal Server Error
+  /expert/admin/{expertId}:
+    get: 
+      summary: gets a expert by ID - requires admin cookie token 
+      description: expert users admin retrieval
+      tags: 
+        - Expert
+      parameters:
+        - $ref: '#/parameters/expertId'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing the information of the user - least possible filtered user
+          schema:
+            $ref: "#/definitions/ExpertReturned"
+        400:
+          description: The provided expert ID is not valid
+        404:
+          description: It was not possible to find a expert by that ID
+        500:
+          description: Internal Server Error
+    patch: 
+      summary: updates a expert by ID - requires admin cookie token 
+      description: expert users admin retrieval
+      tags: 
+        - Expert
+      parameters:
+        - $ref: '#/parameters/expertId'
+        - in: body
+          schema:
+            $ref: '#/definitions/ExpertCreationData'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing the new information of the expert
+          schema:
+            $ref: "#/definitions/ExpertReturned"
+        400:
+          description: The provided expert ID is not valid
+        404:
+          description: It was not possible to find a expert by that ID
+        500:
+          description: Internal Server Error
+    delete: 
+      summary: deletes a expert by ID - requires admin cookie token 
+      description: expert users deletion by admin
+      tags: 
+        - Expert
+      parameters:
+        - $ref: '#/parameters/expertId'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Expert deleted successfully
+        400:
+          description: The provided expert ID is not valid
+        404:
+          description: It was not possible to find a expert by that ID
+        500:
+          description: Internal Server Error
+
+  /admin/login:
+    post:
+      summary: logins an admin user by returning an authentication token
+      parameters: 
+        - in: body
+          schema:
+            $ref: '#/definitions/AdminLoginData'
+      description: Returns an authentication token
+      tags: 
+        - Admin
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Sets an HTTP cookie with the user authentication token
+        400:
+          description: The provided information is invalid or insufficient
+        404:
+          description: An admin user with that email could not be found
+        500:
+          description: Internal Server Error
+
+  /listings/new:
+    put:
+      summary: creates a new listing
+      parameters:
+        - in: body
+          schema:
+            $ref: '#definitions/ListingCreationData'
+      description: listings creation
+      tags:
+        - Listing
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing the listing that has just been created
+          schema:
+            $ref: '#/definitions/ListingReturned'
+        400:
+          description: The provided information is invalid or insufficient
+        500:
+          description: Internal Server Error
+  /listings/{listingId}:
+    get:
+      summary: retrieves a listing - this will be a filtered listing and it can only be an approved listing
+      description: retrieves a listing - this will be a filtered listing and it can only be an approved listing
+      tags:
+        - Listing
+      produces:
+        - application/json
+      responses:
+        200:
+          description: 
+          schema:
+            $ref: '#/definitions/ListingReturnedFiltered'
+        404:
+          description: Listing ID could not be found
+        500:
+          description: Internal Server Error
+    delete:
+      summary: deletes a listing
+      description: listings deletion - the listing will have to belong to the expertId in the cookie
+      tags:
+        - Listing
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Listing deleted successfully
+        400:
+          description: The expert ID in the cookie does not match with the expert id in the listing
+        404:
+          description: Listing ID could not be found
+        500:
+          description: Internal Server Error
+    patch:
+      summary: updates a listing
+      description: listings updating - the listing will have to belong to the expertId in the cookie
+      parameters:
+        - in: body
+          schema:
+            $ref: '#definitions/ListingCreationData'
+      tags:
+        - Listing
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Listing updated successfully
+        400:
+          description: The expert ID in the cookie does not match with the expert id in the listing
+        404:
+          description: Listing ID could not be found
+        500:
+          description: Internal Server Error
+  /listings/expert:
+    get:
+      summary: retrieves all the listings that an expert has - this will retrieve ALL the listings the expert has
+      tags: 
+        - Listing
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Array containing all the listings of an expert - sorted by most recent
+          schema:
+            $ref: '#/definitions/ListingsArray'
+        404:
+          description: It was not possible to find a expert by the ID provided by the
+        500:
+          description: Internal Server Error
+  /listings/expert/{expertId}:
+    get:
+      summary: retrieves all the listings that an expert has - This ONLY includes approved listings
+      tags: 
+        - Listing
+      parameters:
+      - $ref: '#/parameters/expertId'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Array containing all the listings of an expert - sorted by most recent
+          schema:
+            $ref: '#/definitions/ListingsArray'
+        404:
+          description: It was not possible to find a expert by that ID
+        500:
+          description: Internal Server Error
+  /listings/admin/{listingId}:
+    get: 
+      summary: gets a listing by ID - requires admin cookie token 
+      description: listing admin retrieval
+      tags: 
+        - Listing
+      parameters:
+        - $ref: '#/parameters/listingId'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing the information of the listing
+          schema:
+            $ref: "#/definitions/ListingReturned"
+        400:
+          description: The provided listing ID is not valid
+        404:
+          description: It was not possible to find the listing by that ID
+        500:
+          description: Internal Server Error
+    patch: 
+      summary: updates a listing by ID - requires admin cookie token 
+      description: listing update - admin retrieval
+      tags: 
+        - Listing
+      parameters:
+        - $ref: '#/parameters/listingId'
+        - in: body
+          schema:
+            $ref: '#definitions/ListingCreationData'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing the new information of the expert
+          schema:
+            $ref: "#/definitions/ListingReturned"
+        400:
+          description: The provided listing ID is not valid
+        404:
+          description: It was not possible to find the listing by that ID
+        500:
+          description: Internal Server Error
+    delete: 
+      summary: deletes a listing by ID - requires admin cookie token 
+      description: listing deletion by admin
+      tags: 
+        - Listing
+      parameters:
+        - $ref: '#/parameters/listingId'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Listing deleted successfully
+        400:
+          description: The provided listing ID is not valid
+        404:
+          description: It was not possible to find a listing by that ID
+        500:
+          description: Internal Server Error
+  /listings/admin/pending:
+    get: 
+      summary: gets all listings with a pending approval status - requires admin cookie token 
+      description: all pending listings admin retrieval
+      tags: 
+        - Listing
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Array containing all pending listings to be approved
+          schema:
+            $ref: "#/definitions/ListingsPending"
+        400:
+          description: token provided does not match an admin user
+        500:
+          description: Internal Server Error    
+
+  /bookings/new:
+    put:
+      summary: creates a new booking
+      parameters:
+        - in: body
+          schema:
+            $ref: '#definitions/BookingCreationData'
+      description: booking creation
+      tags:
+        - Booking
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Object containing the booking that has just been created
+          schema:
+            $ref: '#/definitions/BookingReturned'
+        400:
+          description: The provided information is invalid or insufficient
+        401:
+          description: Unauthorised
+        500:
+          description: Internal Server Error
+
+definitions:
+  Health:
+    type: object
+    description: health endpoint
+    properties:
+      message:
+        type: string
+  Approved:
+    type: string
+    description: Status of approval
+    enum:
+        - APPROVED
+        - PENDING
+        - DENIED
+        - PENDING
+  UserCreationData:
+    type: object
+    description: creation of new user
+    properties:
+      name: 
+        type: string
+      email: 
+        type: string
+      password: 
+        type: string
+      interestedInExperiseAreas:
+        $ref: '#/definitions/ExpertiseInterests'
+  UserLoginData:
+    type: object
+    description: login data for a customer user
+    properties:
+      email: 
+        type: string
+      password: 
+        type: string
+  UserReturned:
+    type: object
+    description: Customer user data to be submited when created
+    properties:
+      name:
+        type: string
+      createdAt:
+        type: string
+        format: date
+        description: ISO-8601 formatted date - timestamp for creation
+      email: 
+        type: string
+      interestedInExperiseAreas:
+        $ref: '#/definitions/ExpertiseInterests'
+  ExpertReturned:
+    type: object
+    description: expert user
+    properties:
+      name:
+        type: string
+      profilePictureUrl:
+        type: string
+      description:
+        type: string
+      createdAt:
+        type: string
+        format: date
+        description: ISO-8601 formatted date - timestamp for creation
+      approved:
+        $ref: '#/definitions/Approved'
+      email: 
+        type: string
+      isAnExpertIn: 
+        $ref: '#/definitions/ExpertiseInterests'
+  ExpertsPending:
+    type: array
+    description: array of pending expert users
+    items:
+      $ref: "#/definitions/ExpertReturned"
+  ExpertCreationData:
+    type: object
+    description: expert user data to be submited when created
+    properties:
+      name:
+        type: string
+      profilePictureUrl:
+        type: string
+      password:
+        type: string
+      email: 
+        type: string
+      isAnExpertIn: 
+        $ref: '#/definitions/ExpertiseInterests'
+      availability:
+        $ref: '#/definitions/ExpertAvailability'
+  ExpertAvailability:
+    type: object
+    description: 'possibility of availability over the next 4 weeks'
+    
+
+  ExpertLoginData:
+    type: object
+    description: expert user login data
+    properties:
+      email: 
+        type: string
+      password: 
+        type: string
+  AdminLoginData:
+    type: object
+    description: admin user login data
+    properties:
+      email: 
+        type: string
+      password: 
+        type: string
+  ListingReturned:
+    type: object
+    description: Listing returned
+    properties:
+      name:
+        type: string
+      listingPictureUrl:
+        type: string
+      description:
+        type: string
+      createdAt:
+        type: string
+        format: date
+        description: ISO-8601 formatted date - timestamp for creation
+      approved:
+        $ref: '#/definitions/Approved'
+      createdByExpert: 
+        $ref: "#/definitions/ExpertReturned"
+      expertiseArea: 
+        $ref: "#/definitions/Expertise"
+  ListingReturnedFiltered:
+    type: object
+    description: Listing returned filtered
+    properties:
+      name:
+        type: string
+      listingPictureUrl:
+        type: string
+      description:
+        type: string
+      createdAt:
+        type: string
+        format: date
+        description: ISO-8601 formatted date - timestamp for creation
+      createdByExpert: 
+        $ref: "#/definitions/ExpertReturned"
+      expertiseArea: 
+        $ref: "#/definitions/Expertise"
+  ListingCreationData:
+    type: object
+    description: Listing data to be submitted for creation
+    properties:
+      name:
+        type: string
+      listingPictureUrl:
+        type: string
+      description:
+        type: string
+      createdByExpert: 
+        $ref: "#/definitions/ExpertReturned"
+      expertiseArea: 
+        $ref: "#/definitions/Expertise"
+  ListingsArray:
+    type: array
+    description: Listings array - should be sorted by most recent
+    items:
+      $ref: "#/definitions/ListingReturned"
+  ListingsPending:
+    type: array
+    description: Listings array which are pending
+    items:
+      $ref: "#/definitions/ListingReturned"
+  BookingCreationData:
+    name: string
+  BookingReturned:
+    name: string;
+      
+  Expertise:
+    type: string
+    description: Possible expertise options available
+    enum:
+        - PERSONAL_COACH
+        - YOGA_COACH
+        - NUTRITIONIST
+        - LIFE_COACH
+  ExpertiseInterests:
+    type: array
+    description: All the possible areas of expertise interested in
+    items:
+      $ref: "#/definitions/Expertise"
+  BookingHours:
+    type: string
+    description: hours available for booking appointments
+    enum:
+      - '0:00'
+      - '0:30'
+      - '1:00'
+      - '1:30'
+      - '1:00'
+      - '2:00'
+      - '2:30'
+      - '3:00'
+      - '3:30'
+      - '4:00'
+      - '4:30'
+      - '5:00'
+      - '5:30'
+      - '6:00'
+      - '6:30'
+      - '7:30'
+      - '7:30'
+      - '8:00'
+      - '8:30'
+      - '9:00'
+      - '9:30'
+      - '10:00'
+      - '10:30'
+      - '11:00'
+      - '11:30'
+      - '12:00'
+      - '12:30'
+      - '13:00'
+      - '13:30'
+      - '14:00'
+      - '14:30'
+      - '15:00'
+      - '15:30'
+      - '16:00'
+      - '16:30'
+      - '17:00'
+      - '17:30'
+      - '18:00'
+      - '18:30'
+      - '19:00'
+      - '19:30'
+      - '20:00'
+      - '20:30'
+      - '21:00'
+      - '21:30'
+      - '22:00'
+      - '22:30'
+      - '23:00'
+      - '23:30'
+      - '24:00'
+      - '24:30'
+      
+parameters:
+  userId:
+    name: userId
+    in: path
+    type: string
+    description: id of the user
+    required: true
+    minLength: 11
+    maxLength: 11
+  expertId:
+    name: expertId
+    in: path
+    type: string
+    description: id of the expert user
+    required: true
+    minLength: 11
+    maxLength: 11
+  listingId:
+    name: listing id
+    in: path
+    type: string
+    description: id of the listing
+    required: true
+    minLength: 11
+    maxLength: 11
+  bookingId:
+    name: listing id
+    in: path
+    type: string
+    description: id of the listing
+    required: true
+    minLength: 11
+    maxLength: 11
