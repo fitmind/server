@@ -1,6 +1,4 @@
-# TS-example
-
-[![Build Status](https://travis-ci.com/Diego-Romero/ts-node-example.svg?branch=master)](https://travis-ci.com/Diego-Romero/ts-node-example)
+# Fitmind server
 
 ## Check Swagger UI
 
