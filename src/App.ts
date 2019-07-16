@@ -8,7 +8,7 @@ import compression from 'compression';
 
 // import healthController from './controllers/health/health.controller';
 // import postsController from './controllers/post/post.controller';
-// import errorHandler from './middleware/error-handler';
+import errorHandler from './middleware/error-handler';
 
 const createApp = (app: express.Application): express.Application => {
   // app middlewre
@@ -26,14 +26,14 @@ const createApp = (app: express.Application): express.Application => {
 
   // app routes
   app.get('/', (_req: Request, res: Response) => {
-    res.send({ message: 'welcome to the ts-tutorial' });
+    res.send({ message: 'welcome to the Fitmind API' });
   });
 
   // app.use('/health', healthController);
   // app.use('/posts', postsController);
 
   // // error handlers
-  // app.use(errorHandler);
+  app.use(errorHandler);
 
   return app;
 };

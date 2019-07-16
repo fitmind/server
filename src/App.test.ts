@@ -7,7 +7,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import createApp from './App';
 // import healthController from './controllers/health/health.controller';
 // import postController from './controllers/post/post.controller';
-// import errorHandler from './middleware/error-handler';
+import errorHandler from './middleware/error-handler';
 import helmet from 'helmet';
 import compression from 'compression';
 
@@ -48,7 +48,7 @@ describe('testing App', () => {
 
   describe('testing middleware', () => {
     test('should call the exact amount of middlewares', () => {
-      expect(spy).toHaveBeenCalledTimes(7);
+      expect(spy).toHaveBeenCalledTimes(8);
     });
     test('should use helmet', () => {
       expect(helmet).toHaveBeenCalledTimes(1);
@@ -73,13 +73,13 @@ describe('testing App', () => {
     });
   });
 
-  // describe('testing app routes', () => {
-  //   test('get method of landing', async () => {
-  //     const response = await request(app).get('/');
-  //     expect(response.status).toBe(200);
-  //     expect(response.body.message).toBe('welcome to the ts-tutorial');
-  //   });
-  // });
+  describe('testing app routes', () => {
+    test('get method of landing', async () => {
+      const response = await request(app).get('/');
+      expect(response.status).toBe(200);
+      expect(response.body.message).toBe('welcome to the Fitmind API');
+    });
+  });
 
   // describe('testing the app calling the right controllers', () => {
   //   test('testing posts controller gets called', () => {
@@ -90,9 +90,9 @@ describe('testing App', () => {
   //   });
   // });
 
-  // describe('testing the app is calling the right error handlers', () => {
-  //   test('it should call the error handler last', () => {
-  //     expect(spy).toHaveBeenCalledWith(errorHandler);
-  //   });
-  // });
+  describe('testing the app is calling the right error handlers', () => {
+    test('it should call the error handler last', () => {
+      expect(spy).toHaveBeenCalledWith(errorHandler);
+    });
+  });
 });

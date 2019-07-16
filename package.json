@@ -3,13 +3,17 @@
   "version": "0.0.0",
   "description": "",
   "main": "build/server.js",
+  "engines": {
+    "node": "10.16.0"
+  },
   "scripts": {
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
     "build": "npm run build:js",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel src --out-dir build --extensions \".ts\" --source-maps inline",
-    "start": "pm2 start ./build/server.js -i max",
+    "serve": "node ./build/server.js",
+    "start": "npm run build && npm run serve",
     "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.test.ts' --exec 'ts-node' src/server.ts",
     "test": "jest --runInBand",
     "test:watch": "jest --runInBand --watchAll",
@@ -37,7 +41,8 @@
     "mongoose": "^5.6.4",
     "morgan": "1.9.1",
     "pm2": "^3.5.1",
-    "regenerator-runtime": "^0.13.2"
+    "regenerator-runtime": "^0.13.2",
+    "supertest": "^4.0.2"
   },
   "devDependencies": {
     "@babel/cli": "7.4.4",
@@ -60,7 +65,7 @@
     "@types/jest": "^24.0.14",
     "@types/mongoose": "^5.5.8",
     "@types/morgan": "1.7.35",
-    "@types/supertest": "2.0.7",
+    "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^1.10.2",
     "@typescript-eslint/parser": "^1.10.2",
     "babel-jest": "24.8.0",
