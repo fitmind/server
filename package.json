@@ -1,11 +1,8 @@
 {
-  "name": "ts-tutorial",
+  "name": "Fitmind Server",
   "version": "0.0.0",
   "description": "",
   "main": "build/server.js",
-  "engines": {
-    "node": "10.16.0"
-  },
   "scripts": {
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
