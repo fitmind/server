@@ -5,11 +5,11 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express, { Request, Response, NextFunction } from 'express';
 import createApp from './App';
-// import healthController from './controllers/health/health.controller';
-// import postController from './controllers/post/post.controller';
 import errorHandler from './middleware/error-handler';
 import helmet from 'helmet';
 import compression from 'compression';
+import healthController from './health/health.controller';
+import UserController from './user/user.controller';
 
 jest.mock('helmet');
 jest.mock('compression');
@@ -48,7 +48,7 @@ describe('testing App', () => {
 
   describe('testing middleware', () => {
     test('should call the exact amount of middlewares', () => {
-      expect(spy).toHaveBeenCalledTimes(8);
+      expect(spy).toHaveBeenCalledTimes(10);
     });
     test('should use helmet', () => {
       expect(helmet).toHaveBeenCalledTimes(1);
@@ -81,14 +81,14 @@ describe('testing App', () => {
     });
   });
 
-  // describe('testing the app calling the right controllers', () => {
-  //   test('testing posts controller gets called', () => {
-  //     expect(spy).toHaveBeenNthCalledWith(9, '/posts', postController);
-  //   });
-  //   test('testing health controller gets called', () => {
-  //     expect(spy).toHaveBeenNthCalledWith(8, '/health', healthController);
-  //   });
-  // });
+  describe('testing the app calling the right controllers', () => {
+    test('testing health controller gets called', () => {
+      expect(spy).toHaveBeenNthCalledWith(8, '/health', healthController);
+    });
+    test('testing the user controller gets called', () => {
+      expect(spy).toHaveBeenNthCalledWith(9, '/user', UserController);
+    });
+  });
 
   describe('testing the app is calling the right error handlers', () => {
     test('it should call the error handler last', () => {
