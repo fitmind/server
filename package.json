@@ -1,5 +1,5 @@
 {
-  "name": "Fitmind Server",
+  "name": "fitmind-server",
   "version": "0.0.0",
   "description": "",
   "main": "build/server.js",
@@ -27,6 +27,8 @@
     "@babel/cli": "^7.5.0",
     "axios": "0.19.0",
     "body-parser": "1.19.0",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.9.1",
     "compression": "^1.7.4",
     "cookie-parser": "1.4.4",
     "core-js": "^3.1.4",
