@@ -5,13 +5,13 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
-
-// import healthController from './controllers/health/health.controller';
 // import postsController from './controllers/post/post.controller';
 import errorHandler from './middleware/error-handler';
+import healthController from './health/health.controller';
+import UserController from './user/user.controller';
 
 const createApp = (app: express.Application): express.Application => {
-  // app middlewre
+  // app middleware
   app.use(
     helmet({
       hidePoweredBy: true,
@@ -29,10 +29,10 @@ const createApp = (app: express.Application): express.Application => {
     res.send({ message: 'welcome to the Fitmind API' });
   });
 
-  // app.use('/health', healthController);
-  // app.use('/posts', postsController);
+  app.use('/health', healthController);
+  app.use('/user', UserController);
 
-  // // error handlers
+  // // error handler
   app.use(errorHandler);
 
   return app;
