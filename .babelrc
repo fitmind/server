@@ -1,22 +1,15 @@
 {
-  "presets": [
-    "@babel/env",
-    "@babel/typescript"
-  ],
+  "presets": ["@babel/env", "@babel/typescript"],
   "plugins": [
-    "@babel/proposal-class-properties",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
     "@babel/proposal-object-rest-spread",
     "@babel/plugin-transform-async-to-generator"
   ],
-  "ignore": [
-    "**/*.test.ts"
-  ],
+  "ignore": ["**/*.test.ts"],
   "env": {
     "test": {
-      "plugins": [
-        "@babel/plugin-syntax-dynamic-import",
-        "babel-plugin-dynamic-import-node"
-      ]
+      "plugins": ["@babel/plugin-syntax-dynamic-import", "babel-plugin-dynamic-import-node"]
     }
   }
 }

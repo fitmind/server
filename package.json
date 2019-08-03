@@ -42,12 +42,14 @@
     "mongoose": "^5.6.4",
     "morgan": "1.9.1",
     "pm2": "^3.5.1",
+    "ramda": "^0.26.1",
     "regenerator-runtime": "^0.13.2",
     "supertest": "^4.0.2"
   },
   "devDependencies": {
     "@babel/core": "7.4.5",
     "@babel/plugin-proposal-class-properties": "7.4.4",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/plugin-proposal-object-rest-spread": "7.4.4",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-async-to-generator": "7.4.4",
@@ -66,6 +68,7 @@
     "@types/jest": "^24.0.14",
     "@types/mongoose": "^5.5.8",
     "@types/morgan": "1.7.35",
+    "@types/ramda": "^0.26.18",
     "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "^1.10.2",
     "@typescript-eslint/parser": "^1.10.2",
