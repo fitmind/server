@@ -107,5 +107,5 @@ yarn lint:fix
 Get heroku logs of last deployment (Needs Heroku CLI installed):
 
 ```bash
-heroku logs --tail --app fitmind-server
+heroku logs --tail --app fitmind-dev-server
 ```
