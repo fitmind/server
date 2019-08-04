@@ -1,5 +1,5 @@
 import express from 'express';
-import createApp from '../App';
+import createApp from '../../App';
 import request from 'supertest';
 
 describe('Health controller', () => {

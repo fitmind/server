@@ -5,17 +5,16 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
-// import postsController from './controllers/post/post.controller';
 import errorHandlerMiddleware from './middleware/error-handler-middleware/error-handler-middleware';
-import healthController from './health/health.controller';
-import UserController from './user/user.controller';
+import healthController from './api/health/health.controller';
+import UserController from './api/user/user.controller';
 
 const createApp = (app: express.Application): express.Application => {
   // app middleware
   app.use(
     helmet({
-      hidePoweredBy: true,
-    }),
+      hidePoweredBy: true
+    })
   );
   app.use(compression());
   app.use(cors());

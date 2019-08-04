@@ -1,11 +1,11 @@
 import * as mongoose from 'mongoose';
 
-interface UserInterface {
-  id: string;
+export interface UserInterface extends mongoose.Document {
+  _id: string;
   name: string;
   description?: string;
   password: string;
-  interestedInExperiseAreas: String[];
+  interestedInExpertiseAreas: String[];
   created: string;
   approved: boolean;
   rating: number;
@@ -16,12 +16,12 @@ const UserSchema = new mongoose.Schema({
   email: String,
   description: String,
   password: String,
-  interestedInExperiseAreas: [String],
+  interestedInExpertiseAreas: [String],
   created: { type: Date, default: Date.now },
   approved: { type: Boolean, default: false },
-  rating: { type: Number, default: 0 },
+  rating: { type: Number, default: 0 }
 });
 
-const UserModel = mongoose.model<UserInterface & mongoose.Document>('User', UserSchema);
+const UserModel = mongoose.model<UserInterface>('User', UserSchema);
 
 export default UserModel;

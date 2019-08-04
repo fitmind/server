@@ -8,8 +8,8 @@ import createApp from './App';
 import errorHandlerMiddleware from './middleware/error-handler-middleware/error-handler-middleware';
 import helmet from 'helmet';
 import compression from 'compression';
-import healthController from './health/health.controller';
-import UserController from './user/user.controller';
+import healthController from './api/health/health.controller';
+import UserController from './api/user/user.controller';
 
 jest.mock('helmet');
 jest.mock('compression');
@@ -18,7 +18,7 @@ jest.mock('cors');
 jest.mock('cookie-parser');
 jest.mock('body-parser', () => ({
   json: jest.fn(() => (_req: Request, _res: Response, next: NextFunction) => next()),
-  urlencoded: jest.fn(() => (_req: Request, _res: Response, next: NextFunction) => next()),
+  urlencoded: jest.fn(() => (_req: Request, _res: Response, next: NextFunction) => next())
 }));
 
 const mockCookieParser = (cookieParser as unknown) as jest.Mock;
@@ -47,7 +47,7 @@ describe('testing App', () => {
   });
 
   describe('testing middleware', () => {
-    test('should call the exact amount of middlewares', () => {
+    test('should call the exact amount of middleware', () => {
       expect(spy).toHaveBeenCalledTimes(10);
     });
     test('should use helmet', () => {
