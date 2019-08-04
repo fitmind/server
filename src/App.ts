@@ -6,7 +6,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 // import postsController from './controllers/post/post.controller';
-import errorHandler from './middleware/error-handler';
+import errorHandlerMiddleware from './middleware/error-handler-middleware/error-handler-middleware';
 import healthController from './health/health.controller';
 import UserController from './user/user.controller';
 
@@ -33,7 +33,7 @@ const createApp = (app: express.Application): express.Application => {
   app.use('/user', UserController);
 
   // // error handler
-  app.use(errorHandler);
+  app.use(errorHandlerMiddleware);
 
   return app;
 };

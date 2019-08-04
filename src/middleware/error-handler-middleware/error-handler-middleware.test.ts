@@ -1,6 +1,6 @@
 import express from 'express';
 import request from 'supertest';
-import createApp from '../App';
+import createApp from '../../App';
 
 describe('error handler', (): void => {
   let app: express.Application;

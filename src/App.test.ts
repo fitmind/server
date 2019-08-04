@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express, { Request, Response, NextFunction } from 'express';
 import createApp from './App';
-import errorHandler from './middleware/error-handler';
+import errorHandlerMiddleware from './middleware/error-handler-middleware/error-handler-middleware';
 import helmet from 'helmet';
 import compression from 'compression';
 import healthController from './health/health.controller';
@@ -92,7 +92,7 @@ describe('testing App', () => {
 
   describe('testing the app is calling the right error handlers', () => {
     test('it should call the error handler last', () => {
-      expect(spy).toHaveBeenCalledWith(errorHandler);
+      expect(spy).toHaveBeenCalledWith(errorHandlerMiddleware);
     });
   });
 });
