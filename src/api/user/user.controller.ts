@@ -5,13 +5,9 @@ import typeValidationMiddleware from '../../middleware/type-validation-middlewar
 
 export const createUserRouter = (router: Router): Router => {
   router.post('/register', typeValidationMiddleware(userRegisterDto), userRegister);
-  // router.post('/register', userRegister);
   return router;
 };
 
 const UserController = createUserRouter(express.Router());
-// const UserController = express.Router();
-//
-// UserController.post('/register', typeValidationMiddleware(userRegisterDto), userRegister);
 
 export default UserController;

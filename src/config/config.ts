@@ -1,4 +1,4 @@
-enum expertise {
+export enum expertise {
   PERSONAL_COACH = 'PERSONAL_COACH',
   YOGA_COACH = 'YOGA_COACH',
   NUTRITIONIST = 'NUTRITIONIST',

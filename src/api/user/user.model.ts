@@ -1,14 +1,16 @@
 import * as mongoose from 'mongoose';
 
-export interface UserInterface extends mongoose.Document {
+export interface UserInterface {
   _id: string;
   name: string;
+  email: string;
   description?: string;
   password: string;
-  interestedInExpertiseAreas: String[];
-  created: string;
+  interestedInExpertiseAreas: string[];
+  createdTimeStamp: string;
   approved: boolean;
   rating: number;
+  __v: number;
 }
 
 const UserSchema = new mongoose.Schema({
@@ -17,11 +19,13 @@ const UserSchema = new mongoose.Schema({
   description: String,
   password: String,
   interestedInExpertiseAreas: [String],
-  created: { type: Date, default: Date.now },
+  createdTimeStamp: { type: Date, default: Date.now },
   approved: { type: Boolean, default: false },
   rating: { type: Number, default: 0 }
 });
 
-const UserModel = mongoose.model<UserInterface>('User', UserSchema);
+type UserModelType = UserInterface & mongoose.Document;
+
+const UserModel = mongoose.model<UserModelType>('User', UserSchema);
 
 export default UserModel;
