@@ -12,8 +12,8 @@
     "serve": "node ./build/server.js",
     "start": "npm run build && npm run serve",
     "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.test.ts' --exec 'ts-node' src/server.ts",
-    "test": "jest --runInBand",
-    "test:watch": "jest --runInBand --watchAll",
+    "test": "jest --runInBand --verbose",
+    "test:watch": "jest --runInBand --watchAll --verbose",
     "prettier:check": "prettier --check 'src/**/**'",
     "prettier:watch": "onchange '**/*.{ts,js,css,html}' -- prettier --write {{changed}}",
     "prettier:all": "prettier --write '**/*.{ts,js,css,html}'",
@@ -25,7 +25,11 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@babel/cli": "^7.5.0",
+    "@types/node": "^12.6.9",
+    "@types/uuid": "^3.4.5",
+    "aws-sdk": "^2.503.0",
     "axios": "0.19.0",
+    "bcrypt": "^3.0.6",
     "body-parser": "1.19.0",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.9.1",
@@ -44,7 +48,8 @@
     "pm2": "^3.5.1",
     "ramda": "^0.26.1",
     "regenerator-runtime": "^0.13.2",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "7.4.5",
@@ -56,6 +61,7 @@
     "@babel/preset-env": "7.4.5",
     "@babel/preset-typescript": "7.3.3",
     "@types/axios": "0.14.0",
+    "@types/bcrypt": "^3.0.0",
     "@types/body-parser": "1.17.0",
     "@types/compression": "^0.0.36",
     "@types/cookie-parser": "^1.4.1",

@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/fitmind/server.svg?branch=master)](https://travis-ci.org/fitmind/server)
 
+[![CircleCI](https://circleci.com/gh/fitmind/server.svg?style=svg)](https://circleci.com/gh/fitmind/server)
+
 ## Check Swagger UI
 
 Here you will be able to see the API documentation
@@ -107,5 +109,5 @@ yarn lint:fix
 Get heroku logs of last deployment (Needs Heroku CLI installed):
 
 ```bash
-heroku logs --tail --app fitmind-server
+heroku logs --tail --app fitmind-dev-server
 ```
