@@ -72,6 +72,7 @@ describe('User controller test', () => {
       });
       describe('email is invalid or missing', () => {
         it('should return CONFLICT if the email is already in use', async () => {
+          await UserModel.create(defaultBody);
           const res = await request(app)
             .post(URL)
             .send(defaultBody);
