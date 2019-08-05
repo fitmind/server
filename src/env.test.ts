@@ -5,6 +5,15 @@ describe('.env', () => {
   it('should have a MongoURL', () => {
     expect(process.env['mongoUrl']).toBeDefined();
   });
+  it('should have a AWS_ACCESS_KEY_ID', () => {
+    expect(process.env['AWS_ACCESS_KEY_ID']).toBeDefined();
+  });
+  it('should have a AWS_SECRET_ACCESS_KEY', () => {
+    expect(process.env['AWS_SECRET_ACCESS_KEY']).toBeDefined();
+  });
+  it('should have a mongoTestingUrl', () => {
+    expect(process.env['mongoTestingUrl']).toBeDefined();
+  });
   it('should have a NODE_ENV', () => {
     expect(process.env['NODE_ENV']).toBeDefined();
   });
