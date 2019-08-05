@@ -25,6 +25,9 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@babel/cli": "^7.5.0",
+    "@types/node": "^12.6.9",
+    "@types/uuid": "^3.4.5",
+    "aws-sdk": "^2.503.0",
     "axios": "0.19.0",
     "bcrypt": "^3.0.6",
     "body-parser": "1.19.0",
@@ -45,7 +48,9 @@
     "pm2": "^3.5.1",
     "ramda": "^0.26.1",
     "regenerator-runtime": "^0.13.2",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "uuid": "^3.3.2",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@babel/core": "7.4.5",
@@ -72,6 +77,7 @@
     "@types/morgan": "1.7.35",
     "@types/ramda": "^0.26.18",
     "@types/supertest": "^2.0.8",
+    "@types/winston": "^2.4.4",
     "@typescript-eslint/eslint-plugin": "^1.10.2",
     "@typescript-eslint/parser": "^1.10.2",
     "babel-jest": "24.8.0",

@@ -8,3 +8,5 @@ jest-coverage
 coverage
 yarn-error.log
 DS_STORE
+error.log
+combined.log

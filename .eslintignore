@@ -2,3 +2,4 @@ docs
 .idea
 build
 node_modules
+src/emails
