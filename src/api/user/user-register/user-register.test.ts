@@ -15,7 +15,7 @@ describe('User controller test', () => {
 
   beforeAll(() => {
     app = createApp(express());
-    mongoose.connect(process.env.mongoTestingUrl || '', {
+    mongoose.connect(process.env.MONGO_TESTING_URL || '', {
       useNewUrlParser: true
     });
   });
@@ -72,7 +72,6 @@ describe('User controller test', () => {
       });
       describe('email is invalid or missing', () => {
         it('should return CONFLICT if the email is already in use', async () => {
-          const newUser = await UserModel.create(defaultBody);
           const res = await request(app)
             .post(URL)
             .send(defaultBody);

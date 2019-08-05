@@ -14,14 +14,17 @@ describe('validate expertise', () => {
 
   describe('validate function', () => {
     it('should return false if no expertises are passed', () => {
-      expect(validExpertise.validate([''], validationArguments)).toBeFalsy();
+      const validation = validExpertise.validate([''], validationArguments);
+      expect(validation).toBeFalsy();
     });
-    it.only('should only allow the valid expertise set in config to be passed', () => {
+    it('should only allow the valid expertise set in config to be passed', () => {
       const validExpertises = Object.keys(CONFIG.expertise);
-      expect(validExpertise.validate(validExpertises, validationArguments)).toBeTruthy();
+      const validation = validExpertise.validate(validExpertises, validationArguments);
+      expect(validation).toBeTruthy();
     });
     it('should return false if any other string is passed down', () => {
-      expect(validExpertise.validate(['string', 'more string'], validationArguments)).toBeFalsy();
+      const validation = validExpertise.validate(['string', 'more string'], validationArguments);
+      expect(validation).toBeFalsy();
     });
   });
 
