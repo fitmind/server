@@ -17,8 +17,7 @@ const userRegister = async (req: Request, res: Response, next: NextFunction) => 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const createdUser = await UserModel.create({ ...req.body, password: hashedPassword });
     if (process.env.NODE_ENV !== 'test') {
-      // todo: once AWS has unblocked restrictions it should be like this: sendEmail(EMAILS.USER_REGISTER,[email]);
-      sendEmail(EMAILS.USER_REGISTER, ['hello.fitmind@gmail.com']);
+      sendEmail(EMAILS.USER_REGISTER, [email]);
     }
     res.status(CREATED).json(filterUser(createdUser));
   }

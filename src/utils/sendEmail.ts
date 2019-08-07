@@ -1,5 +1,6 @@
 import AWS from 'aws-sdk';
 import fs from 'fs';
+import CONFIG from '../config/config';
 
 AWS.config.update({ region: 'eu-west-1' });
 
@@ -7,7 +8,7 @@ export const EMAILS = {
   USER_REGISTER: 'USER_REGISTER'
 };
 
-const EMAIL_SOURCE = 'dev.diego.romero@gmail.com';
+const EMAIL_SOURCE = CONFIG.emailSource;
 
 const sendEmail = (type: string, sendTo: string[] = [], subject: string = '') => {
   let htmlPath;

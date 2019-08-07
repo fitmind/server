@@ -11,7 +11,8 @@ const CONFIG = {
     user: {
       signUp: '/user/register'
     }
-  }
+  },
+  emailSource: 'hello.fitmind@gmail.com'
 };
 
 export default CONFIG;
