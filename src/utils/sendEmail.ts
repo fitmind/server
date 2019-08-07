@@ -12,28 +12,25 @@ const EMAIL_SOURCE = CONFIG.emailSource;
 
 const sendEmail = (type: string, sendTo: string[] = [], subject: string = '') => {
   let htmlPath;
-  let html = '<h1>error</h1>';
   switch (type) {
     case 'USER_REGISTER':
       subject = 'Fitmind User Registration';
       htmlPath = './src/emails/user-register-email.html';
       break;
     default:
-      html = '<h1>error</h1>';
+      return;
   }
   if (htmlPath) {
     fs.readFile(htmlPath, 'utf8', (err, htmlString) => {
       if (err) {
-        console.error(err);
+        return;
       } else {
         let params = {
           Destination: {
             ToAddresses: sendTo
           },
           Message: {
-            /* required */
             Body: {
-              /* required */
               Html: {
                 Charset: 'UTF-8',
                 Data: htmlString
@@ -44,16 +41,16 @@ const sendEmail = (type: string, sendTo: string[] = [], subject: string = '') =>
               Data: subject
             }
           },
-          Source: EMAIL_SOURCE /* required */
+          Source: EMAIL_SOURCE
         };
         const sendPromise = new AWS.SES({ apiVersion: '2010-12-01' }).sendEmail(params).promise();
         sendPromise
-          .then(function(data) {
-            console.log(`Email send successfully`);
-            console.log(data);
+          .then(function() {
+            // console.log(`Email send successfully`);
+            // console.log(data);
           })
-          .catch(function(err) {
-            console.error(err, err.stack);
+          .catch(function() {
+            // console.error(err, err.stack);
           });
       }
     });
