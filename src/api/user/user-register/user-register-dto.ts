@@ -1,5 +1,5 @@
 import { IsEmail, IsString, Length, Validate } from 'class-validator';
-import { ValidExpertise } from '../../../utils/validateExpertise';
+import { ValidExpertise } from '../../../utils/validate-expertise/validate-expertise';
 
 class userRegisterDto {
   @IsString()

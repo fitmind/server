@@ -26,7 +26,7 @@ describe('User controller test', () => {
   });
   describe('User register', () => {
     describe('valid user', () => {
-      it('should allow the user to be registered and the password should be encrypted', async () => {
+      it('should allow the user to be registered and the password should be encrypted', async done => {
         const validSignUp = {
           name: 'Diego',
           email: 'diego@testing.com',
@@ -41,6 +41,7 @@ describe('User controller test', () => {
         const createdUser = (await UserModel.findOne({ email: validSignUp.email })) || { password: '' };
         const isPasswordMatching = await bcrypt.compare(validSignUp.password, createdUser.password);
         expect(isPasswordMatching).toBeTruthy();
+        done();
       });
     });
 
@@ -71,13 +72,14 @@ describe('User controller test', () => {
         });
       });
       describe('email is invalid or missing', () => {
-        it('should return CONFLICT if the email is already in use', async () => {
+        it('should return CONFLICT if the email is already in use', async done => {
           await UserModel.create(defaultBody);
           const res = await request(app)
             .post(URL)
             .send(defaultBody);
           expect(res.status).toBe(CONFLICT);
           expect(res.body.message).toEqual('Email is already in use');
+          done();
         });
         it('invalid', async () => {
           const res = await request(app)

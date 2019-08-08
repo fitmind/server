@@ -1,5 +1,5 @@
 import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
-import CONFIG from '../config/config';
+import CONFIG from '../../config/config';
 
 @ValidatorConstraint({ name: 'validExpertise', async: false })
 export class ValidExpertise implements ValidatorConstraintInterface {

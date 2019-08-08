@@ -1,6 +1,6 @@
 import AWS from 'aws-sdk';
 import fs from 'fs';
-import CONFIG from '../config/config';
+import CONFIG from '../../config/config';
 
 AWS.config.update({ region: 'eu-west-1' });
 

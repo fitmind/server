@@ -1,5 +1,5 @@
-import { ValidExpertise } from './validateExpertise';
-import CONFIG from '../config/config';
+import { ValidExpertise } from './validate-expertise';
+import CONFIG from '../../config/config';
 
 describe('validate expertise', () => {
   const validExpertise = new ValidExpertise();
