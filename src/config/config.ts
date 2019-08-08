@@ -6,10 +6,15 @@ export enum expertise {
 }
 
 const CONFIG = {
+  authTokenExpiryDate: 10000000000000,
+  cookies: {
+    user: 'X-Fitmind-Authorization'
+  },
   expertise,
   routes: {
     user: {
-      signUp: '/user/register'
+      signUp: '/user/register',
+      login: '/user/login'
     }
   },
   emailSource: 'hello.fitmind@gmail.com'

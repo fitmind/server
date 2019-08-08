@@ -3,7 +3,7 @@ import { CREATED, CONFLICT } from 'http-status-codes';
 import UserModel from '../user.model';
 import HttpException from '../../../interfaces/HttpException';
 import * as bcrypt from 'bcrypt';
-import sendEmail, { EMAILS } from '../../../utils/sendEmail';
+import sendEmail, { EMAILS } from '../../../utils/send-email/sendEmail';
 import filterUser from '../../../utils/filter-user/filter-user';
 
 const userRegister = async (req: Request, res: Response, next: NextFunction) => {

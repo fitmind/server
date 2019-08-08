@@ -17,4 +17,8 @@ describe('.env', () => {
   it('should have a NODE_ENV', () => {
     expect(process.env['NODE_ENV']).toBeDefined();
   });
+
+  it('should have a JWT_SECRET', () => {
+    expect(process.env['JWT_SECRET']).toBeDefined();
+  });
 });
