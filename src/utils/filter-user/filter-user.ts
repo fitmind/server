@@ -1,6 +1,6 @@
-import { UserInterface } from '../../api/user/user.model';
 import FilteredUserInterface from '../../interfaces/filtered-user';
 import { pick } from 'ramda';
+import UserInterface from '../../interfaces/user-interface';
 
 const filterUser = (user: UserInterface): FilteredUserInterface => {
   return pick(

@@ -1,17 +1,5 @@
 import * as mongoose from 'mongoose';
-
-export interface UserInterface {
-  _id: string;
-  name: string;
-  email: string;
-  description?: string;
-  password: string;
-  interestedInExpertiseAreas: string[];
-  createdTimeStamp: string;
-  approved: boolean;
-  rating: number;
-  __v: number;
-}
+import UserInterface from '../../interfaces/user-interface';
 
 const UserSchema = new mongoose.Schema({
   name: String,
@@ -24,7 +12,7 @@ const UserSchema = new mongoose.Schema({
   rating: { type: Number, default: 0 }
 });
 
-type UserModelType = UserInterface & mongoose.Document;
+export type UserModelType = UserInterface & mongoose.Document;
 
 const UserModel = mongoose.model<UserModelType>('User', UserSchema);
 

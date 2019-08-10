@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { NOT_FOUND, UNAUTHORIZED, CREATED } from 'http-status-codes';
 import UserModel from '../user.model';
-import HttpException from '../../../interfaces/HttpException';
+import HttpException from '../../../utils/http-exception/http-exception';
 import * as bcrypt from 'bcrypt';
 import createUserToken from '../../../utils/create-token/create-token';
 import CONFIG from '../../../config/config';

@@ -10,9 +10,9 @@ module.exports = {
     sourceType: 'module' // Allows for the use of imports
   },
   rules: {
-    'no-unused-vars': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/ban-types': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off'
+    // 'no-unused-vars': 'off',
+    // '@typescript-eslint/no-unused-vars': 'off',
+    // '@typescript-eslint/ban-types': 'off',
+    // '@typescript-eslint/explicit-function-return-type': 'off'
   }
 };

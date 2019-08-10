@@ -1,28 +1,29 @@
 import request from 'supertest';
 import express from 'express';
 import createApp from '../../../App';
-import mongoose from 'mongoose';
 import { omit } from 'ramda';
 import UserModel from '../user.model';
 import CONFIG from '../../../config/config';
 import { BAD_REQUEST, CONFLICT, CREATED } from 'http-status-codes';
 import * as bcrypt from 'bcrypt';
+import {
+  disconnectTestingDb,
+  setTestingDbConnection
+} from '../../../utils/testing-db-connection/testing-db-connection';
 
 const URL = CONFIG.routes.user.signUp;
 
-describe('User controller test', () => {
+describe('User register test', () => {
   let app: express.Application;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     app = createApp(express());
-    mongoose.connect(process.env.MONGO_TESTING_URL || '', {
-      useNewUrlParser: true
-    });
+    await setTestingDbConnection();
   });
   afterAll(async () => {
     await UserModel.findOneAndDelete({ email: 'diego@testing.com' });
     await UserModel.findOneAndDelete({ email: 'default@testing.com' });
-    await mongoose.disconnect();
+    await disconnectTestingDb();
   });
   describe('User register', () => {
     describe('valid user', () => {

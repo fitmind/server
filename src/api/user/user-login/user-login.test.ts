@@ -1,11 +1,14 @@
 import express from 'express';
 import createApp from '../../../App';
 import UserModel from '../user.model';
-import mongoose from 'mongoose';
 import CONFIG from '../../../config/config';
 import request from 'supertest';
 import { omit } from 'ramda';
 import { BAD_REQUEST, NOT_FOUND, CREATED, UNAUTHORIZED } from 'http-status-codes';
+import {
+  disconnectTestingDb,
+  setTestingDbConnection
+} from '../../../utils/testing-db-connection/testing-db-connection';
 
 describe('User Login', () => {
   const URL = CONFIG.routes.user.login;
@@ -24,16 +27,14 @@ describe('User Login', () => {
 
   beforeAll(async () => {
     app = createApp(express());
-    mongoose.connect(process.env.MONGO_TESTING_URL || '', {
-      useNewUrlParser: true
-    });
+    await setTestingDbConnection();
     await request(app)
       .post(SIGN_UP_URL)
       .send(validSignUp);
   });
   afterAll(async () => {
     await UserModel.findOneAndDelete({ email });
-    await mongoose.disconnect();
+    await disconnectTestingDb();
   });
   describe('valid request', () => {
     it('should return a 201 along with an authorization cookie', async done => {

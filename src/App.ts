@@ -6,8 +6,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import errorHandlerMiddleware from './middleware/error-handler-middleware/error-handler-middleware';
-import healthController from './api/health/health.controller';
-import UserController from './api/user/user.controller';
+import healthRouter from './api/health/health.router';
+import userRouter from './api/user/user.router';
 
 const createApp = (app: express.Application): express.Application => {
   // app middleware
@@ -28,8 +28,8 @@ const createApp = (app: express.Application): express.Application => {
     res.send({ message: 'welcome to the Fitmind API' });
   });
 
-  app.use('/health', healthController);
-  app.use('/user', UserController);
+  app.use('/health', healthRouter);
+  app.use('/user', userRouter);
 
   // // error handler
   app.use(errorHandlerMiddleware);
