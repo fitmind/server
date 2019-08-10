@@ -8,8 +8,8 @@ import createApp from './App';
 import errorHandlerMiddleware from './middleware/error-handler-middleware/error-handler-middleware';
 import helmet from 'helmet';
 import compression from 'compression';
-import healthController from './api/health/health.controller';
-import UserController from './api/user/user.controller';
+import healthRouter from './api/health/health.router';
+import UserController from './api/user/user.router';
 
 jest.mock('helmet');
 jest.mock('compression');
@@ -83,7 +83,7 @@ describe('testing App', () => {
 
   describe('testing the app calling the right controllers', () => {
     test('testing health controller gets called', () => {
-      expect(spy).toHaveBeenNthCalledWith(8, '/health', healthController);
+      expect(spy).toHaveBeenNthCalledWith(8, '/health', healthRouter);
     });
     test('testing the user controller gets called', () => {
       expect(spy).toHaveBeenNthCalledWith(9, '/user', UserController);
