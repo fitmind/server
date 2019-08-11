@@ -1,7 +1,5 @@
 # Fitmind server
 
-[![Build Status](https://travis-ci.org/fitmind/server.svg?branch=master)](https://travis-ci.org/fitmind/server)
-
 [![CircleCI](https://circleci.com/gh/fitmind/server.svg?style=svg)](https://circleci.com/gh/fitmind/server)
 
 ## Check Swagger UI

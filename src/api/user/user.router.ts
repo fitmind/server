@@ -8,6 +8,7 @@ import userAuthMiddleware from '../../middleware/user-auth-middleware/user-auth-
 import getUserMe from './user-me/user-me';
 import CONFIG from '../../config/config';
 import userLogout from './user-logout/user-logout';
+import userDashboard from './dashboard/dashboard';
 
 const userType = CONFIG.UserTypes.CUSTOMER;
 const userRouter = express.Router();
@@ -16,5 +17,6 @@ userRouter.post('/register', typeValidationMiddleware(userRegisterDto), userRegi
 userRouter.post('/login', typeValidationMiddleware(userLoginDto), userLogin);
 userRouter.get('/me', userAuthMiddleware(userType), getUserMe);
 userRouter.post('/logout', userAuthMiddleware(userType), userLogout);
+userRouter.post('/dashboard', userAuthMiddleware(userType), userDashboard);
 
 export default userRouter;

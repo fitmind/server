@@ -1,6 +1,5 @@
 import express from 'express';
 import createApp from '../../../App';
-import UserModel from '../user.model';
 import CONFIG from '../../../config/config';
 import request from 'supertest';
 import { omit } from 'ramda';
@@ -9,21 +8,21 @@ import {
   disconnectTestingDb,
   setTestingDbConnection
 } from '../../../utils/testing-db-connection/testing-db-connection';
+import {
+  deleteFromDbByEmail,
+  userTestPassword,
+  userValidLogin,
+  userValidSignUp
+} from '../../../utils/user-testing-utils/user-testing-utils';
 
 describe('User Login', () => {
   const URL = CONFIG.routes.user.login;
   const SIGN_UP_URL = CONFIG.routes.user.signUp;
   const email = 'diego.login@testing.com';
+  const validSignUp = userValidSignUp(email);
+  const validLogin = userValidLogin(email);
+  const password = userTestPassword;
   let app: express.Application;
-  const password = 'ValidPassword123!';
-  let validRequestPost = { email, password };
-  const validSignUp = {
-    name: 'Diego',
-    email,
-    description: 'some long string',
-    password,
-    interestedInExpertiseAreas: ['PERSONAL_COACH']
-  };
 
   beforeAll(async () => {
     app = createApp(express());
@@ -33,14 +32,14 @@ describe('User Login', () => {
       .send(validSignUp);
   });
   afterAll(async () => {
-    await UserModel.findOneAndDelete({ email });
+    await deleteFromDbByEmail(email);
     await disconnectTestingDb();
   });
   describe('valid request', () => {
     it('should return a 201 along with an authorization cookie', async done => {
       const res = await request(app)
         .post(URL)
-        .send(validRequestPost);
+        .send(validLogin);
       const cookie = res.header['set-cookie'][0];
       expect(res.status).toBe(CREATED);
       expect(cookie.includes(CONFIG.cookies.user)).toBeTruthy();
@@ -59,20 +58,20 @@ describe('User Login', () => {
       it('should return 400 if email is missing', async () => {
         const res = await request(app)
           .post(URL)
-          .send(omit(['email'], validRequestPost));
+          .send(omit(['email'], validLogin));
         expect(res.status).toBe(BAD_REQUEST);
       });
       it('should return 400 if email is not an email', async () => {
         const res = await request(app)
           .post(URL)
-          .send({ ...validRequestPost, email: 'broken_email.com' });
+          .send({ ...validLogin, email: 'broken_email.com' });
         expect(res.status).toBe(BAD_REQUEST);
       });
     });
     it('is missing sending the password', async () => {
       const res = await request(app)
         .post(URL)
-        .send(omit(['password'], validRequestPost));
+        .send(omit(['password'], validLogin));
       expect(res.status).toBe(BAD_REQUEST);
     });
     it('should return bad request if the password doesnt match', async () => {

@@ -1,3 +1,5 @@
+import { availableHours } from './available-hours';
+
 export enum expertise {
   PERSONAL_COACH = 'PERSONAL_COACH',
   YOGA_COACH = 'YOGA_COACH',
@@ -11,6 +13,12 @@ export enum UserTypes {
   ADMIN = 'ADMIN'
 }
 
+export enum ApprovedStatus {
+  APPROVED = 'APPROVED',
+  PENDING = 'PENDING',
+  DENIED = 'DENIED'
+}
+
 const CONFIG = {
   authTokenExpiryDate: 10000000000000,
   cookies: {
@@ -18,8 +26,16 @@ const CONFIG = {
     expert: 'X-Fitmind--Expert-Authorization',
     admin: 'X-Fitmind-Admin-Authorization'
   },
+  modelNames: {
+    expert: 'Expert',
+    user: 'User',
+    listing: 'Listing',
+    booking: 'Booking'
+  },
   expertise,
   UserTypes,
+  ApprovedStatus,
+  availableHours,
   routes: {
     user: {
       signUp: '/user/register',

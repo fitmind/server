@@ -6,7 +6,7 @@ export default interface UserInterface {
   password: string;
   interestedInExpertiseAreas: string[];
   createdTimeStamp: string;
-  approved: boolean;
   rating: number;
   __v: number;
+  pictureUrl: string;
 }
