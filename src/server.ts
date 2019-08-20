@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 mongoose
-  .connect(process.env.MONGO_URL || '', { useNewUrlParser: true })
+  .connect(process.env.MONGO_URL || '', { useNewUrlParser: true, useFindAndModify: false })
   .then(() => {
     console.log('MongoDB connected');
     const app = createApp(express());

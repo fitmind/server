@@ -1,6 +1,5 @@
 import express from 'express';
 import createApp from '../../../App';
-import UserModel from '../user.model';
 import CONFIG from '../../../config/config';
 import request from 'supertest';
 import { OK } from 'http-status-codes';
@@ -8,26 +7,16 @@ import {
   disconnectTestingDb,
   setTestingDbConnection
 } from '../../../utils/testing-db-connection/testing-db-connection';
+import { deleteFromDbByEmail, userValidLogin, userValidSignUp } from '../../../utils/testing-utils/testing-utils';
 
 describe('User Logout', () => {
   const URL = CONFIG.routes.user.logout;
   const SIGN_UP_URL = CONFIG.routes.user.signUp;
   const LOGIN_URL = CONFIG.routes.user.login;
-  const email = 'diego.logout@testing.com';
   let app: express.Application;
-  const password = 'ValidPassword123!';
-  const validSignUp = {
-    name: 'Diego',
-    email,
-    description: 'some long string',
-    password,
-    interestedInExpertiseAreas: ['PERSONAL_COACH']
-  };
-  const validLogin = {
-    email,
-    password
-  };
-  let loginRes;
+  const email = 'login@email.com';
+  const validSignUp = userValidSignUp(email);
+  const validLogin = userValidLogin(email);
 
   beforeAll(async () => {
     app = createApp(express());
@@ -35,17 +24,14 @@ describe('User Logout', () => {
     await request(app)
       .post(SIGN_UP_URL)
       .send(validSignUp);
-    loginRes = await request(app)
-      .post(LOGIN_URL)
-      .send(validLogin);
   });
   afterAll(async () => {
-    await UserModel.findOneAndDelete({ email });
+    await deleteFromDbByEmail(email);
     await disconnectTestingDb();
   });
   describe('valid request', () => {
     it('should return a 200 along with an authorization cookie', async done => {
-      loginRes = await request(app)
+      const loginRes = await request(app)
         .post(LOGIN_URL)
         .send(validLogin);
 

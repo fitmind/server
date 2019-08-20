@@ -9,22 +9,16 @@ import {
   setTestingDbConnection
 } from '../../../utils/testing-db-connection/testing-db-connection';
 import { filterUserMe } from './user-me';
+import { deleteFromDbByEmail, userValidLogin, userValidSignUp } from '../../../utils/testing-utils/testing-utils';
 
 describe('User get me', () => {
   const URL = CONFIG.routes.user.me;
   const SIGN_UP_URL = CONFIG.routes.user.signUp;
   const LOGIN_URL = CONFIG.routes.user.login;
-  const email = 'diego.me@testing.com';
+  const email = 'user_me@testing.com';
+  const validSignUp = userValidSignUp(email);
+  const validLogin = userValidLogin(email);
   let app: express.Application;
-  const password = 'ValidPassword123!';
-  let validLogin = { email, password };
-  const validSignUp = {
-    name: 'Diego',
-    email,
-    description: 'some long string',
-    password,
-    interestedInExpertiseAreas: ['PERSONAL_COACH']
-  };
   let cookie: string;
   let user: UserModelType | null;
   let login = null;
@@ -42,7 +36,7 @@ describe('User get me', () => {
     cookie = login.header['set-cookie'][0];
   });
   afterAll(async () => {
-    await UserModel.findOneAndDelete({ email });
+    await deleteFromDbByEmail(email);
     await disconnectTestingDb();
   });
 

@@ -2,7 +2,7 @@ import request from 'supertest';
 import express from 'express';
 import createApp from '../../../App';
 import { omit } from 'ramda';
-import UserModel from '../user.model';
+import UserModel, { UserModelType } from '../user.model';
 import CONFIG from '../../../config/config';
 import { BAD_REQUEST, CONFLICT, CREATED } from 'http-status-codes';
 import * as bcrypt from 'bcrypt';
@@ -10,36 +10,33 @@ import {
   disconnectTestingDb,
   setTestingDbConnection
 } from '../../../utils/testing-db-connection/testing-db-connection';
+import { deleteFromDbByEmail, userValidSignUp } from '../../../utils/testing-utils/testing-utils';
 
 const URL = CONFIG.routes.user.signUp;
 
 describe('User register test', () => {
   let app: express.Application;
+  const email = 'registrationfitmind@gmail.com';
+  const validSignUp = userValidSignUp(email);
 
   beforeAll(async () => {
     app = createApp(express());
     await setTestingDbConnection();
   });
   afterAll(async () => {
-    await UserModel.findOneAndDelete({ email: 'diego@testing.com' });
-    await UserModel.findOneAndDelete({ email: 'default@testing.com' });
+    await deleteFromDbByEmail(email);
     await disconnectTestingDb();
   });
   describe('User register', () => {
     describe('valid user', () => {
       it('should allow the user to be registered and the password should be encrypted', async done => {
-        const validSignUp = {
-          name: 'Diego',
-          email: 'diego@testing.com',
-          description: 'some long string',
-          password: 'ValidPassword123!',
-          interestedInExpertiseAreas: ['PERSONAL_COACH']
-        };
+        // have to delete just in case, otherwise the test becomes flaky
+        await deleteFromDbByEmail(email);
         const res = await request(app)
           .post(URL)
           .send(validSignUp);
-        expect(res.status).toBe(CREATED);
-        const createdUser = (await UserModel.findOne({ email: validSignUp.email })) || { password: '' };
+        expect(res.status).toEqual(CREATED);
+        const createdUser = (await UserModel.findOne({ email })) as UserModelType;
         const isPasswordMatching = await bcrypt.compare(validSignUp.password, createdUser.password);
         expect(isPasswordMatching).toBeTruthy();
         done();
@@ -47,74 +44,73 @@ describe('User register test', () => {
     });
 
     describe('invalid user', () => {
-      let defaultBody = {
-        name: 'diego',
-        email: 'default@testing.com',
-        description: 'some long string',
-        password: 'ValidPassword123!',
-        interestedInExpertiseAreas: ['PERSONAL_COACH']
-      };
       describe('name is invalid or missing', () => {
-        it('invalid', async () => {
+        it('invalid', async done => {
           const res = await request(app)
             .post(URL)
-            .send({ ...defaultBody, name: 123 });
+            .send({ ...validSignUp, name: 123 });
           expect(res.status).toBe(BAD_REQUEST);
           expect(res.body.message).toEqual(
             'name must be longer than or equal to 2 and shorter than or equal to 20 characters,name must be a string'
           );
+          done();
         });
-        it('missing', async () => {
+        it('missing', async done => {
           const res = await request(app)
             .post(URL)
-            .send(omit(['name'], defaultBody));
+            .send(omit(['name'], validSignUp));
           expect(res.status).toBe(BAD_REQUEST);
           expect(res.body.message).toBe('name must be longer than or equal to 2 characters,name must be a string');
+          done();
         });
       });
       describe('email is invalid or missing', () => {
         it('should return CONFLICT if the email is already in use', async done => {
-          await UserModel.create(defaultBody);
+          await UserModel.create(validSignUp);
           const res = await request(app)
             .post(URL)
-            .send(defaultBody);
+            .send(validSignUp);
           expect(res.status).toBe(CONFLICT);
           expect(res.body.message).toEqual('Email is already in use');
           done();
         });
-        it('invalid', async () => {
+        it('invalid', async done => {
           const res = await request(app)
             .post(URL)
-            .send({ ...defaultBody, email: 'diego@gmail' });
+            .send({ ...validSignUp, email: 'diego@gmail' });
           expect(res.status).toBe(BAD_REQUEST);
           expect(res.body.message).toBe('email must be an email');
+          done();
         });
-        it('missing', async () => {
+        it('missing', async done => {
           const res = await request(app)
             .post(URL)
-            .send(omit(['email'], defaultBody));
+            .send(omit(['email'], validSignUp));
           expect(res.status).toBe(BAD_REQUEST);
           expect(res.body.message).toBe('email must be an email');
+          done();
         });
       });
       describe('interested in expertise is invalid or missing', () => {
-        it('is invalid', async () => {
+        it('is invalid', async done => {
           const res = await request(app)
             .post(URL)
-            .send({ ...defaultBody, interestedInExpertiseAreas: ['not valid string'] });
+            .send({ ...validSignUp, interestedInExpertiseAreas: ['not valid string'] });
           expect(res.status).toBe(BAD_REQUEST);
           expect(res.body.message).toBe(
             'Expertise sent is not one of the valid ones and is necessary to send at least one'
           );
+          done();
         });
-        it('is missing', async () => {
+        it('is missing', async done => {
           const res = await request(app)
             .post(URL)
-            .send(omit(['interestedInExpertiseAreas'], defaultBody));
+            .send(omit(['interestedInExpertiseAreas'], validSignUp));
           expect(res.status).toBe(BAD_REQUEST);
           expect(res.body.message).toBe(
             'Expertise sent is not one of the valid ones and is necessary to send at least one'
           );
+          done();
         });
       });
     });

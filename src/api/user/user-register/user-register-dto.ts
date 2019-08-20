@@ -1,4 +1,4 @@
-import { IsEmail, IsString, Length, Validate } from 'class-validator';
+import { IsEmail, IsString, IsUrl, Length, Validate } from 'class-validator';
 import { ValidExpertise } from '../../../utils/validate-expertise/validate-expertise';
 
 class userRegisterDto {
@@ -16,6 +16,10 @@ class userRegisterDto {
   @IsString()
   @Length(0, 300)
   public description: string;
+
+  @IsString()
+  @IsUrl()
+  public pictureUrl: string;
 
   @Validate(ValidExpertise)
   public interestedInExpertiseAreas: string[];
