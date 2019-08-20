@@ -10,6 +10,7 @@ interface ExpertInterface {
   createdTimeStamp: string;
   approvedStatus: string;
   isAnExpertIn: string[];
+  bookings: string[];
   weeklyAvailability: {
     monday: string[];
     tuesday: string[];
@@ -30,6 +31,10 @@ const ExpertSchema = new mongoose.Schema({
   createdTimeStamp: { type: Date, default: Date.now },
   approvedStatus: { type: String, default: ApprovedStatus.PENDING },
   isAnExpertIn: [String],
+  bookings: {
+    ref: CONFIG.modelNames.booking,
+    type: mongoose.Schema.Types.ObjectId
+  },
   weeklyAvailability: {
     monday: [String],
     tuesday: [String],

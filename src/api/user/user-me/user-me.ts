@@ -10,15 +10,10 @@ interface FilteredUser {
   email: string;
   description?: string;
   interestedInExpertiseAreas: string[];
-  approved: boolean;
-  rating: number;
 }
 
 export const filterUserMe = (user: UserModelType): FilteredUser =>
-  pick(
-    ['_id', 'name', 'email', 'description', 'interestedInExpertiseAreas', 'approved', 'rating', 'createdTimeStamp'],
-    user
-  );
+  pick(['_id', 'name', 'email', 'description', 'interestedInExpertiseAreas'], user);
 
 const getUserMe = (req: RequestWithUser, res: Response) => {
   res.status(OK).json(filterUserMe(req.user as UserModelType));

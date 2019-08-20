@@ -2,13 +2,13 @@ import * as mongoose from 'mongoose';
 import CONFIG from '../../config/config';
 
 interface BookingInterface {
-  time: string;
+  time: Date;
   createdByUser: string;
   listing: string;
 }
 
 const BookingSchema = new mongoose.Schema({
-  time: String,
+  time: Date || String,
   createdByUser: {
     ref: CONFIG.modelNames.user,
     type: mongoose.Schema.Types.ObjectId

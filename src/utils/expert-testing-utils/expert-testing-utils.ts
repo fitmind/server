@@ -12,13 +12,13 @@ export const expertValidSignUp = (email = expertTestEmail) => ({
   pictureUrl: 'https://fitmind-dev.s3.eu-west-2.amazonaws.com/mock-images/daniel_photo.png',
   isAnExpertIn: ['PERSONAL_COACH'],
   weeklyAvailability: {
-    monday: CONFIG.availableHours,
-    tuesday: CONFIG.availableHours,
-    wednesday: CONFIG.availableHours,
-    thursday: CONFIG.availableHours,
-    friday: CONFIG.availableHours,
-    saturday: CONFIG.availableHours,
-    sunday: CONFIG.availableHours
+    monday: ['6:00'],
+    tuesday: ['6:00'],
+    wednesday: ['6:00'],
+    thursday: ['6:00'],
+    friday: ['6:00'],
+    saturday: ['6:00'],
+    sunday: ['6:00']
   }
 });
 

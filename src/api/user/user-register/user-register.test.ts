@@ -10,7 +10,7 @@ import {
   disconnectTestingDb,
   setTestingDbConnection
 } from '../../../utils/testing-db-connection/testing-db-connection';
-import { deleteFromDbByEmail, userValidSignUp } from '../../../utils/user-testing-utils/user-testing-utils';
+import { deleteFromDbByEmail, userValidSignUp } from '../../../utils/testing-utils/testing-utils';
 
 const URL = CONFIG.routes.user.signUp;
 

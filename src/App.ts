@@ -17,7 +17,12 @@ const createApp = (app: express.Application): express.Application => {
     })
   );
   app.use(compression());
-  app.use(cors());
+  app.use(
+    cors({
+      origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
+      credentials: true
+    })
+  );
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(cookieParser());

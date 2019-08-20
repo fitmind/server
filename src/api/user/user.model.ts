@@ -9,7 +9,14 @@ const UserSchema = new mongoose.Schema({
   password: String,
   pictureUrl: String,
   interestedInExpertiseAreas: [String],
-  createdTimeStamp: { type: Date, default: Date.now }
+  createdTimeStamp: { type: Date, default: Date.now },
+  bookings: [
+    {
+      ref: CONFIG.modelNames.booking,
+      type: mongoose.Schema.Types.ObjectId,
+      default: []
+    }
+  ]
 });
 
 export type UserModelType = UserInterface & mongoose.Document;

@@ -9,11 +9,7 @@ import {
   setTestingDbConnection
 } from '../../../utils/testing-db-connection/testing-db-connection';
 import { filterUserMe } from './user-me';
-import {
-  deleteFromDbByEmail,
-  userValidLogin,
-  userValidSignUp
-} from '../../../utils/user-testing-utils/user-testing-utils';
+import { deleteFromDbByEmail, userValidLogin, userValidSignUp } from '../../../utils/testing-utils/testing-utils';
 
 describe('User get me', () => {
   const URL = CONFIG.routes.user.me;

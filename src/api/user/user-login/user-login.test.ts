@@ -13,7 +13,7 @@ import {
   userTestPassword,
   userValidLogin,
   userValidSignUp
-} from '../../../utils/user-testing-utils/user-testing-utils';
+} from '../../../utils/testing-utils/testing-utils';
 
 describe('User Login', () => {
   const URL = CONFIG.routes.user.login;

@@ -9,4 +9,5 @@ export default interface UserInterface {
   rating: number;
   __v: number;
   pictureUrl: string;
+  bookings: string[];
 }

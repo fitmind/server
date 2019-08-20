@@ -21,4 +21,8 @@ describe('.env', () => {
   it('should have a JWT_SECRET', () => {
     expect(process.env['JWT_SECRET']).toBeDefined();
   });
+
+  it('should have a CLIENT_ORIGIN', () => {
+    expect(process.env['CLIENT_ORIGIN']).toBeDefined();
+  });
 });

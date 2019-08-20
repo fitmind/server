@@ -41,7 +41,8 @@ const CONFIG = {
       signUp: '/user/register',
       login: '/user/login',
       me: '/user/me',
-      logout: '/user/logout'
+      logout: '/user/logout',
+      dashboard: '/user/dashboard'
     }
   },
   emailSource: 'hello.fitmind@gmail.com'

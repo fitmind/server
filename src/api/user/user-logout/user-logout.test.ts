@@ -7,11 +7,7 @@ import {
   disconnectTestingDb,
   setTestingDbConnection
 } from '../../../utils/testing-db-connection/testing-db-connection';
-import {
-  deleteFromDbByEmail,
-  userValidLogin,
-  userValidSignUp
-} from '../../../utils/user-testing-utils/user-testing-utils';
+import { deleteFromDbByEmail, userValidLogin, userValidSignUp } from '../../../utils/testing-utils/testing-utils';
 
 describe('User Logout', () => {
   const URL = CONFIG.routes.user.logout;

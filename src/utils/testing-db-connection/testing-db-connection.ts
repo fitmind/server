@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 
 export const setTestingDbConnection = async () => {
   await mongoose.connect(process.env.MONGO_TESTING_URL as string, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useFindAndModify: false
   });
 };
 
