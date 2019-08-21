@@ -3,7 +3,7 @@ import createApp from '../../../App';
 import UserModel, { UserModelType } from '../user.model';
 import CONFIG from '../../../config/config';
 import request from 'supertest';
-import { UNAUTHORIZED, OK, NOT_FOUND } from 'http-status-codes';
+// import { UNAUTHORIZED, OK, NOT_FOUND } from 'http-status-codes';
 import {
   disconnectTestingDb,
   setTestingDbConnection
@@ -21,10 +21,10 @@ import {
 import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
 import ListingModel, { ListingModelType } from '../../listing/listing.model';
 import BookingModel, { bookingModelType } from '../../bookings/booking.model';
-import { filterUserMe } from '../user-me/user-me';
+// import { filterUserMe } from '../user-me/user-me';
 
 describe('User Dashboard', () => {
-  const URL = CONFIG.routes.user.dashboard;
+  // const URL = CONFIG.routes.user.dashboard;
   const SIGN_UP_URL = CONFIG.routes.user.signUp;
   const LOGIN_URL = CONFIG.routes.user.login;
   const email = 'user_dashboard@testing.com';
@@ -50,15 +50,15 @@ describe('User Dashboard', () => {
       .send(userValidLogin(email));
     cookie = login.header['set-cookie'][0];
     expert = await generateExpertForTesting(expertEmail);
-    console.log('expert');
-    console.log(expert);
+    // console.log('expert');
+    // console.log(expert);
     listing = await generateListingForTesting(expert._id);
-    console.log('listing');
-    console.log(listing);
+    // console.log('listing');
+    // console.log(listing);
     pastBooking = await generateBookingForTesting(generateDateInThePast(1), user._id, listing._id);
     futureBooking = await generateBookingForTesting(generateDateInTheFuture(1), user._id, listing._id);
-    console.log(pastBooking);
-    console.log(futureBooking);
+    // console.log(pastBooking);
+    // console.log(futureBooking);
     await user.bookings.push(futureBooking._id);
     await user.bookings.push(pastBooking._id);
     await user.save();
