@@ -8,6 +8,7 @@ import compression from 'compression';
 import errorHandlerMiddleware from './middleware/error-handler-middleware/error-handler-middleware';
 import healthRouter from './api/health/health.router';
 import userRouter from './api/user/user.router';
+import expertRouter from './api/expert/expert.router';
 
 const createApp = (app: express.Application): express.Application => {
   // app middleware
@@ -35,6 +36,7 @@ const createApp = (app: express.Application): express.Application => {
 
   app.use('/health', healthRouter);
   app.use('/user', userRouter);
+  app.use('/expert', expertRouter);
 
   // // error handler
   app.use(errorHandlerMiddleware);

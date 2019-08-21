@@ -1,26 +1,6 @@
 import * as mongoose from 'mongoose';
 import CONFIG, { ApprovedStatus } from '../../config/config';
-
-interface ExpertInterface {
-  name: string;
-  email: string;
-  description: string;
-  password: string;
-  pictureUrl: string;
-  createdTimeStamp: string;
-  approvedStatus: string;
-  isAnExpertIn: string[];
-  bookings: string[];
-  weeklyAvailability: {
-    monday: string[];
-    tuesday: string[];
-    wednesday: string[];
-    thursday: string[];
-    friday: string[];
-    saturday: string[];
-    sunday: string[];
-  };
-}
+import ExpertInterface from '../../interfaces/expert.interface';
 
 const ExpertSchema = new mongoose.Schema({
   name: String,
