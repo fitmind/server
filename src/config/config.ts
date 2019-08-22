@@ -43,6 +43,13 @@ const CONFIG = {
       me: '/user/me',
       logout: '/user/logout',
       dashboard: '/user/dashboard'
+    },
+    expert: {
+      register: '/expert/register',
+      login: '/expert/login',
+      me: '/expert/me',
+      logout: '/expert/logout',
+      dashboard: '/expert/dashboard'
     }
   },
   emailSource: 'hello.fitmind@gmail.com'

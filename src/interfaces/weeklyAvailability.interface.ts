@@ -1,4 +1,4 @@
-export default interface weeklyAvailability {
+export default interface WeeklyAvailability {
   monday: string[];
   tuesday: string[];
   wednesday: string[];

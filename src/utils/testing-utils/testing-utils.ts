@@ -1,6 +1,5 @@
 import UserModel from '../../api/user/user.model';
 import ExpertModel, { ExpertModelType } from '../../api/expert/expert.model';
-import { expertValidSignUp } from '../expert-testing-utils/expert-testing-utils';
 import ListingModel from '../../api/listing/listing.model';
 import BookingModel, { bookingModelType } from '../../api/bookings/booking.model';
 
@@ -16,6 +15,24 @@ export const userValidSignUp = (email = userTestEmail) => ({
   interestedInExpertiseAreas: ['PERSONAL_COACH']
 });
 
+export const expertValidSignUp = (email = userTestEmail) => ({
+  name: 'Diego',
+  email,
+  description: 'some long string',
+  password: userTestPassword,
+  pictureUrl: 'https://fitmind-dev.s3.eu-west-2.amazonaws.com/mock-images/daniel_photo.png',
+  isAnExpertIn: ['PERSONAL_COACH'],
+  weeklyAvailability: {
+    monday: ['6:00', '6:30'],
+    tuesday: [],
+    wednesday: [],
+    thursday: [],
+    friday: [],
+    saturday: [],
+    sunday: []
+  }
+});
+
 export const userValidLogin = (email = userTestEmail) => ({
   email,
   password: userTestPassword
@@ -23,6 +40,10 @@ export const userValidLogin = (email = userTestEmail) => ({
 
 export const deleteFromDbByEmail = async (email: string) => {
   await UserModel.findOneAndDelete({ email });
+};
+
+export const deleteExpertByEmail = async (email: string) => {
+  await ExpertModel.findOneAndDelete({ email });
 };
 
 export const generateDateInThePast = (days: number): Date => {
