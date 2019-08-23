@@ -30,7 +30,6 @@ describe('User register test', () => {
   describe('User register', () => {
     describe('valid user', () => {
       it('should allow the user to be registered and the password should be encrypted', async done => {
-        // have to delete just in case, otherwise the test becomes flaky
         await deleteFromDbByEmail(email);
         const res = await request(app)
           .post(URL)
