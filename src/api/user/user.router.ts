@@ -15,7 +15,6 @@ const userRouter = express.Router();
 
 userRouter.post('/register', typeValidationMiddleware(userRegisterDto), userRegister);
 userRouter.post('/login', typeValidationMiddleware(userLoginDto), userLogin);
-// expertRouter.get('/dashboard', userAuthMiddleware(userType), userDashboard);
 userRouter.get('/me', userAuthMiddleware(userType), getUserMe);
 userRouter.put('/me', userAuthMiddleware(userType), typeValidationMiddleware(userRegisterDto), updateUserMe);
 userRouter.post('/logout', userAuthMiddleware(userType), userLogout);

@@ -33,6 +33,11 @@ export const expertValidSignUp = (email = userTestEmail) => ({
   }
 });
 
+export const generateExpertLogin = (email = userTestEmail) => ({
+  email,
+  password: userTestPassword
+});
+
 export const userValidLogin = (email = userTestEmail) => ({
   email,
   password: userTestPassword
