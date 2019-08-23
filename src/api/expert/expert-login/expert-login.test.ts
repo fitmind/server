@@ -7,7 +7,7 @@ import {
 import request from 'supertest';
 import CONFIG from '../../../config/config';
 import { OK, UNAUTHORIZED, BAD_REQUEST, NOT_FOUND } from 'http-status-codes';
-import { expertValidSignUp, generateExpertLogin } from '../../../utils/testing-utils/testing-utils';
+import { generateExpertLogin, generateExpertValidSignUp } from '../../../utils/testing-utils/testing-utils';
 import ExpertModel from '../expert.model';
 
 describe('expert login', () => {
@@ -15,7 +15,7 @@ describe('expert login', () => {
   const URL = CONFIG.routes.expert.login;
   const SIGN_URL = CONFIG.routes.expert.register;
   const email = 'expertregister@mail.com';
-  const validSignUp = expertValidSignUp(email);
+  const validSignUp = generateExpertValidSignUp(email);
   const validLogin = generateExpertLogin(email);
 
   beforeAll(async done => {
