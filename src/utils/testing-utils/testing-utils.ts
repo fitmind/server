@@ -45,6 +45,11 @@ export const userValidLogin = (email = userTestEmail) => ({
   password: userTestPassword
 });
 
+export const generateAdminValidLogin = (email = userTestEmail) => ({
+  email,
+  password: userTestPassword
+});
+
 export const deleteFromDbByEmail = async (email: string) => {
   await UserModel.findOneAndDelete({ email });
 };

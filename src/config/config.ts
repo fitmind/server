@@ -29,6 +29,7 @@ const CONFIG = {
   modelNames: {
     expert: 'Expert',
     user: 'User',
+    admin: 'Admin',
     listing: 'Listing',
     booking: 'Booking'
   },
@@ -50,6 +51,13 @@ const CONFIG = {
       me: '/expert/me',
       logout: '/expert/logout',
       dashboard: '/expert/dashboard'
+    },
+    admin: {
+      login: '/user/login',
+      expertsPending: '/expert/pending',
+      expertId: '/expert/:id',
+      listingsPending: '/listing/pending',
+      listingId: '/expert/:id'
     }
   },
   emailSource: 'hello.fitmind@gmail.com'

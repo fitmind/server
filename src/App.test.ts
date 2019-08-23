@@ -11,6 +11,7 @@ import compression from 'compression';
 import healthRouter from './api/health/health.router';
 import expertRouter from './api/expert/expert.router';
 import userRouter from './api/user/user.router';
+import adminRouter from './api/admin/admin.router';
 
 jest.mock('helmet');
 jest.mock('compression');
@@ -49,7 +50,7 @@ describe('testing App', () => {
 
   describe('testing middleware', () => {
     test('should call the exact amount of middleware', () => {
-      expect(spy).toHaveBeenCalledTimes(11);
+      expect(spy).toHaveBeenCalledTimes(12);
     });
     test('should use helmet', () => {
       expect(helmet).toHaveBeenCalledTimes(1);
@@ -83,14 +84,17 @@ describe('testing App', () => {
   });
 
   describe('testing the app calling the right controllers', () => {
-    test('testing health controller gets called', () => {
+    test('testing health router gets called', () => {
       expect(spy).toHaveBeenNthCalledWith(8, '/health', healthRouter);
     });
-    test('testing the user controller gets called', () => {
+    test('testing the user router gets called', () => {
       expect(spy).toHaveBeenNthCalledWith(9, '/user', userRouter);
     });
-    test('testing the user controller gets called', () => {
+    test('testing the expert router gets called', () => {
       expect(spy).toHaveBeenNthCalledWith(10, '/expert', expertRouter);
+    });
+    test('testing the admin router gets called', () => {
+      expect(spy).toHaveBeenNthCalledWith(11, '/admin', adminRouter);
     });
   });
 

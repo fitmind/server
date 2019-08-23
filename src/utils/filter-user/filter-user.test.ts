@@ -1,6 +1,6 @@
 import filterUser from './filter-user';
-import FilteredUserInterface from '../../interfaces/filtered-user';
 import UserInterface from '../../interfaces/user-interface';
+import FilteredUserInterface from '../../interfaces/filtered-user';
 
 describe('filter user function', () => {
   it('should return the user with only the filtered props', () => {

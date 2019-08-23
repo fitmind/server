@@ -9,6 +9,7 @@ import errorHandlerMiddleware from './middleware/error-handler-middleware/error-
 import healthRouter from './api/health/health.router';
 import userRouter from './api/user/user.router';
 import expertRouter from './api/expert/expert.router';
+import adminRouter from './api/admin/admin.router';
 
 const createApp = (app: express.Application): express.Application => {
   // app middleware
@@ -37,6 +38,7 @@ const createApp = (app: express.Application): express.Application => {
   app.use('/health', healthRouter);
   app.use('/user', userRouter);
   app.use('/expert', expertRouter);
+  app.use('/admin', adminRouter);
 
   // // error handler
   app.use(errorHandlerMiddleware);
