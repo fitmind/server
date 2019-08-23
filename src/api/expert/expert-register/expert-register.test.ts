@@ -9,14 +9,14 @@ import { CONFLICT, CREATED, BAD_REQUEST } from 'http-status-codes';
 import * as bcrypt from 'bcrypt';
 import CONFIG from '../../../config/config';
 import ExpertModel, { ExpertModelType } from '../expert.model';
-import { deleteExpertByEmail, expertValidSignUp } from '../../../utils/testing-utils/testing-utils';
+import { deleteExpertByEmail, generateExpertValidSignUp } from '../../../utils/testing-utils/testing-utils';
 
 const URL = CONFIG.routes.expert.register;
 
 describe('expert register test', () => {
   let app: express.Application;
   const email = 'expert1212register@gmail.com';
-  const validSignUp = expertValidSignUp(email);
+  const validSignUp = generateExpertValidSignUp(email);
 
   beforeAll(async () => {
     app = createApp(express());

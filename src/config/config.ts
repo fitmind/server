@@ -23,7 +23,7 @@ const CONFIG = {
   authTokenExpiryDate: 10000000000000,
   cookies: {
     user: 'X-Fitmind-Authorization',
-    expert: 'X-Fitmind--Expert-Authorization',
+    expert: 'X-Fitmind-Expert-Authorization',
     admin: 'X-Fitmind-Admin-Authorization'
   },
   modelNames: {
