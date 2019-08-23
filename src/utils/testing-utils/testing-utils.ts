@@ -15,7 +15,7 @@ export const userValidSignUp = (email = userTestEmail) => ({
   interestedInExpertiseAreas: ['PERSONAL_COACH']
 });
 
-export const expertValidSignUp = (email = userTestEmail) => ({
+export const generateExpertValidSignUp = (email = userTestEmail) => ({
   name: 'Diego',
   email,
   description: 'some long string',
@@ -72,7 +72,7 @@ export const generateDateInTheFuture = (days: number): Date => {
 };
 
 export const generateExpertForTesting = async (email: string) => {
-  return (await ExpertModel.create(expertValidSignUp(email))) as ExpertModelType;
+  return (await ExpertModel.create(generateExpertValidSignUp(email))) as ExpertModelType;
 };
 
 export const generateListingForTesting = async (expertId: string) => {

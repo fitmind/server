@@ -20,7 +20,7 @@ const expertLogin = async ({ body: { email, password } }: Request, res: Response
         });
       } else {
         const token = createUserToken(expert._id);
-        res.cookie(CONFIG.cookies.user, token, {
+        res.cookie(CONFIG.cookies.expert, token, {
           maxAge: CONFIG.authTokenExpiryDate,
           httpOnly: true
         });
