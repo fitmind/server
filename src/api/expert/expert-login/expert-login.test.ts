@@ -7,7 +7,11 @@ import {
 import request from 'supertest';
 import CONFIG from '../../../config/config';
 import { OK, UNAUTHORIZED, BAD_REQUEST, NOT_FOUND } from 'http-status-codes';
-import { generateExpertLogin, generateExpertValidSignUp } from '../../../utils/testing-utils/testing-utils';
+import {
+  deleteExpertByEmail,
+  generateExpertLogin,
+  generateExpertValidSignUp
+} from '../../../utils/testing-utils/testing-utils';
 import ExpertModel from '../expert.model';
 
 describe('expert login', () => {
@@ -28,7 +32,7 @@ describe('expert login', () => {
 
   afterAll(async done => {
     await disconnectTestingDb();
-    await ExpertModel.remove({ email });
+    await deleteExpertByEmail(email);
     done();
   });
 
