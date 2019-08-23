@@ -13,7 +13,6 @@ const userRouter = express.Router();
 
 userRouter.post('/register', typeValidationMiddleware(userRegisterDto), userRegister);
 userRouter.post('/login', typeValidationMiddleware(userLoginDto), userLogin);
-// expertRouter.get('/dashboard', userAuthMiddleware(userType), userDashboard);
 userRouter.get('/me', userAuthMiddleware, getUserMe);
 userRouter.put('/me', userAuthMiddleware, typeValidationMiddleware(userRegisterDto), updateUserMe);
 userRouter.post('/logout', userAuthMiddleware, userLogout);
