@@ -6,14 +6,15 @@ import { UserModelType } from '../user.model';
 
 interface FilteredUser {
   _id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   description?: string;
   interestedInExpertiseAreas: string[];
 }
 
 export const filterUserMe = (user: UserModelType): FilteredUser =>
-  pick(['_id', 'name', 'email', 'description', 'interestedInExpertiseAreas'], user);
+  pick(['_id', 'firstName', 'lastName', 'email', 'description', 'interestedInExpertiseAreas'], user);
 
 const getUserMe = (req: RequestWithUser, res: Response) => {
   res.status(OK).json(filterUserMe(req.user as UserModelType));

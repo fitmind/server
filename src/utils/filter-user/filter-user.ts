@@ -4,7 +4,16 @@ import UserInterface from '../../interfaces/user-interface';
 
 const filterUser = (user: UserInterface): FilteredUserInterface => {
   return pick(
-    ['_id', 'email', 'name', 'description', 'interestedInExpertiseAreas', 'createdTimeStamp', 'pictureUrl'],
+    [
+      '_id',
+      'email',
+      'firstName',
+      'lastName',
+      'description',
+      'interestedInExpertiseAreas',
+      'createdTimeStamp',
+      'pictureUrl'
+    ],
     user
   );
 };
