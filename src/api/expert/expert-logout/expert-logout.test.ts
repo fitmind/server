@@ -8,7 +8,7 @@ import {
   setTestingDbConnection
 } from '../../../utils/testing-db-connection/testing-db-connection';
 import {
-  deleteFromDbByEmail,
+  deleteExpertByEmail,
   generateExpertLogin,
   generateExpertValidSignUp
 } from '../../../utils/testing-utils/testing-utils';
@@ -30,7 +30,7 @@ describe('expert Logout', () => {
       .send(validSignUp);
   });
   afterAll(async () => {
-    await deleteFromDbByEmail(email);
+    await deleteExpertByEmail(email);
     await disconnectTestingDb();
   });
 

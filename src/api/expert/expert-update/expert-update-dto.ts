@@ -1,8 +1,8 @@
-import { IsEmail, IsString, IsUrl, Length, Validate } from 'class-validator';
+import { IsString, IsUrl, Length, Validate } from 'class-validator';
 import { ValidExpertise } from '../../../utils/validate-expertise/validate-expertise';
 import { ValidAvailability } from '../../../utils/validate-availability/validate-availability';
 
-class expertRegisterDto {
+class expertUpdateDto {
   @IsString()
   @Length(2, 20)
   public firstName: string;
@@ -10,13 +10,6 @@ class expertRegisterDto {
   @IsString()
   @Length(2, 20)
   public lastName: string;
-
-  @IsEmail()
-  public email: string;
-
-  @IsString()
-  @Length(6, 25)
-  public password: string;
 
   @IsString()
   @Length(0, 300)
@@ -41,4 +34,4 @@ class expertRegisterDto {
   };
 }
 
-export default expertRegisterDto;
+export default expertUpdateDto;

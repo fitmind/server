@@ -8,6 +8,7 @@ export const userTestPassword = 'ValidPassword123!';
 
 export const userValidSignUp = (email = userTestEmail) => ({
   name: 'Diego',
+  lastName: 'Romero',
   email,
   description: 'some long string',
   password: userTestPassword,
@@ -16,7 +17,8 @@ export const userValidSignUp = (email = userTestEmail) => ({
 });
 
 export const generateExpertValidSignUp = (email = userTestEmail) => ({
-  name: 'Diego',
+  firstName: 'Diego',
+  lastName: 'Romero',
   email,
   description: 'some long string',
   password: userTestPassword,

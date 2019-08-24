@@ -3,7 +3,8 @@ import CONFIG, { ApprovedStatus } from '../../config/config';
 import ExpertInterface from '../../interfaces/expert.interface';
 
 const ExpertSchema = new mongoose.Schema({
-  name: String,
+  firstName: String,
+  lastName: String,
   email: String,
   description: String,
   password: String,

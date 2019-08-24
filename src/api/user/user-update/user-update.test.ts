@@ -26,8 +26,17 @@ describe('User update', () => {
   const validLogin = userValidLogin(email);
   let login = null;
   let cookie: string;
+  const newDescription = 'NEW UPDATED DESCRIPTION';
+  const validUpdate = {
+    name: 'Diego',
+    email,
+    description: newDescription,
+    password: userTestPassword,
+    pictureUrl: 'https://fitmind-dev.s3.eu-west-2.amazonaws.com/mock-images/daniel_photo.png',
+    interestedInExpertiseAreas: ['PERSONAL_COACH']
+  };
 
-  beforeAll(async () => {
+  beforeAll(async done => {
     app = createApp(express());
     await setTestingDbConnection();
     await request(app)
@@ -37,25 +46,19 @@ describe('User update', () => {
       .post(LOGIN_URL)
       .send(validLogin);
     cookie = login.header['set-cookie'][0];
+    done();
   });
 
-  afterAll(async () => {
+  afterAll(async done => {
     await deleteFromDbByEmail(email);
     await disconnectTestingDb();
+    done();
   });
 
   describe('user update', () => {
     describe('valid user', () => {
-      it('should update the user in the database', async () => {
+      it('should update the user in the database', async done => {
         const newDescription = 'NEW UPDATED DESCRIPTION';
-        const validUpdate = {
-          name: 'Diego',
-          email,
-          description: newDescription,
-          password: userTestPassword,
-          pictureUrl: 'https://fitmind-dev.s3.eu-west-2.amazonaws.com/mock-images/daniel_photo.png',
-          interestedInExpertiseAreas: ['PERSONAL_COACH']
-        };
         const res = await request(app)
           .put(URL)
           .set('Cookie', [cookie])
@@ -63,25 +66,19 @@ describe('User update', () => {
         const user = (await UserModel.findOne({ email }).exec()) as UserModelType;
         expect(res.status).toEqual(OK);
         expect(user.description).toBe(newDescription);
+        done();
       });
     });
     describe('invalid data', () => {
-      const validUpdate = {
-        name: 'Diego',
-        email,
-        description: 'newDescription',
-        password: userTestPassword,
-        pictureUrl: 'https://fitmind-dev.s3.eu-west-2.amazonaws.com/mock-images/daniel_photo.png',
-        interestedInExpertiseAreas: ['PERSONAL_COACH']
-      };
-      it('should fail if the cookie is not in the request', async () => {
+      it('should fail if the cookie is not in the request', async done => {
         const res = await request(app)
           .put(URL)
           .set('Cookie', ['bad cookie'])
           .send(validUpdate);
         expect(res.status).toEqual(UNAUTHORIZED);
+        done();
       });
-      it('should fail if the data is not acceptable', async () => {
+      it('should fail if the data is not acceptable', async done => {
         const inValidUpdate = {
           name: 'Diego',
           email,
@@ -95,6 +92,7 @@ describe('User update', () => {
           .set('Cookie', [cookie])
           .send(inValidUpdate);
         expect(res.status).toEqual(BAD_REQUEST);
+        done();
       });
     });
   });

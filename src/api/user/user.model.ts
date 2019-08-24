@@ -3,7 +3,8 @@ import UserInterface from '../../interfaces/user-interface';
 import CONFIG from '../../config/config';
 
 const UserSchema = new mongoose.Schema({
-  name: String,
+  firstName: String,
+  LastName: String,
   email: String,
   description: String,
   password: String,

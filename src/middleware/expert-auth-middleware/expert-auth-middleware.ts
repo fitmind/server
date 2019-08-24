@@ -4,21 +4,21 @@ import * as jwt from 'jsonwebtoken';
 import HttpException from '../../utils/http-exception/http-exception';
 import { UNAUTHORIZED, NOT_FOUND } from 'http-status-codes';
 import jwtInterface from '../../interfaces/jwt.interface';
-import UserModel from '../../api/user/user.model';
-import RequestWithUser from '../../interfaces/request-with-user.interface';
+import RequestWithExpert from '../../interfaces/request-with-expert.interface';
+import ExpertModel from '../../api/expert/expert.model';
 
-async function userAuthMiddleware(req: RequestWithUser, res: Response, next: NextFunction) {
+async function expertAuthMiddleware(req: RequestWithExpert, res: Response, next: NextFunction) {
   const cookies = req.cookies;
-  const token = cookies[CONFIG.cookies.user];
+  const token = cookies[CONFIG.cookies.expert];
   if (!cookies || !token) {
     next(new HttpException(UNAUTHORIZED, 'Cookie is invalid'));
   } else {
     const secret = process.env.JWT_SECRET as string;
     try {
       const verificationResponse = jwt.verify(token, secret) as jwtInterface;
-      const user = await UserModel.findById(verificationResponse.id);
-      if (user) {
-        req.user = user;
+      const expert = await ExpertModel.findById(verificationResponse.id);
+      if (expert) {
+        req.expert = expert;
         next();
       } else {
         next(new HttpException(NOT_FOUND, 'User does not exists'));
@@ -29,4 +29,4 @@ async function userAuthMiddleware(req: RequestWithUser, res: Response, next: Nex
   }
 }
 
-export default userAuthMiddleware;
+export default expertAuthMiddleware;
