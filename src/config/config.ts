@@ -53,7 +53,7 @@ const CONFIG = {
       dashboard: '/expert/dashboard'
     },
     admin: {
-      login: '/user/login',
+      login: '/admin/login',
       expertsPending: '/expert/pending',
       expertId: '/expert/:id',
       listingsPending: '/listing/pending',
