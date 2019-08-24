@@ -8,6 +8,7 @@ import expertLogout from './expert-logout/expert-logout';
 import updateExpert from './expert-update/expert-update';
 import expertUpdateDto from './expert-update/expert-update-dto';
 import expertAuthMiddleware from '../../middleware/expert-auth-middleware/expert-auth-middleware';
+import getExpertMe from './expert-me/expert-me';
 
 const expertRouter = express.Router();
 
@@ -15,5 +16,6 @@ expertRouter.post('/register', typeValidationMiddleware(expertRegisterDto), expe
 expertRouter.post('/login', typeValidationMiddleware(expertLoginDto), expertLogin);
 expertRouter.post('/logout', expertLogout);
 expertRouter.put('/me', expertAuthMiddleware, typeValidationMiddleware(expertUpdateDto), updateExpert);
+expertRouter.get('/me', expertAuthMiddleware, getExpertMe);
 
 export default expertRouter;

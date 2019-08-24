@@ -9,7 +9,7 @@ export default interface ExpertInterface {
   pictureUrl: string;
   createdTimeStamp: string;
   approvedStatus: string;
-  isAnExpertIn: string[];
   bookings: string[];
+  isAnExpertIn: string[];
   weeklyAvailability: weeklyAvailability;
 }
