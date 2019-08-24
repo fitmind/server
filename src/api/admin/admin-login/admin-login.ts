@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { NOT_FOUND, UNAUTHORIZED, CREATED, OK } from 'http-status-codes';
+import { NOT_FOUND, UNAUTHORIZED, OK } from 'http-status-codes';
 import HttpException from '../../../utils/http-exception/http-exception';
 import * as bcrypt from 'bcrypt';
 import createUserToken from '../../../utils/create-token/create-token';
@@ -13,8 +13,6 @@ const adminLogin = async (req: Request, res: Response, next: NextFunction) => {
         next(new HttpException(NOT_FOUND, 'Email not found'));
       });
     } else {
-      console.log(req.body.password);
-      console.log(adminUser.password);
       const isPasswordMatching = await bcrypt.compare(req.body.password, adminUser.password);
       if (!isPasswordMatching) {
         setImmediate(() => {

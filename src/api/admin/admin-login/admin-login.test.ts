@@ -27,7 +27,6 @@ describe('Admin Login', () => {
     app = createApp(express());
     await setTestingDbConnection();
     adminUser = await createAdminByEmail(email, password);
-    console.log(adminUser);
     done();
   });
   afterAll(async () => {
@@ -39,8 +38,6 @@ describe('Admin Login', () => {
       const res = await request(app)
         .post(URL)
         .send(validLogin);
-      console.log(res.header);
-      console.log(res.status);
       const cookie = res.header['set-cookie'][0];
       expect(res.status).toBe(OK);
       expect(cookie.includes(CONFIG.cookies.admin)).toBeTruthy();
