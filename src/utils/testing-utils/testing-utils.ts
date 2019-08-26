@@ -49,7 +49,7 @@ export const userValidLogin = (email = userTestEmail) => ({
 
 export const generateAdminValidLogin = (email: string = userTestEmail, password: string = userTestPassword) => ({
   email,
-  password: password
+  password
 });
 
 export const deleteFromDbByEmail = async (email: string) => {

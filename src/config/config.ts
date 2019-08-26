@@ -56,7 +56,7 @@ const CONFIG = {
       login: '/admin/login',
       logout: '/admin/logout',
       expertsPending: '/admin/expert/pending',
-      expertId: 'admin/expert/:id',
+      expertId: (id: string) => `/admin/expert/${id}`,
       listingsPending: 'admin/listing/pending',
       listingId: 'admin/expert/:id'
     }
