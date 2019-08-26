@@ -7,18 +7,13 @@ import {
   disconnectTestingDb,
   setTestingDbConnection
 } from '../../../utils/testing-db-connection/testing-db-connection';
-import {
-  createAdminByEmail,
-  deleteAdminByEmail,
-  generateAdminValidLogin,
-  userTestPassword
-} from '../../../utils/testing-utils/testing-utils';
+import { createAdmin, deleteAdminByEmail, generateAdminValidLogin } from '../../../utils/testing-utils/testing-utils';
 import ExpertModel from '../../expert/expert.model';
 
 describe('Admin Login', () => {
   const URL = CONFIG.routes.admin.login;
   const email = 'admin.login@testing.com';
-  const password = userTestPassword;
+  const password = 'Testing123!';
   const validLogin = generateAdminValidLogin(email, password);
   let app: express.Application;
   let adminUser;
@@ -26,12 +21,13 @@ describe('Admin Login', () => {
   beforeAll(async done => {
     app = createApp(express());
     await setTestingDbConnection();
-    adminUser = await createAdminByEmail(email, password);
+    adminUser = await createAdmin(email, password);
     done();
   });
-  afterAll(async () => {
+  afterAll(async done => {
     await deleteAdminByEmail(email);
     await disconnectTestingDb();
+    done();
   });
   describe('valid request', () => {
     it('should return a 201 along with an authorization cookie', async done => {

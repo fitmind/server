@@ -15,6 +15,6 @@ userRouter.post('/register', typeValidationMiddleware(userRegisterDto), userRegi
 userRouter.post('/login', typeValidationMiddleware(userLoginDto), userLogin);
 userRouter.get('/me', userAuthMiddleware, getUserMe);
 userRouter.put('/me', userAuthMiddleware, typeValidationMiddleware(userRegisterDto), updateUserMe);
-userRouter.post('/logout', userAuthMiddleware, userLogout);
+userRouter.post('/logout', userLogout);
 
 export default userRouter;
