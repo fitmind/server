@@ -55,10 +55,10 @@ const CONFIG = {
     admin: {
       login: '/admin/login',
       logout: '/admin/logout',
-      expertsPending: '/expert/pending',
-      expertId: '/expert/:id',
-      listingsPending: '/listing/pending',
-      listingId: '/expert/:id'
+      expertsPending: '/admin/expert/pending',
+      expertId: 'admin/expert/:id',
+      listingsPending: 'admin/listing/pending',
+      listingId: 'admin/expert/:id'
     }
   },
   emailSource: 'hello.fitmind@gmail.com'
