@@ -4,6 +4,9 @@ info:
   description: Common API for Fitmind
   version: "1.0.0"
 servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Diego-Romero/Fitmind/1.0.0
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/Diego-Romero/test/1.0.0
   - url: http://api.example.com/v1
@@ -38,7 +41,7 @@ paths:
             schema:
               $ref: '#/components/schemas/UserCreationData'
       description: customer users
-      tags: 
+      tags:
         - User
       responses:
         '201':
@@ -49,6 +52,21 @@ paths:
                 $ref: '#/components/schemas/UserReturned'
         400:
           description: The provided information is invalid, user with that email already exists or insufficient data received in order to create the user
+        500:
+          description: Internal Server Error
+  /user/logout:
+    post:
+      summary: Removes the user auth cookie token
+
+      description: Returns an authentication token
+      tags:
+        - User
+      responses:
+        '200':
+          description: >
+            Successfully removed cookie.
+        400:
+          description: The provided information is invalid or insufficient
         500:
           description: Internal Server Error
   /user/login:
@@ -62,16 +80,16 @@ paths:
             schema:
               $ref: '#/components/schemas/UserLoginData'
       description: Returns an authentication token
-      tags: 
+      tags:
         - User
       responses:
         '200':
           description: >
             Successfully authenticated.
             The session ID is returned in a cookie named `USERID`. You need to include this cookie in subsequent requests.
-          headers: 
+          headers:
             Set-Cookie:
-              schema: 
+              schema:
                 type: string
                 example: USERID=abcde12345; Path=/; HttpOnly
         400:
@@ -81,16 +99,38 @@ paths:
         500:
           description: Internal Server Error
   /user/me:
-    get: 
+    get:
       security:
         - userCookieAuth: []
       summary: gets a user by ID
       description: customer users
-      tags: 
+      tags:
         - User
       responses:
         '200':
           description: Object containing the information of the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserReturned"
+        '401':
+          description: Unauthorised to fetch this user, the cookie authentication did not succeed
+        '404':
+          description: It was not possible to find a user by that ID. This should be quite a rare case as a token would have to be generated and then the user deleted afterwards.
+        '500':
+          description: Internal Server Error
+    put:
+      summary: updates a user by ID
+      security:
+        - userCookieAuth: []
+      description: customer users
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/schemas/UserCreationData'
+      responses:
+        200:
+          description: updated user returned
           content:
             application/json:
               schema:
@@ -101,53 +141,31 @@ paths:
           description: It was not possible to find a user by that ID
         500:
           description: Internal Server Error
-    put: 
-      summary: updates a user by ID
-      security:
-        - userCookieAuth: []
-      description: customer users
-      tags: 
-        - User
-      parameters:
-      - $ref: '#/components/schemas/UserCreationData'
-      responses:
-        200:
-          description: updated user returned
-          content:
-            application/json:
-              schema: 
-                $ref: "#/components/schemas/UserReturned"
-        400:
-          description: The provided user ID is not valid
-        404:
-          description: It was not possible to find a user by that ID
-        500:
-          description: Internal Server Error
-    delete: 
-      summary: deletes a user by ID
-      security:
-        - userCookieAuth: []
-      description: customer users deletion
-      tags: 
-        - User
-      parameters:
-      - $ref: '#/components/parameters/userId'
-      responses:
-        204:
-          description: User deleted successfully
-        400:
-          description: The provided user ID is not valid
-        404:
-          description: It was not possible to find a user by that ID
-        500:
-          description: Internal Server Error
+    # delete:
+    #   summary: deletes a user by ID
+    #   security:
+    #     - userCookieAuth: []
+    #   description: customer users deletion
+    #   tags:
+    #     - User
+    #   parameters:
+    #   - $ref: '#/components/parameters/userId'
+    #   responses:
+    #     204:
+    #       description: User deleted successfully
+    #     400:
+    #       description: The provided user ID is not valid
+    #     404:
+    #       description: It was not possible to find a user by that ID
+    #     500:
+    #       description: Internal Server Error
   /user/{userId}:
-    get: 
+    get:
       summary: gets a user by ID, publically accessible
-      tags: 
+      tags:
         - User
       parameters:
-      - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/userId'
       responses:
         '200':
           description: Object containing the information of the user
@@ -161,14 +179,34 @@ paths:
           description: It was not possible to find a user by that ID
         500:
           description: Internal Server Error
-          
+  /user/dashboard:
+    get:
+      security:
+        - userCookieAuth: []
+      summary: gets the customer dashboard
+      description: customer users
+      tags:
+        - User
+      responses:
+        '200':
+          description: Object containing the dashbaord data of the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerDashboard"
+        '401':
+          description: Unauthorised to fetch this user, the cookie authentication did not succeed
+        '404':
+          description: It was not possible to find a user by that ID. This should be quite a rare case as a token would have to be generated and then the user deleted afterwards.
+        '500':
+          description: Internal Server Error
   /expert/register:
     post:
       summary: creates a new expert
-      parameters: 
-      - $ref: '#/components/schemas/ExpertCreationData'
+      parameters:
+        - $ref: '#/components/schemas/ExpertCreationData'
       description: expert users register
-      tags: 
+      tags:
         - Expert
       responses:
         '201':
@@ -184,19 +222,19 @@ paths:
   /expert/login:
     post:
       summary: logins an expert user by returning an authentication token
-      parameters: 
-      - $ref: '#/components/schemas/ExpertLoginData'
+      parameters:
+        - $ref: '#/components/schemas/ExpertLoginData'
       description: Returns an authentication token
-      tags: 
+      tags:
         - Expert
       responses:
         '200':
           description: >
             Successfully authenticated.
             The session ID is returned in a cookie named `USERID`. You need to include this cookie in subsequent requests.
-          headers: 
+          headers:
             Set-Cookie:
-              schema: 
+              schema:
                 type: string
                 example: EXPERTID=abcde12345; Path=/; HttpOnly
         400:
@@ -206,71 +244,71 @@ paths:
         500:
           description: Internal Server Error
   /expert/me:
-      get:
-        summary: gets a expert by ID using the cookie provided
-        description: expert users
-        security:
+    get:
+      summary: gets a expert by ID using the cookie provided
+      description: expert users
+      security:
         - expertCookieAuth: []
-        tags: 
-          - Expert
-        responses:
-          '200':
-            description: Object containing the information of the user
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/ExpertReturned"
-          400:
-            description: The provided expert ID is not valid
-          404:
-            description: It was not possible to find a expert by that ID
-          500:
-            description: Internal Server Error
-      put: 
-        summary: updates a exert user by ID
-        security:
+      tags:
+        - Expert
+      responses:
+        '200':
+          description: Object containing the information of the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExpertReturned"
+        400:
+          description: The provided expert ID is not valid
+        404:
+          description: It was not possible to find a expert by that ID
+        500:
+          description: Internal Server Error
+    put:
+      summary: updates a exert user by ID
+      security:
         - expertCookieAuth: []
-        description: customer users
-        tags: 
-          - Expert
-        parameters:
-        - $ref: '#/components/schemas/ExpertCreationData'
-        responses:
-          200:
-            description: updated user returned
-            content:
-              application/json:
-                schema: 
-                  $ref: "#/components/schemas/ExpertReturned"
-          400:
-            description: The provided user ID is not valid
-          404:
-            description: It was not possible to find a user by that ID
-          500:
-            description: Internal Server Error
-      delete: 
-        summary: deletes a expert user by ID
-        security:
-        - expertCookieAuth: []
-        description: customer users deletion
-        tags: 
-          - Expert
-        responses:
-          204:
-            description: User deleted successfully
-          400:
-            description: The provided user ID is not valid
-          404:
-            description: It was not possible to find a user by that ID
-          500:
-            description: Internal Server Error
-  /expert/{expertId}:
-    get: 
-      summary: gets a user by ID, publically accessible
-      tags: 
+      description: customer users
+      tags:
         - Expert
       parameters:
-      - $ref: '#/components/parameters/expertId'
+        - $ref: '#/components/schemas/ExpertCreationData'
+      responses:
+        200:
+          description: updated user returned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExpertReturned"
+        400:
+          description: The provided user ID is not valid
+        404:
+          description: It was not possible to find a user by that ID
+        500:
+          description: Internal Server Error
+    delete:
+      summary: deletes a expert user by ID
+      security:
+        - expertCookieAuth: []
+      description: customer users deletion
+      tags:
+        - Expert
+      responses:
+        204:
+          description: User deleted successfully
+        400:
+          description: The provided user ID is not valid
+        404:
+          description: It was not possible to find a user by that ID
+        500:
+          description: Internal Server Error
+  /expert/{expertId}:
+    get:
+      summary: gets a user by ID, publically accessible
+      tags:
+        - Expert
+      parameters:
+        - $ref: '#/components/parameters/expertId'
       responses:
         '200':
           description: Object containing the information of the user
@@ -284,8 +322,8 @@ paths:
           description: It was not possible to find a user by that ID
         500:
           description: Internal Server Error
-          
-  
+
+
   /admin/login:
     post:
       summary: logins a admin user by returning an authentication token
@@ -297,16 +335,16 @@ paths:
             schema:
               $ref: '#/components/schemas/AdminLoginData'
       description: Returns an authentication token
-      tags: 
+      tags:
         - Admin
       responses:
         '200':
           description: >
             Successfully authenticated.
             The session ID is returned in a cookie named `ADMINID`. You need to include this cookie in subsequent requests.
-          headers: 
+          headers:
             Set-Cookie:
-              schema: 
+              schema:
                 type: string
                 example: ADMINID=abcde12345; Path=/; HttpOnly
         400:
@@ -315,14 +353,28 @@ paths:
           description: A user with that email could not be found
         500:
           description: Internal Server Error
-          
-  /admin/experts/pending:
-    get: 
-      summary: gets all experts with a pending approval status - requires admin cookie token 
+  /admin/logout:
+    post:
+      summary: Removes the admin auth cookie token
+
+      description: Returns an authentication token
+      tags:
+        - Admin
+      responses:
+        '200':
+          description: >
+            Successfully removed cookie.
+        400:
+          description: The provided information is invalid or insufficient
+        500:
+          description: Internal Server Error
+  /admin/expert/pending:
+    get:
+      summary: gets all experts with a pending approval status - requires admin cookie token
       security:
         - adminCookieAuth: []
       description: all pending expert users admin retrieval
-      tags: 
+      tags:
         - Admin
       responses:
         200:
@@ -335,15 +387,15 @@ paths:
           description: token provided does not match an admin user
         500:
           description: Internal Server Error
-  /admin/experts/{expertId}:
-    get: 
-      summary: gets a expert by ID - requires admin cookie token 
+  /admin/expert/{expertId}:
+    get:
+      summary: gets a expert by ID - requires admin cookie token
       description: expert users admin retrieval
       parameters:
-      - $ref: '#/components/parameters/expertId'
+        - $ref: '#/components/parameters/expertId'
       security:
         - adminCookieAuth: []
-      tags: 
+      tags:
         - Admin
       responses:
         200:
@@ -358,13 +410,13 @@ paths:
           description: It was not possible to find a expert by that ID
         500:
           description: Internal Server Error
-  /admin/listings/pending:
-    get: 
-      summary: gets all listings with a pending approval status - requires admin cookie token 
+  /admin/listing/pending:
+    get:
+      summary: gets all listings with a pending approval status - requires admin cookie token
       security:
         - adminCookieAuth: []
       description: all pending listings users admin retrieval
-      tags: 
+      tags:
         - Admin
       responses:
         200:
@@ -377,15 +429,15 @@ paths:
           description: token provided does not match an admin user
         500:
           description: Internal Server Error
-  /admin/listings/{listingId}:
-    get: 
-      summary: gets a listing by ID - requires admin cookie token 
+  /admin/listing/{listingId}:
+    get:
+      summary: gets a listing by ID - requires admin cookie token
       description: listing admin retrieval
       parameters:
-      - $ref: '#/components/parameters/listingId'
+        - $ref: '#/components/parameters/listingId'
       security:
         - adminCookieAuth: []
-      tags: 
+      tags:
         - Admin
       responses:
         200:
@@ -400,7 +452,7 @@ paths:
           description: It was not possible to find a expert by that ID
         500:
           description: Internal Server Error
-  
+
   /listings/new:
     post:
       summary: creates a new listing
@@ -430,16 +482,16 @@ paths:
       summary: retrieves a listing - this will be a filtered listing and it can only be an approved listing
       description: retrieves a listing - this will be a filtered listing and it can only be an approved listing
       parameters:
-      - $ref: '#/components/parameters/listingId'
+        - $ref: '#/components/parameters/listingId'
       tags:
         - Listing
       responses:
         201:
-            description: Object containing a filtered listing
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/ListingReturnedFiltered"
+          description: Object containing a filtered listing
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListingReturnedFiltered"
         404:
           description: Listing ID could not be found
         500:
@@ -450,7 +502,7 @@ paths:
       tags:
         - Listing
       parameters:
-      - $ref: '#/components/parameters/listingId'
+        - $ref: '#/components/parameters/listingId'
       responses:
         200:
           description: Listing deleted successfully
@@ -464,7 +516,7 @@ paths:
       summary: updates a listing
       description: listings updating - the listing will have to belong to the expertId in the cookie
       parameters:
-      - $ref: '#/components/parameters/listingId'
+        - $ref: '#/components/parameters/listingId'
       tags:
         - Listing
       responses:
@@ -481,16 +533,16 @@ paths:
       summary: retrieves all the listings from certain expertise only
       description: retrieves an array of listings
       parameters:
-      - $ref: '#/components/parameters/expertise'
+        - $ref: '#/components/parameters/expertise'
       tags:
         - Listing
       responses:
         201:
-            description: Array containing the listings by expertise
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/ListingsArray"
+          description: Array containing the listings by expertise
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListingsArray"
         404:
           description: Listing ID could not be found
         500:
@@ -503,11 +555,11 @@ paths:
         - Listing
       responses:
         201:
-            description: Array containing the listings
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/ListingsArray"
+          description: Array containing the listings
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListingsArray"
         500:
           description: Internal Server Error
   /bookings/new:
@@ -542,7 +594,7 @@ paths:
     get:
       summary: gets future availability for bookings
       parameters:
-      - $ref: '#/components/parameters/listingId'
+        - $ref: '#/components/parameters/listingId'
       description: booking availability retrieval
       tags:
         - Booking
@@ -566,16 +618,16 @@ paths:
       security:
         - userCookieAuth: []
       parameters:
-      - $ref: '#/components/parameters/bookingId'
+        - $ref: '#/components/parameters/bookingId'
       tags:
         - Booking
       responses:
         201:
-            description: Object containing the booking
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/bookingReturned"
+          description: Object containing the booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/bookingReturned"
         404:
           description: booking ID could not be found
         500:
@@ -588,7 +640,7 @@ paths:
       tags:
         - Booking
       parameters:
-      - $ref: '#/components/parameters/bookingId'
+        - $ref: '#/components/parameters/bookingId'
       responses:
         200:
           description: booking deleted successfully
@@ -601,7 +653,7 @@ paths:
     patch:
       summary: updates the booking via the user side and not the expert side as it requires the cookie
       parameters:
-      - $ref: '#/components/parameters/bookingId'
+        - $ref: '#/components/parameters/bookingId'
       security:
         - userCookieAuth: []
       tags:
@@ -622,16 +674,16 @@ paths:
       security:
         - expertCookieAuth: []
       parameters:
-      - $ref: '#/components/parameters/bookingId'
+        - $ref: '#/components/parameters/bookingId'
       tags:
         - Booking
       responses:
         201:
-            description: Object containing the booking
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/bookingReturned"
+          description: Object containing the booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/bookingReturned"
         404:
           description: booking ID could not be found
         500:
@@ -644,7 +696,7 @@ paths:
       tags:
         - Booking
       parameters:
-      - $ref: '#/components/parameters/bookingId'
+        - $ref: '#/components/parameters/bookingId'
       responses:
         200:
           description: booking deleted successfully
@@ -657,7 +709,7 @@ paths:
     patch:
       summary: updates the booking via the expert side
       parameters:
-      - $ref: '#/components/parameters/bookingId'
+        - $ref: '#/components/parameters/bookingId'
       security:
         - expertCookieAuth: []
       tags:
@@ -678,18 +730,22 @@ components:
       type: string
       minLength: 11
       maxLength: 11
+    Rating:
+      type: integer
+      minimum: 0
+      maximum: 5
+      default: 0
     Health:
       properties:
         message:
-            type: string
+          type: string
     Approved:
       type: string
       description: Status of approval
       enum:
-          - APPROVED
-          - PENDING
-          - DENIED
-          - PENDING
+        - APPROVED
+        - PENDING
+        - DENIED
     ExpertiseInterests:
       type: array
       description: All the possible areas of expertise interested in
@@ -699,24 +755,27 @@ components:
       type: string
       description: Possible expertise options available
       enum:
-          - PERSONAL_COACH
-          - YOGA_COACH
-          - NUTRITIONIST
-          - LIFE_COACH
+        - PERSONAL_COACH
+        - YOGA_COACH
+        - NUTRITIONIST
+        - LIFE_COACH
 
     # User customer Data
     UserCreationData:
       type: object
       description: creation of new user
       properties:
-        name: 
+        name:
           type: string
-        email: 
+        email:
           format: email
           type: string
         description:
           type: string
-        password: 
+        pictureUrl:
+          type: string
+          format: uri
+        password:
           type: string
           format: password
         interestedInExperiseAreas:
@@ -725,35 +784,42 @@ components:
       type: object
       description: login data for a customer user
       properties:
-        email: 
+        email:
           format: email
           type: string
-        password: 
+        password:
           type: string
           format: password
+    CustomerDashboard:
+      type: object
+      description: Customer dashboard
+      properties:
+        upcomingBookings:
+          $ref: '#/components/schemas/BookingsArray'
+        pastBookings:
+          $ref: '#/components/schemas/BookingsArray'
     UserReturned:
       type: object
       description: Customer user data to be submited when created
       properties:
-        _id: 
+        _id:
           type: string
         name:
           type: string
-        createdAt:
+        createdTimeStamp:
           type: string
           format: date
           description: ISO-8601 formatted date - timestamp for creation
+        pictureUrl:
+          type: string
+          format: uri
         description:
           type: string
-        email: 
+        email:
           type: string
           format: email
         interestedInExperiseAreas:
           $ref: '#/components/schemas/ExpertiseInterests'
-        # upcomingBookings:
-        #   $ref: '#/definitions/BookingsArray'
-        # pastBookings:
-        #   $ref: '#/definitions/BookingsArray'
     UserReturnedFiltered:
       type: object
       description: Customer user data to be submited when created
@@ -766,11 +832,11 @@ components:
           description: ISO-8601 formatted date - timestamp for creation
         description:
           type: string
-        email: 
+        email:
           type: string
         interestedInExperiseAreas:
           $ref: '#/components/schemas/ExpertiseInterests'
-    
+
     # Experts
     ExpertReturned:
       type: object
@@ -789,12 +855,12 @@ components:
           type: string
           format: date
           description: ISO-8601 formatted date - timestamp for creation
-        approved:
+        approvedStatus:
           $ref: '#/components/schemas/Approved'
-        email: 
+        email:
           type: string
           format: email
-        isAnExpertIn: 
+        isAnExpertIn:
           $ref: '#/components/schemas/ExpertiseInterests'
         weeklyAvailability:
           $ref: '#/components/schemas/ExpertWeeklyAvailability'
@@ -815,10 +881,10 @@ components:
           type: string
           format: date
           description: ISO-8601 formatted date - timestamp for creation
-        email: 
+        email:
           type: string
           format: email
-        isAnExpertIn: 
+        isAnExpertIn:
           $ref: '#/components/schemas/ExpertiseInterests'
         weeklyAvailability:
           $ref: '#/components/schemas/ExpertWeeklyAvailability'
@@ -839,10 +905,10 @@ components:
         password:
           type: string
           format: password
-        email: 
+        email:
           type: string
           format: email
-        isAnExpertIn: 
+        isAnExpertIn:
           $ref: '#/components/schemas/ExpertiseInterests'
         weeklyAvailability:
           $ref: '#/components/schemas/ExpertWeeklyAvailability'
@@ -850,20 +916,20 @@ components:
       type: object
       description: expert user login data
       properties:
-        email: 
+        email:
           type: string
           format: email
-        password: 
+        password:
           type: string
           format: password
     AdminLoginData:
       type: object
       description: admin user login data
       properties:
-        email: 
+        email:
           type: string
           format: email
-        password: 
+        password:
           type: string
           format: password
     ListingReturned:
@@ -872,20 +938,22 @@ components:
       properties:
         name:
           type: string
-        listingPictureUrl:
+        PictureUrl:
           type: string
           format: uri
+        price:
+          type: string
         description:
           type: string
-        createdAt:
+        createdTimeStamp:
           type: string
           format: date
           description: ISO-8601 formatted date - timestamp for creation
-        approved:
+        approvedStatus:
           $ref: '#/components/schemas/Approved'
-        createdByExpert: 
+        createdByExpert:
           $ref: "#/components/schemas/ExpertReturned"
-        expertiseArea: 
+        expertiseArea:
           $ref: "#/components/schemas/Expertise"
     ListingReturnedFiltered:
       type: object
@@ -898,13 +966,15 @@ components:
           format: uri
         description:
           type: string
+        price:
+          type: string
         createdAt:
           type: string
           format: date
           description: ISO-8601 formatted date - timestamp for creation
-        createdByExpert: 
+        createdByExpert:
           $ref: "#/components/schemas/ExpertReturned"
-        expertiseArea: 
+        expertiseArea:
           $ref: "#/components/schemas/Expertise"
     ListingCreationData:
       type: object
@@ -919,9 +989,9 @@ components:
           format: uri
         description:
           type: string
-        createdByExpert: 
+        createdByExpert:
           $ref: "#/components/schemas/ExpertReturned"
-        expertiseArea: 
+        expertiseArea:
           $ref: "#/components/schemas/Expertise"
     ListingsArray:
       type: array
@@ -933,7 +1003,7 @@ components:
       description: Listings array which are pending
       items:
         $ref: "#/components/schemas/ListingReturned"
-  
+
     ExpertWeeklyAvailability:
       type: object
       description: 'Expert availability throughout the week'
@@ -952,7 +1022,7 @@ components:
           $ref: '#/components/schemas/BookingHoursArray'
         sunday:
           $ref: '#/components/schemas/BookingHoursArray'
-      
+
     BookingHoursArray:
       type: array
       description: a set of available hours when the expert can take Bookings
@@ -1041,7 +1111,11 @@ components:
           $ref: '#/components/schemas/MongoId'
         listing:
           $ref: '#/components/schemas/MongoId'
-      
+    BookingsArray:
+      type: array
+      description: Array of bookings
+      items:
+        $ref: '#/components/schemas/bookingReturned'
   parameters:
     expertise:
       in: path
