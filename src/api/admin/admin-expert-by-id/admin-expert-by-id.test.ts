@@ -65,7 +65,6 @@ describe('Admin pending expert', () => {
 
     it('should return NOT_FOUND if the user doesnt exist', async done => {
       const badUrl = CONFIG.routes.admin.expertId('5d5e62f187f5450ade0c1xxx');
-      console.log(badUrl);
       const res = await request(app)
         .get(badUrl)
         .set('Cookie', [cookie]);
