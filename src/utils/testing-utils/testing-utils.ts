@@ -3,7 +3,7 @@ import ExpertModel, { ExpertModelType } from '../../api/expert/expert.model';
 import ListingModel from '../../api/listing/listing.model';
 import BookingModel, { bookingModelType } from '../../api/bookings/booking.model';
 import AdminModel, { AdminModelType } from '../../api/admin/admin.model';
-import * as bcrypt from 'bcrypt';
+import encryptPassword from '../encrypt-password/encrypt-password';
 
 export const userTestEmail = 'diego@testing.com';
 export const userTestPassword = 'ValidPassword123!';
@@ -49,15 +49,15 @@ export const userValidLogin = (email = userTestEmail) => ({
 
 export const generateAdminValidLogin = (email: string = userTestEmail, password: string = userTestPassword) => ({
   email,
-  password: userTestPassword
+  password: password
 });
 
 export const deleteFromDbByEmail = async (email: string) => {
   await UserModel.findOneAndDelete({ email });
 };
 
-export const createAdminByEmail = async (email: string, password: string): Promise<AdminModelType> => {
-  const hashedPassword = await bcrypt.hash(password, 10);
+export const createAdmin = async (email: string, password: string): Promise<AdminModelType> => {
+  const hashedPassword = await encryptPassword(password);
   return await AdminModel.create({ email, password: hashedPassword });
 };
 

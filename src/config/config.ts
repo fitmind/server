@@ -54,6 +54,7 @@ const CONFIG = {
     },
     admin: {
       login: '/admin/login',
+      logout: '/admin/logout',
       expertsPending: '/expert/pending',
       expertId: '/expert/:id',
       listingsPending: '/listing/pending',
