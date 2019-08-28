@@ -6,7 +6,6 @@ import HttpException from '../../../utils/http-exception/http-exception';
 
 const createListing = async (req: RequestWithExpert, res: Response, next: NextFunction) => {
   const expertId = req.expert ? req.expert.id : '';
-  console.log(expertId);
   try {
     await ListingModel.create({ ...req.body, createdByExpert: expertId });
     res.sendStatus(CREATED);
