@@ -13,16 +13,15 @@ import {
   generateExpertValidSignUp,
   generateListingValidBody
 } from '../../../utils/testing-utils/testing-utils';
-import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
 
 describe('Create Listing', () => {
   let URL: string = CONFIG.routes.listing.new;
   let app = createApp(express());
   const expertEmail = 'createlistingexpert@mail.com';
-  let cookie: string, login, expert;
+  let cookie: string, login;
   const validSignUp = generateExpertValidSignUp(expertEmail);
   const validLogin = generateExpertLogin(expertEmail);
-  let listingValidBody = {};
+  let listingValidBody = generateListingValidBody();
 
   beforeAll(async done => {
     await setTestingDbConnection();
@@ -32,9 +31,7 @@ describe('Create Listing', () => {
     login = await request(app)
       .post(CONFIG.routes.expert.login)
       .send(validLogin);
-    expert = (await ExpertModel.findOne({ email: expertEmail })) as ExpertModelType;
     cookie = login.header['set-cookie'][0];
-    listingValidBody = generateListingValidBody(expert.id);
     done();
   });
   afterAll(async done => {

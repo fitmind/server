@@ -18,10 +18,6 @@ class createListingDto {
   public description: string;
 
   @IsString()
-  @Length(24, 24)
-  public createdByExpert: string;
-
-  @IsString()
   public expertiseArea: string;
 
   @IsString()

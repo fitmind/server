@@ -38,13 +38,12 @@ export const generateExpertValidSignUp = (email = userTestEmail) => ({
   }
 });
 
-export const generateListingValidBody = (expertId: string) => ({
+export const generateListingValidBody = () => ({
   name: 'listing name',
   price: '100.00',
   description: 'some listing desc',
   pictureUrl: 'https://fitmind-dev.s3.eu-west-2.amazonaws.com/mock-images/daniel_photo.png',
   expertiseArea: CONFIG.expertise.LIFE_COACH,
-  createdByExpert: expertId,
   postCode: 'NW13LR'
 });
 
