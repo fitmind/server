@@ -1,15 +1,6 @@
 import * as mongoose from 'mongoose';
 import CONFIG, { ApprovedStatus } from '../../config/config';
-
-interface ListingInterface {
-  name: string;
-  description: string;
-  pictureUrl: string;
-  createdTimeStamp: string;
-  approvedStatus: string;
-  expertiseArea: string;
-  createdByExpert: string;
-}
+import ListingInterface from '../../interfaces/listing.interface';
 
 const ListingSchema = new mongoose.Schema({
   name: String,
@@ -21,7 +12,8 @@ const ListingSchema = new mongoose.Schema({
   createdByExpert: {
     ref: CONFIG.modelNames.expert,
     type: mongoose.Schema.Types.ObjectId
-  }
+  },
+  postCode: String
 });
 
 export type ListingModelType = ListingInterface & mongoose.Document;

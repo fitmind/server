@@ -10,6 +10,7 @@ import healthRouter from './api/health/health.router';
 import userRouter from './api/user/user.router';
 import expertRouter from './api/expert/expert.router';
 import adminRouter from './api/admin/admin.router';
+import listingRouter from './api/listing/listing.router';
 
 const createApp = (app: express.Application): express.Application => {
   // app middleware
@@ -39,6 +40,7 @@ const createApp = (app: express.Application): express.Application => {
   app.use('/user', userRouter);
   app.use('/expert', expertRouter);
   app.use('/admin', adminRouter);
+  app.use('/listings', listingRouter);
 
   // // error handler
   app.use(errorHandlerMiddleware);

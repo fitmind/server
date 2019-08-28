@@ -60,6 +60,9 @@ const CONFIG = {
       approveExpertId: (id: string) => `/admin/expert/approve/${id}`,
       listingsPending: 'admin/listing/pending',
       listingId: 'admin/expert/:id'
+    },
+    listing: {
+      new: '/listings/new'
     }
   },
   emailSource: 'hello.fitmind@gmail.com'
