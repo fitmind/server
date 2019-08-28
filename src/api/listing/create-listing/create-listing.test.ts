@@ -42,7 +42,6 @@ describe('Create Listing', () => {
 
   describe('valid request', () => {
     it('should change the expert approval status to APPROVED if is true', async done => {
-      console.log(listingValidBody);
       const res = await request(app)
         .post(URL)
         .set('Cookie', [cookie])
