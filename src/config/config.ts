@@ -62,7 +62,8 @@ const CONFIG = {
       listingId: 'admin/expert/:id'
     },
     listing: {
-      new: '/listings/new'
+      new: '/listings/new',
+      getById: (id: string) => `/listings/${id}`
     }
   },
   emailSource: 'hello.fitmind@gmail.com'

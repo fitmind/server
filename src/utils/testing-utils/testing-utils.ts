@@ -79,6 +79,10 @@ export const deleteExpertByEmail = async (email: string) => {
   await ExpertModel.findOneAndDelete({ email });
 };
 
+export const deleteListingById = async (id: string) => {
+  await ListingModel.findByIdAndDelete(id);
+};
+
 export const generateDateInThePast = (days: number): Date => {
   let pastDate = new Date();
   pastDate.setDate(pastDate.getDate() - days);
