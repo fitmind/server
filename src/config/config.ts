@@ -59,7 +59,8 @@ const CONFIG = {
       listingsPending: '/admin/listings/pending',
       expertId: (id: string) => `/admin/expert/${id}`,
       listingId: (id: string) => `/admin/listings/${id}`,
-      approveExpertId: (id: string) => `/admin/expert/approve/${id}`
+      approveExpertId: (id: string) => `/admin/expert/approve/${id}`,
+      approveListingId: (id: string) => `/admin/listings/approve/${id}`
     },
     listing: {
       new: '/listings/new',

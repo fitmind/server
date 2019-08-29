@@ -10,6 +10,8 @@ import adminExpertApprove from './admin-expert-approve/admin-expert-approve';
 import adminExpertApproveDto from './admin-expert-approve/admin-expert-approve-dto';
 import adminListingsPending from './admin-listings-pending/admin-listings-pending';
 import adminGetListingById from './admin-listing-by-id/admin-listing-by-id';
+import adminListingApproveDto from './admin-listing-approve/admin-listing-approve-dto';
+import adminListingApprove from './admin-listing-approve/admin-listing-approve';
 
 const adminRouter = express.Router();
 
@@ -24,6 +26,12 @@ adminRouter.put(
   adminAuthMiddleware,
   typeValidationMiddleware(adminExpertApproveDto),
   adminExpertApprove
+);
+adminRouter.put(
+  '/listings/approve/:id',
+  adminAuthMiddleware,
+  typeValidationMiddleware(adminListingApproveDto),
+  adminListingApprove
 );
 
 export default adminRouter;
