@@ -356,7 +356,6 @@ paths:
   /admin/logout:
     post:
       summary: Removes the admin auth cookie token
-
       description: Returns an authentication token
       tags:
         - Admin
@@ -405,9 +404,35 @@ paths:
               schema:
                 $ref: "#/components/schemas/ExpertReturned"
         400:
-          description: The provided expert ID is not valid
+          description: The provided expert ID is not valid or doesnt exist
         404:
-          description: It was not possible to find a expert by that ID
+          description: It was not possible to find a expert by that ID or the admin doesnt exist
+        500:
+          description: Internal Server Error
+  /admin/expert/approve/{expertId}:
+    put:
+      summary: Approves or rejects an expert
+      description: Approves or rejects an expert
+      requestBody:
+        description: approved status
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminApprovalData'
+      parameters:
+        - $ref: '#/components/parameters/expertId'
+      security:
+        - adminCookieAuth: []
+      tags:
+        - Admin
+      responses:
+        200:
+          description: Expert status has been updated correctly
+        400:
+          description: The provided expert ID is not valid or doesnt exist
+        404:
+          description: It was not possible to find a expert by that ID or the admin doesnt exist
         500:
           description: Internal Server Error
   /admin/listing/pending:
@@ -730,11 +755,6 @@ components:
       type: string
       minLength: 11
       maxLength: 11
-    Rating:
-      type: integer
-      minimum: 0
-      maximum: 5
-      default: 0
     Health:
       properties:
         message:
@@ -889,10 +909,13 @@ components:
         weeklyAvailability:
           $ref: '#/components/schemas/ExpertWeeklyAvailability'
     ExpertsPending:
-      type: array
+      type: object
       description: array of pending expert users
-      items:
-        $ref: "#/components/schemas/ExpertReturned"
+      properties:
+        experts:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExpertReturned"
     ExpertCreationData:
       type: object
       description: expert user data to be submited when created
@@ -932,6 +955,12 @@ components:
         password:
           type: string
           format: password
+    AdminApprovalData:
+      type: object
+      description: data if the user was
+      properties:
+        approved:
+          type: boolean
     ListingReturned:
       type: object
       description: Listing returned
@@ -1134,7 +1163,7 @@ components:
     expertId:
       in: path
       required: true
-      description: retrieves a expert with filtered data by its ID
+      description: Expert ID
       name: expertId
       schema:
         $ref: '#/components/schemas/MongoId'

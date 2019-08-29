@@ -57,8 +57,12 @@ const CONFIG = {
       logout: '/admin/logout',
       expertsPending: '/admin/expert/pending',
       expertId: (id: string) => `/admin/expert/${id}`,
+      approveExpertId: (id: string) => `/admin/expert/approve/${id}`,
       listingsPending: 'admin/listing/pending',
       listingId: 'admin/expert/:id'
+    },
+    listing: {
+      new: '/listings/new'
     }
   },
   emailSource: 'hello.fitmind@gmail.com'
