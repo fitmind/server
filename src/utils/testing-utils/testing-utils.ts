@@ -37,18 +37,19 @@ export const generateExpertValidSignUp = (email = userTestEmail) => ({
   }
 });
 
-export const generateListingValidBody = (expertId?: string) => ({
+export const generateListingValidBody = (expertId?: string, approvedStatus?: string) => ({
   name: 'listing name',
   price: '100.00',
   description: 'some listing desc',
   pictureUrl: 'https://fitmind-dev.s3.eu-west-2.amazonaws.com/mock-images/daniel_photo.png',
   expertiseArea: CONFIG.expertise.LIFE_COACH,
   postCode: 'NW13LR',
-  createdByExpert: expertId
+  createdByExpert: expertId,
+  approvedStatus
 });
 
 export const generateListingForTesting = async (expertId?: string, approvedStatus?: string) => {
-  return await ListingModel.create({ ...generateListingValidBody(expertId) });
+  return await ListingModel.create({ ...generateListingValidBody(expertId, approvedStatus) });
 };
 
 export const generateExpertLogin = (email = userTestEmail) => ({
@@ -83,7 +84,7 @@ export const deleteExpertByEmail = async (email: string) => {
   await ExpertModel.findOneAndDelete({ email });
 };
 
-export const deleteListingById = async (id: string) => {
+export const deleteListingFromTestById = async (id: string) => {
   await ListingModel.findByIdAndDelete(id);
 };
 

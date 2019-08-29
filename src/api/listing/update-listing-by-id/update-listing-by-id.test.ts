@@ -8,12 +8,12 @@ import request from 'supertest';
 import { BAD_REQUEST, OK, UNAUTHORIZED } from 'http-status-codes';
 import CONFIG from '../../../config/config';
 import {
-  deleteListingById,
   generateListingValidBody,
   generateListingForTesting,
   deleteExpertByEmail,
   generateExpertLogin,
-  generateExpertValidSignUp
+  generateExpertValidSignUp,
+  deleteListingFromTestById
 } from '../../../utils/testing-utils/testing-utils';
 import { ListingModelType } from '../listing.model';
 import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
@@ -54,7 +54,7 @@ describe('Update listing by ID', () => {
     done();
   });
   afterAll(async done => {
-    await deleteListingById(listing.id);
+    await deleteListingFromTestById(listing.id);
     await deleteExpertByEmail(expertEmail);
     await deleteExpertByEmail(expertBadEmail);
     await disconnectTestingDb();

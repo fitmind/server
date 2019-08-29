@@ -11,8 +11,10 @@ import {
   deleteExpertByEmail,
   generateExpertLogin,
   generateExpertValidSignUp,
-  generateListingValidBody
+  generateListingValidBody,
+  deleteListingFromTestById
 } from '../../../utils/testing-utils/testing-utils';
+import ListingModel, { ListingModelType } from '../listing.model';
 
 describe('Create Listing', () => {
   let URL: string = CONFIG.routes.listing.new;
@@ -36,6 +38,8 @@ describe('Create Listing', () => {
   });
   afterAll(async done => {
     await deleteExpertByEmail(expertEmail);
+    const listing = (await ListingModel.findOne({ name: listingValidBody.name })) as ListingModelType;
+    await deleteListingFromTestById(listing.id);
     await disconnectTestingDb();
     done();
   });

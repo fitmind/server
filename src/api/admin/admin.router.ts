@@ -8,12 +8,14 @@ import adminAuthMiddleware from '../../middleware/admin-auth-middleware/admin-au
 import AdminGetExpertById from './admin-expert-by-id/admin-expert-by-id';
 import adminExpertApprove from './admin-expert-approve/admin-expert-approve';
 import adminExpertApproveDto from './admin-expert-approve/admin-expert-approve-dto';
+import adminListingsPending from './admin-listings-pending/admin-listings-pending';
 
 const adminRouter = express.Router();
 
 adminRouter.post('/login', typeValidationMiddleware(adminLoginDto), adminLogin);
 adminRouter.post('/logout', adminLogout);
 adminRouter.get('/expert/pending', adminAuthMiddleware, adminExpertsPending);
+adminRouter.get('/listings/pending', adminAuthMiddleware, adminListingsPending);
 adminRouter.get('/expert/:expertId', adminAuthMiddleware, AdminGetExpertById);
 adminRouter.put(
   '/expert/approve/:expertId',

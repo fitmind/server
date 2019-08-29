@@ -7,7 +7,7 @@ import {
 import request from 'supertest';
 import { BAD_REQUEST, OK } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import { deleteListingById, generateListingValidBody } from '../../../utils/testing-utils/testing-utils';
+import { generateListingValidBody, deleteListingFromTestById } from '../../../utils/testing-utils/testing-utils';
 import ListingModel, { ListingModelType } from '../listing.model';
 
 describe('Get listing by ID', () => {
@@ -26,8 +26,8 @@ describe('Get listing by ID', () => {
     done();
   });
   afterAll(async done => {
-    await deleteListingById(validListing.id);
-    await deleteListingById(invalidListing.id);
+    await deleteListingFromTestById(validListing.id);
+    await deleteListingFromTestById(invalidListing.id);
     await disconnectTestingDb();
     done();
   });
