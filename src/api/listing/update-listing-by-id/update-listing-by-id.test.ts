@@ -10,23 +10,23 @@ import CONFIG from '../../../config/config';
 import {
   deleteListingById,
   generateListingValidBody,
-  generateExpertForTesting,
   generateListingForTesting,
   deleteExpertByEmail,
   generateExpertLogin,
   generateExpertValidSignUp
 } from '../../../utils/testing-utils/testing-utils';
-import ListingModel, { ListingModelType } from '../listing.model';
+import { ListingModelType } from '../listing.model';
 import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
 
-describe('Delete listing by ID', () => {
+describe('Update listing by ID', () => {
   let URL: string;
   let app = createApp(express());
   let listing: ListingModelType;
-  const expertEmail = 'deletelisting@mail.com';
-  const expertBadEmail = 'deletelistingbad@mail.com';
+  const expertEmail = 'updatelisting@mail.com';
+  const expertBadEmail = 'updatelisting2@mail.com';
   let cookie: string;
   let cookie2: string;
+  let listingValidBody = generateListingValidBody();
 
   beforeAll(async done => {
     await setTestingDbConnection();
@@ -50,7 +50,7 @@ describe('Delete listing by ID', () => {
       .send(generateExpertLogin(expertBadEmail));
     cookie2 = login2.header['set-cookie'][0];
 
-    URL = CONFIG.routes.listing.deleteById(listing.id);
+    URL = CONFIG.routes.listing.updateById(listing.id);
     done();
   });
   afterAll(async done => {
@@ -63,37 +63,41 @@ describe('Delete listing by ID', () => {
 
   describe('invalid request', () => {
     it('should return BAD_REQUEST if the param id is wrong', async done => {
-      const badUrl = CONFIG.routes.listing.deleteById('123');
+      const badUrl = CONFIG.routes.listing.updateById('123');
       const res = await request(app)
-        .delete(badUrl)
-        .set('Cookie', [cookie]);
+        .put(badUrl)
+        .set('Cookie', [cookie])
+        .send(listingValidBody);
       expect(res.status).toBe(BAD_REQUEST);
       done();
     });
 
     it('should return BAD_REQUEST if the param id passed does not exist', async done => {
-      const badUrl = CONFIG.routes.listing.deleteById('5d668256beeef0141567dxxx');
+      const badUrl = CONFIG.routes.listing.updateById('5d668256beeef0141567dxxx');
       const res = await request(app)
-        .delete(badUrl)
-        .set('Cookie', [cookie]);
+        .put(badUrl)
+        .set('Cookie', [cookie])
+        .send(listingValidBody);
       expect(res.status).toBe(BAD_REQUEST);
       done();
     });
 
     it('should return UNAUTHORIZED if the listing does not belongs to the expert', async done => {
       const res = await request(app)
-        .delete(URL)
-        .set('Cookie', [cookie2]);
+        .put(URL)
+        .set('Cookie', [cookie2])
+        .send(listingValidBody);
       expect(res.status).toBe(UNAUTHORIZED);
       done();
     });
   });
 
   describe('valid request', () => {
-    it('should retrieve a 200 if the listing was deleted successfully', async done => {
+    it('should retrieve a 200 if the listing was updated successfully', async done => {
       const res = await request(app)
-        .delete(URL)
-        .set('Cookie', [cookie]);
+        .put(URL)
+        .set('Cookie', [cookie])
+        .send(listingValidBody);
       expect(res.status).toBe(OK);
       done();
     });
