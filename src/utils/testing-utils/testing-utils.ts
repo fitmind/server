@@ -20,8 +20,7 @@ export const userValidSignUp = (email = userTestEmail) => ({
 });
 
 export const generateExpertValidSignUp = (email = userTestEmail) => ({
-  firstName: 'Diego',
-  lastName: 'Romero',
+  name: 'Diego Romero',
   email,
   description: 'some long string',
   password: userTestPassword,
@@ -38,14 +37,20 @@ export const generateExpertValidSignUp = (email = userTestEmail) => ({
   }
 });
 
-export const generateListingValidBody = () => ({
+export const generateListingValidBody = (expertId?: string, approvedStatus?: string) => ({
   name: 'listing name',
   price: '100.00',
   description: 'some listing desc',
   pictureUrl: 'https://fitmind-dev.s3.eu-west-2.amazonaws.com/mock-images/daniel_photo.png',
   expertiseArea: CONFIG.expertise.LIFE_COACH,
-  postCode: 'NW13LR'
+  postCode: 'NW13LR',
+  createdByExpert: expertId,
+  approvedStatus
 });
+
+export const generateListingForTesting = async (expertId?: string, approvedStatus?: string) => {
+  return await ListingModel.create({ ...generateListingValidBody(expertId, approvedStatus) });
+};
 
 export const generateExpertLogin = (email = userTestEmail) => ({
   email,
@@ -79,19 +84,15 @@ export const deleteExpertByEmail = async (email: string) => {
   await ExpertModel.findOneAndDelete({ email });
 };
 
+export const deleteListingFromTestById = async (id: string) => {
+  await ListingModel.findByIdAndDelete(id);
+};
+
 export const generateDateInThePast = (days: number): Date => {
   let pastDate = new Date();
   pastDate.setDate(pastDate.getDate() - days);
   return pastDate;
 };
-
-export const ListingCreationData = (expertId: string) => ({
-  name: 'Listing name',
-  description: 'some long string',
-  pictureUrl: 'https://fitmind-dev.s3.eu-west-2.amazonaws.com/mock-images/daniel_photo.png',
-  expertiseArea: 'PERSONAL_COACH',
-  createdByExpert: expertId
-});
 
 export const generateDateInTheFuture = (days: number): Date => {
   let pastDate = new Date();
@@ -101,10 +102,6 @@ export const generateDateInTheFuture = (days: number): Date => {
 
 export const generateExpertForTesting = async (email: string) => {
   return (await ExpertModel.create(generateExpertValidSignUp(email))) as ExpertModelType;
-};
-
-export const generateListingForTesting = async (expertId: string) => {
-  return await ListingModel.create(ListingCreationData(expertId));
 };
 
 export const generateBookingForTesting = async (date: Date, userId: string, listingId: string) => {
