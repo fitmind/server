@@ -5,11 +5,7 @@ import { ValidAvailability } from '../../../utils/validate-availability/validate
 class expertRegisterDto {
   @IsString()
   @Length(2, 20)
-  public firstName: string;
-
-  @IsString()
-  @Length(2, 20)
-  public lastName: string;
+  public name: string;
 
   @IsEmail()
   public email: string;
