@@ -3,18 +3,23 @@ import CONFIG from '../../config/config';
 
 interface BookingInterface {
   time: Date;
-  createdByUser: string;
+  expert: string;
   listing: string;
+  customer: string;
 }
 
 const BookingSchema = new mongoose.Schema({
   time: Date || String,
-  createdByUser: {
+  customer: {
     ref: CONFIG.modelNames.user,
     type: mongoose.Schema.Types.ObjectId
   },
   listing: {
     ref: CONFIG.modelNames.listing,
+    type: mongoose.Schema.Types.ObjectId
+  },
+  expert: {
+    ref: CONFIG.modelNames.expert,
     type: mongoose.Schema.Types.ObjectId
   }
 });

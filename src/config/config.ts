@@ -66,6 +66,9 @@ const CONFIG = {
       getById: (id: string) => `/listings/${id}`,
       deleteById: (id: string) => `/listings/${id}`,
       updateById: (id: string) => `/listings/${id}`
+    },
+    bookings: {
+      new: (id: string) => `/bookings/new/${id}`
     }
   },
   emailSource: 'hello.fitmind@gmail.com'

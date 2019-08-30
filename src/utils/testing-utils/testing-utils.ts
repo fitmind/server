@@ -1,13 +1,17 @@
 import UserModel from '../../api/user/user.model';
 import ExpertModel, { ExpertModelType } from '../../api/expert/expert.model';
 import ListingModel from '../../api/listing/listing.model';
-import BookingModel, { bookingModelType } from '../../api/bookings/booking.model';
+import BookingModel, { bookingModelType } from '../../api/booking/booking.model';
 import AdminModel, { AdminModelType } from '../../api/admin/admin.model';
 import encryptPassword from '../encrypt-password/encrypt-password';
 import CONFIG from '../../config/config';
 
 export const userTestEmail = 'diego@testing.com';
 export const userTestPassword = 'ValidPassword123!';
+
+export const deleteUserById = async (id: string) => {
+  return await UserModel.findByIdAndDelete(id);
+};
 
 export const userValidSignUp = (email = userTestEmail) => ({
   name: 'Diego',
