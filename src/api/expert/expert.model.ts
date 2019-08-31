@@ -3,8 +3,7 @@ import CONFIG, { ApprovedStatus } from '../../config/config';
 import ExpertInterface from '../../interfaces/expert.interface';
 
 const ExpertSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
+  name: String,
   email: String,
   description: String,
   password: String,
@@ -12,10 +11,6 @@ const ExpertSchema = new mongoose.Schema({
   createdTimeStamp: { type: Date, default: Date.now },
   approvedStatus: { type: String, default: ApprovedStatus.PENDING },
   isAnExpertIn: [String],
-  bookings: {
-    ref: CONFIG.modelNames.booking,
-    type: mongoose.Schema.Types.ObjectId
-  },
   weeklyAvailability: {
     monday: [String],
     tuesday: [String],

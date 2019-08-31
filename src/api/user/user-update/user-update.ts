@@ -7,7 +7,7 @@ import HttpException from '../../../utils/http-exception/http-exception';
 const updateUserMe = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   const user = req.user as UserModelType;
   try {
-    await UserModel.findByIdAndUpdate(user._id, req.body, {}).exec();
+    await UserModel.findByIdAndUpdate(user._id, req.body, {});
     res.sendStatus(OK);
   } catch (e) {
     next(new HttpException(BAD_REQUEST, 'User could not be updated at this time, please try again later'));

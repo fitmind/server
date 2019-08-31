@@ -1,7 +1,6 @@
 interface FilteredUserInterface {
-  _id: string;
-  firstName: string;
-  lastName: string;
+  id: string;
+  name: string;
   email: string;
   description?: string;
   interestedInExpertiseAreas: string[];
