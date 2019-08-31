@@ -56,10 +56,11 @@ const CONFIG = {
       login: '/admin/login',
       logout: '/admin/logout',
       expertsPending: '/admin/expert/pending',
-      listingsPending: '/admin/listings/pending',
+      listingsPending: '/admin/listing/pending',
       expertId: (id: string) => `/admin/expert/${id}`,
-      listingId: (id: string) => `/admin/listings/${id}`,
-      approveExpertId: (id: string) => `/admin/expert/approve/${id}`
+      listingId: (id: string) => `/admin/listing/${id}`,
+      approveExpertId: (id: string) => `/admin/expert/approve/${id}`,
+      approveListingId: (id: string) => `/admin/listing/approve/${id}`
     },
     listing: {
       new: '/listings/new',
@@ -68,7 +69,9 @@ const CONFIG = {
       updateById: (id: string) => `/listings/${id}`
     },
     bookings: {
-      new: (id: string) => `/bookings/new/${id}`
+      new: (id: string) => `/bookings/new/${id}`,
+      getAsCustomerById: (id: string) => `/bookings/user/${id}`,
+      getAsExpertById: (id: string) => `/bookings/expert/${id}`
     }
   },
   emailSource: 'hello.fitmind@gmail.com'

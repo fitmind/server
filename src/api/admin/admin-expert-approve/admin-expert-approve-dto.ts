@@ -1,8 +1,8 @@
 import { IsBoolean } from 'class-validator';
 
-class adminExpertApproveDto {
+class adminListingApproveDto {
   @IsBoolean()
   public approved: boolean;
 }
 
-export default adminExpertApproveDto;
+export default adminListingApproveDto;

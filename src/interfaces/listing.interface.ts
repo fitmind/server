@@ -1,4 +1,5 @@
 export default interface ListingInterface {
+  id: string;
   name: string;
   price: number;
   description: string;
