@@ -13,6 +13,7 @@ import expertRouter from './api/expert/expert.router';
 import userRouter from './api/user/user.router';
 import adminRouter from './api/admin/admin.router';
 import listingRouter from './api/listing/listing.router';
+import bookingRouter from './api/booking/booking.router';
 
 jest.mock('helmet');
 jest.mock('compression');
@@ -51,7 +52,7 @@ describe('testing App', () => {
 
   describe('testing middleware', () => {
     test('should call the exact amount of middleware', () => {
-      expect(spy).toHaveBeenCalledTimes(13);
+      expect(spy).toHaveBeenCalledTimes(14);
     });
     test('should use helmet', () => {
       expect(helmet).toHaveBeenCalledTimes(1);
@@ -99,6 +100,9 @@ describe('testing App', () => {
     });
     test('testing the listing router gets called', () => {
       expect(spy).toHaveBeenNthCalledWith(12, '/listings', listingRouter);
+    });
+    test('testing the listing router gets called', () => {
+      expect(spy).toHaveBeenNthCalledWith(13, '/bookings', bookingRouter);
     });
   });
 

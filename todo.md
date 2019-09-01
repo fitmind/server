@@ -1,0 +1,3 @@
+- need to update swagger as creating a booking is slightly different, the listing id is in the url and the user id is in the token, just the time is needed in the body of the request
+- Before the booking is created the availability should be checked
+- need to add delete booking from

@@ -1,8 +1,8 @@
 import weeklyAvailability from './weeklyAvailability.interface';
 
 export default interface ExpertInterface {
-  firstName: string;
-  lastName: string;
+  id: string;
+  name: string;
   email: string;
   description: string;
   password: string;

@@ -1,13 +1,17 @@
-import UserModel from '../../api/user/user.model';
+import UserModel, { UserModelType } from '../../api/user/user.model';
 import ExpertModel, { ExpertModelType } from '../../api/expert/expert.model';
 import ListingModel from '../../api/listing/listing.model';
-import BookingModel, { bookingModelType } from '../../api/bookings/booking.model';
+import BookingModel from '../../api/booking/booking.model';
 import AdminModel, { AdminModelType } from '../../api/admin/admin.model';
 import encryptPassword from '../encrypt-password/encrypt-password';
 import CONFIG from '../../config/config';
 
 export const userTestEmail = 'diego@testing.com';
 export const userTestPassword = 'ValidPassword123!';
+
+export const deleteUserById = async (id: string) => {
+  return await UserModel.findByIdAndDelete(id);
+};
 
 export const userValidSignUp = (email = userTestEmail) => ({
   name: 'Diego',
@@ -104,10 +108,28 @@ export const generateExpertForTesting = async (email: string) => {
   return (await ExpertModel.create(generateExpertValidSignUp(email))) as ExpertModelType;
 };
 
-export const generateBookingForTesting = async (date: Date, userId: string, listingId: string) => {
-  return (await BookingModel.create({
-    time: date,
-    createdByUser: userId,
-    listing: listingId
-  })) as bookingModelType;
+export const generateUserForTesting = async (email: string) => {
+  return (await UserModel.create(userValidSignUp(email))) as UserModelType;
+};
+
+export const generateBookingForTesting = async (
+  userId: string,
+  listingId: string,
+  expertId: string,
+  time: string = '2019-08-31T11:00:14.407Z'
+) => {
+  return await BookingModel.create({
+    time: time,
+    customer: userId,
+    listing: listingId,
+    expert: expertId
+  });
+};
+
+export const deleteBookingById = async (id: string) => {
+  await BookingModel.findByIdAndDelete(id);
+};
+
+export const approveListingInTesting = async (id: string) => {
+  await ListingModel.findByIdAndUpdate(id, { approvedStatus: CONFIG.ApprovedStatus.APPROVED });
 };

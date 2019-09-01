@@ -1,26 +1,25 @@
 import * as mongoose from 'mongoose';
 import CONFIG from '../../config/config';
-
-interface BookingInterface {
-  time: Date;
-  createdByUser: string;
-  listing: string;
-}
+import Booking from '../../interfaces/booking.interface';
 
 const BookingSchema = new mongoose.Schema({
   time: Date || String,
-  createdByUser: {
+  customer: {
     ref: CONFIG.modelNames.user,
     type: mongoose.Schema.Types.ObjectId
   },
   listing: {
     ref: CONFIG.modelNames.listing,
     type: mongoose.Schema.Types.ObjectId
+  },
+  expert: {
+    ref: CONFIG.modelNames.expert,
+    type: mongoose.Schema.Types.ObjectId
   }
 });
 
-export type bookingModelType = BookingInterface & mongoose.Document;
+export type BookingModelType = Booking & mongoose.Document;
 
-const BookingModel = mongoose.model<bookingModelType>(CONFIG.modelNames.booking, BookingSchema);
+const BookingModel = mongoose.model<BookingModelType>(CONFIG.modelNames.booking, BookingSchema);
 
 export default BookingModel;

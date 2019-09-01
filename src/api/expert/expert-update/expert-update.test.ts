@@ -25,8 +25,7 @@ describe('expert update', () => {
   let login, cookie: string;
   const updateFirstName = 'Jose';
   const validUpdate = {
-    firstName: 'Diego',
-    lastName: 'Romero',
+    name: 'Diego',
     description: 'some long string',
     pictureUrl: 'https://fitmind-dev.s3.eu-west-2.amazonaws.com/mock-images/daniel_photo.png',
     isAnExpertIn: ['PERSONAL_COACH'],
@@ -63,10 +62,11 @@ describe('expert update', () => {
       const res = await request(app)
         .put(URL)
         .set('Cookie', [cookie])
-        .send({ ...validUpdate, firstName: updateFirstName });
+        .send({ ...validUpdate, name: updateFirstName });
       expect(res.status).toEqual(OK);
-      const expert = (await ExpertModel.findOne({ email }).exec()) as ExpertModelType;
-      expect(expert.firstName).toEqual(updateFirstName);
+      const expert = (await ExpertModel.findOne({ email })) as ExpertModelType;
+      console.log(expert);
+      expect(expert.name).toEqual(updateFirstName);
       done();
     });
   });
@@ -76,7 +76,7 @@ describe('expert update', () => {
       const res = await request(app)
         .put(URL)
         .set('Cookie', [cookie])
-        .send({ ...validUpdate, firstName: 123 });
+        .send({ badField: 123 });
       expect(res.status).toEqual(BAD_REQUEST);
       done();
     });
