@@ -1,6 +1,6 @@
 import express from 'express';
 import createApp from '../../../App';
-import UserModel, { UserModelType } from '../user.model';
+import { UserModelType } from '../user.model';
 import CONFIG from '../../../config/config';
 import request from 'supertest';
 import { UNAUTHORIZED, OK, NOT_FOUND } from 'http-status-codes';
@@ -9,36 +9,34 @@ import {
   setTestingDbConnection
 } from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import { filterUserMe } from './user-me';
-import {} from '../../../utils/testing-utils/testing-utils';
 import {
+  deleteCustomerUserById,
   deleteCustomerUserFromDbByEmail,
-  generateCustomerUserValidLogin,
-  generateCustomerUserValidSignUp
+  getCustomerUserByEmail,
+  loginCustomerUser,
+  registerCustomerUser
 } from '../../../utils/testing-utils/customer-user-utils';
+import {
+  getCookieFromHeader,
+  requestWithWrongCookie,
+  getValidRequestWithCookie
+} from '../../../utils/testing-utils/testing-utils';
 
 describe('User get me', () => {
   const URL = CONFIG.routes.user.me;
-  const SIGN_UP_URL = CONFIG.routes.user.signUp;
-  const LOGIN_URL = CONFIG.routes.user.login;
   const email = 'user_me@testing.com';
-  const validSignUp = generateCustomerUserValidSignUp(email);
-  const validLogin = generateCustomerUserValidLogin(email);
   let app: express.Application;
   let cookie: string;
-  let user: UserModelType | null;
+  let user: UserModelType;
   let login = null;
 
   beforeAll(async () => {
     app = createApp(express());
     await setTestingDbConnection();
-    await request(app)
-      .post(SIGN_UP_URL)
-      .send(validSignUp);
-    user = (await UserModel.findOne({ email })) as UserModelType;
-    login = await request(app)
-      .post(LOGIN_URL)
-      .send(validLogin);
-    cookie = login.header['set-cookie'][0];
+    await registerCustomerUser(app, email);
+    user = await getCustomerUserByEmail(email);
+    login = await loginCustomerUser(app, email);
+    cookie = getCookieFromHeader(login);
   });
   afterAll(async () => {
     await deleteCustomerUserFromDbByEmail(email);
@@ -58,17 +56,12 @@ describe('User get me', () => {
 
   describe('invalid request', () => {
     it('should return 401 if the authentication failed', async () => {
-      const res = await request(app)
-        .get(URL)
-        .set('Cookie', [`${CONFIG.cookies.user}=wrong_token`]);
+      const res = await requestWithWrongCookie(app, URL);
       expect(res.status).toBe(UNAUTHORIZED);
     });
     it('should return 404 if it was not possible to find the user', async () => {
-      // @ts-ignore
-      await UserModel.findByIdAndDelete(user._id);
-      const res = await request(app)
-        .get(URL)
-        .set('Cookie', [cookie]);
+      await deleteCustomerUserById(user.id);
+      const res = await getValidRequestWithCookie(app, URL, cookie);
       expect(res.status).toBe(NOT_FOUND);
     });
   });

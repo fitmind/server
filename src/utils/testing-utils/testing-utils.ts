@@ -1,8 +1,6 @@
-import ListingModel from '../../api/listing/listing.model';
-import BookingModel from '../../api/booking/booking.model';
-import AdminModel, { AdminModelType } from '../../api/admin/admin.model';
-import encryptPassword from '../encrypt-password/encrypt-password';
+import request from 'supertest';
 import CONFIG from '../../config/config';
+import express from 'express';
 
 export const userTestEmail = 'diego@testing.com';
 export const userTestPassword = 'ValidPassword123!';
@@ -22,4 +20,30 @@ export const generateDateInTheFuture = (days: number): Date => {
   let pastDate = new Date();
   pastDate.setDate(pastDate.getDate() + days);
   return pastDate;
+};
+
+export const requestWithWrongCookie = async (app: express.Application, url: string) => {
+  return request(app)
+    .get(url)
+    .set('Cookie', [`${CONFIG.cookies.user}=wrong_token`]);
+};
+
+export const getValidRequestWithCookie = async (app: express.Application, url: string, cookie: string) => {
+  return request(app)
+    .get(url)
+    .set('Cookie', [cookie]);
+};
+
+export const postValidRequestWithCookie = async (app: express.Application, url: string, cookie: string, data: any) => {
+  return request(app)
+    .put(url)
+    .set('Cookie', [cookie])
+    .send(data);
+};
+
+export const putValidRequestWithCookie = async (app: express.Application, url: string, cookie: string, data: any) => {
+  return request(app)
+    .put(url)
+    .set('Cookie', [cookie])
+    .send(data);
 };

@@ -9,25 +9,20 @@ import {
 } from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import {
   deleteCustomerUserFromDbByEmail,
-  generateCustomerUserValidLogin,
-  generateCustomerUserValidSignUp
+  loginCustomerUser,
+  registerCustomerUser
 } from '../../../utils/testing-utils/customer-user-utils';
+import { getCookieFromHeader } from '../../../utils/testing-utils/testing-utils';
 
 describe('User Logout', () => {
   const URL = CONFIG.routes.user.logout;
-  const SIGN_UP_URL = CONFIG.routes.user.signUp;
-  const LOGIN_URL = CONFIG.routes.user.login;
   let app: express.Application;
   const email = 'login@email.com';
-  const validSignUp = generateCustomerUserValidSignUp(email);
-  const validLogin = generateCustomerUserValidLogin(email);
 
   beforeAll(async () => {
     app = createApp(express());
     await setTestingDbConnection();
-    await request(app)
-      .post(SIGN_UP_URL)
-      .send(validSignUp);
+    await registerCustomerUser(app, email);
   });
   afterAll(async () => {
     await deleteCustomerUserFromDbByEmail(email);
@@ -35,20 +30,18 @@ describe('User Logout', () => {
   });
   describe('valid request', () => {
     it('should return a 200 along with an authorization cookie', async done => {
-      const loginRes = await request(app)
-        .post(LOGIN_URL)
-        .send(validLogin);
+      const loginRes = await loginCustomerUser(app, email);
 
-      const loginCookie = loginRes.header['set-cookie'][0];
+      const loginCookie = getCookieFromHeader(loginRes);
       expect(loginCookie.includes(CONFIG.cookies.user)).toBeTruthy();
 
       const res = await request(app)
         .post(URL)
         .set('Cookie', [loginCookie]);
       expect(res.status).toBe(OK);
-      const cookie = res.header['set-cookie'][0].split(';')[0];
+      const cookie = getCookieFromHeader(res).split(';')[0];
       // this means that the bearer token is not present in the string anymore, just the cookie header
-      expect(cookie).toEqual('X-Fitmind-Authorization=');
+      expect(cookie).toEqual(`${CONFIG.cookies.user}=`);
       done();
     });
   });
