@@ -7,13 +7,13 @@ import { BAD_REQUEST, OK, UNAUTHORIZED } from 'http-status-codes';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
+import { userTestPassword } from '../../../utils/testing-utils/testing-utils';
 import {
-  deleteFromDbByEmail,
-  userTestPassword,
-  userValidLogin,
-  userValidSignUp
-} from '../../../utils/testing-utils/testing-utils';
+  deleteCustomerUserFromDbByEmail,
+  generateCustomerUserValidLogin,
+  generateCustomerUserValidSignUp
+} from '../../../utils/testing-utils/customer-user-utils';
 
 const URL = CONFIG.routes.user.me;
 const SIGN_UP_URL = CONFIG.routes.user.signUp;
@@ -22,8 +22,8 @@ const LOGIN_URL = CONFIG.routes.user.login;
 describe('User update', () => {
   let app: express.Application;
   const email = 'updateUser@gmail.com';
-  const validSignUp = userValidSignUp(email);
-  const validLogin = userValidLogin(email);
+  const validSignUp = generateCustomerUserValidSignUp(email);
+  const validLogin = generateCustomerUserValidLogin(email);
   let login = null;
   let cookie: string;
   const newDescription = 'NEW UPDATED DESCRIPTION';
@@ -50,7 +50,7 @@ describe('User update', () => {
   });
 
   afterAll(async done => {
-    await deleteFromDbByEmail(email);
+    await deleteCustomerUserFromDbByEmail(email);
     await disconnectTestingDb();
     done();
   });

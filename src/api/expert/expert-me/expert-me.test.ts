@@ -6,14 +6,14 @@ import { UNAUTHORIZED, OK, NOT_FOUND } from 'http-status-codes';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
-import {
-  deleteExpertByEmail,
-  generateExpertLogin,
-  generateExpertValidSignUp
-} from '../../../utils/testing-utils/testing-utils';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import ExpertModel, { ExpertModelType } from '../expert.model';
 import { filterExpertMe } from './expert-me';
+import {
+  deleteExpertByEmail,
+  generateExpertUserValidSignUp,
+  generateExpertValidLogin
+} from '../../../utils/testing-utils/expert-user-utils';
 
 describe('Expert get me', () => {
   let app: express.Application;
@@ -22,8 +22,8 @@ describe('Expert get me', () => {
   const SIGN_UP_URL = CONFIG.routes.expert.register;
   const LOGIN_URL = CONFIG.routes.expert.login;
   const email = 'expert_me@testing.com';
-  const validSignUp = generateExpertValidSignUp(email);
-  const validLogin = generateExpertLogin(email);
+  const validSignUp = generateExpertUserValidSignUp(email);
+  const validLogin = generateExpertValidLogin(email);
   let expert: ExpertModelType;
   let login;
 

@@ -3,25 +3,26 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import { NOT_FOUND, CREATED, UNAUTHORIZED, BAD_REQUEST } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import {
-  deleteExpertByEmail,
-  deleteListingFromTestById,
-  userValidSignUp,
-  userValidLogin,
-  generateListingForTesting,
-  generateExpertForTesting,
-  deleteUserById,
-  deleteBookingById,
-  approveListingInTesting
-} from '../../../utils/testing-utils/testing-utils';
 import { ListingModelType } from '../../listing/listing.model';
 import UserModel, { UserModelType } from '../../user/user.model';
 import { ExpertModelType } from '../../expert/expert.model';
 import BookingModel, { BookingModelType } from '../booking.model';
+import {
+  deleteCustomerUserById,
+  generateCustomerUserValidLogin,
+  generateCustomerUserValidSignUp
+} from '../../../utils/testing-utils/customer-user-utils';
+import { deleteExpertByEmail, generateExpertForTesting } from '../../../utils/testing-utils/expert-user-utils';
+import {
+  approveListingInTesting,
+  deleteListingFromTestById,
+  generateListingForTesting
+} from '../../../utils/testing-utils/listing-utils';
+import { deleteBookingById } from '../../../utils/testing-utils/booking-utils';
 
 describe('Create Booking', () => {
   let URL: string;
@@ -29,8 +30,8 @@ describe('Create Booking', () => {
   const expertEmail = 'createbookingexpert@mail.com';
   const customerEmail = 'createbookinguser@mail.com';
   let cookie: string, login, listing: ListingModelType, expert: ExpertModelType, user: UserModelType;
-  const validSignUp = userValidSignUp(customerEmail);
-  const validLogin = userValidLogin(customerEmail);
+  const validSignUp = generateCustomerUserValidSignUp(customerEmail);
+  const validLogin = generateCustomerUserValidLogin(customerEmail);
   const validBooking = { time: '2019-08-30T17:08:28.203Z' };
 
   beforeAll(async done => {
@@ -52,7 +53,7 @@ describe('Create Booking', () => {
   afterAll(async done => {
     await deleteExpertByEmail(expertEmail);
     await deleteListingFromTestById(listing.id);
-    await deleteUserById(user._id);
+    await deleteCustomerUserById(user._id);
     await disconnectTestingDb();
     done();
   });

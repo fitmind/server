@@ -3,21 +3,18 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import { BAD_REQUEST, OK, UNAUTHORIZED } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import {
-  generateListingValidBody,
-  generateExpertForTesting,
-  generateListingForTesting,
-  deleteExpertByEmail,
-  generateExpertLogin,
-  generateExpertValidSignUp,
-  deleteListingFromTestById
-} from '../../../utils/testing-utils/testing-utils';
-import ListingModel, { ListingModelType } from '../listing.model';
+import { ListingModelType } from '../listing.model';
 import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
+import {
+  deleteExpertByEmail,
+  generateExpertUserValidSignUp,
+  generateExpertValidLogin
+} from '../../../utils/testing-utils/expert-user-utils';
+import { deleteListingFromTestById, generateListingForTesting } from '../../../utils/testing-utils/listing-utils';
 
 describe('Delete listing by ID', () => {
   let URL: string;
@@ -32,11 +29,11 @@ describe('Delete listing by ID', () => {
     await setTestingDbConnection();
     await request(app)
       .post(CONFIG.routes.expert.register)
-      .send(generateExpertValidSignUp(expertEmail));
+      .send(generateExpertUserValidSignUp(expertEmail));
     const expert = (await ExpertModel.findOne({ email: expertEmail })) as ExpertModelType;
     const login = await request(app)
       .post(CONFIG.routes.expert.login)
-      .send(generateExpertLogin(expertEmail));
+      .send(generateExpertValidLogin(expertEmail));
     cookie = login.header['set-cookie'][0];
 
     listing = (await generateListingForTesting(expert._id)) as ListingModelType;
@@ -44,10 +41,10 @@ describe('Delete listing by ID', () => {
     // generating user 2 so I can send an incorrect cookie in the request to test
     await request(app)
       .post(CONFIG.routes.expert.register)
-      .send(generateExpertValidSignUp(expertBadEmail));
+      .send(generateExpertUserValidSignUp(expertBadEmail));
     const login2 = await request(app)
       .post(CONFIG.routes.expert.login)
-      .send(generateExpertLogin(expertBadEmail));
+      .send(generateExpertValidLogin(expertBadEmail));
     cookie2 = login2.header['set-cookie'][0];
 
     URL = CONFIG.routes.listing.deleteById(listing.id);

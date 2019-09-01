@@ -7,20 +7,20 @@ import { BAD_REQUEST, NOT_FOUND, CREATED, UNAUTHORIZED } from 'http-status-codes
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
+import { userTestPassword } from '../../../utils/testing-utils/testing-utils';
 import {
-  deleteFromDbByEmail,
-  userTestPassword,
-  userValidLogin,
-  userValidSignUp
-} from '../../../utils/testing-utils/testing-utils';
+  deleteCustomerUserFromDbByEmail,
+  generateCustomerUserValidLogin,
+  generateCustomerUserValidSignUp
+} from '../../../utils/testing-utils/customer-user-utils';
 
 describe('User Login', () => {
   const URL = CONFIG.routes.user.login;
   const SIGN_UP_URL = CONFIG.routes.user.signUp;
   const email = 'diego.login@testing.com';
-  const validSignUp = userValidSignUp(email);
-  const validLogin = userValidLogin(email);
+  const validSignUp = generateCustomerUserValidSignUp(email);
+  const validLogin = generateCustomerUserValidLogin(email);
   const password = userTestPassword;
   let app: express.Application;
 
@@ -32,7 +32,7 @@ describe('User Login', () => {
       .send(validSignUp);
   });
   afterAll(async () => {
-    await deleteFromDbByEmail(email);
+    await deleteCustomerUserFromDbByEmail(email);
     await disconnectTestingDb();
   });
   describe('valid request', () => {

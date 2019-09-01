@@ -3,26 +3,25 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import { NOT_FOUND, CREATED, UNAUTHORIZED, BAD_REQUEST } from 'http-status-codes';
 import CONFIG from '../../../config/config';
+import ListingModel, { ListingModelType } from '../listing.model';
 import {
   deleteExpertByEmail,
-  generateExpertLogin,
-  generateExpertValidSignUp,
-  generateListingValidBody,
-  deleteListingFromTestById
-} from '../../../utils/testing-utils/testing-utils';
-import ListingModel, { ListingModelType } from '../listing.model';
+  generateExpertUserValidSignUp,
+  generateExpertValidLogin
+} from '../../../utils/testing-utils/expert-user-utils';
+import { deleteListingFromTestById, generateListingValidBody } from '../../../utils/testing-utils/listing-utils';
 
 describe('Create Listing', () => {
   let URL: string = CONFIG.routes.listing.new;
   let app = createApp(express());
   const expertEmail = 'createlistingexpert@mail.com';
   let cookie: string, login;
-  const validSignUp = generateExpertValidSignUp(expertEmail);
-  const validLogin = generateExpertLogin(expertEmail);
+  const validSignUp = generateExpertUserValidSignUp(expertEmail);
+  const validLogin = generateExpertValidLogin(expertEmail);
   let listingValidBody = generateListingValidBody();
 
   beforeAll(async done => {

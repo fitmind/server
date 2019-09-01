@@ -6,8 +6,12 @@ import { OK } from 'http-status-codes';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
-import { deleteFromDbByEmail, userValidLogin, userValidSignUp } from '../../../utils/testing-utils/testing-utils';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
+import {
+  deleteCustomerUserFromDbByEmail,
+  generateCustomerUserValidLogin,
+  generateCustomerUserValidSignUp
+} from '../../../utils/testing-utils/customer-user-utils';
 
 describe('User Logout', () => {
   const URL = CONFIG.routes.user.logout;
@@ -15,8 +19,8 @@ describe('User Logout', () => {
   const LOGIN_URL = CONFIG.routes.user.login;
   let app: express.Application;
   const email = 'login@email.com';
-  const validSignUp = userValidSignUp(email);
-  const validLogin = userValidLogin(email);
+  const validSignUp = generateCustomerUserValidSignUp(email);
+  const validLogin = generateCustomerUserValidLogin(email);
 
   beforeAll(async () => {
     app = createApp(express());
@@ -26,7 +30,7 @@ describe('User Logout', () => {
       .send(validSignUp);
   });
   afterAll(async () => {
-    await deleteFromDbByEmail(email);
+    await deleteCustomerUserFromDbByEmail(email);
     await disconnectTestingDb();
   });
   describe('valid request', () => {

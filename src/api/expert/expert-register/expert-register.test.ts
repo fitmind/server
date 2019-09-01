@@ -3,20 +3,20 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import { CONFLICT, CREATED, BAD_REQUEST } from 'http-status-codes';
 import * as bcrypt from 'bcrypt';
 import CONFIG from '../../../config/config';
 import ExpertModel, { ExpertModelType } from '../expert.model';
-import { deleteExpertByEmail, generateExpertValidSignUp } from '../../../utils/testing-utils/testing-utils';
+import { deleteExpertByEmail, generateExpertUserValidSignUp } from '../../../utils/testing-utils/expert-user-utils';
 
 const URL = CONFIG.routes.expert.register;
 
 describe('expert register test', () => {
   let app: express.Application;
   const email = 'expert1212register@gmail.com';
-  const validSignUp = generateExpertValidSignUp(email);
+  const validSignUp = generateExpertUserValidSignUp(email);
 
   beforeAll(async () => {
     app = createApp(express());

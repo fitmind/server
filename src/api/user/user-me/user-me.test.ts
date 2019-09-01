@@ -7,17 +7,22 @@ import { UNAUTHORIZED, OK, NOT_FOUND } from 'http-status-codes';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import { filterUserMe } from './user-me';
-import { deleteFromDbByEmail, userValidLogin, userValidSignUp } from '../../../utils/testing-utils/testing-utils';
+import {} from '../../../utils/testing-utils/testing-utils';
+import {
+  deleteCustomerUserFromDbByEmail,
+  generateCustomerUserValidLogin,
+  generateCustomerUserValidSignUp
+} from '../../../utils/testing-utils/customer-user-utils';
 
 describe('User get me', () => {
   const URL = CONFIG.routes.user.me;
   const SIGN_UP_URL = CONFIG.routes.user.signUp;
   const LOGIN_URL = CONFIG.routes.user.login;
   const email = 'user_me@testing.com';
-  const validSignUp = userValidSignUp(email);
-  const validLogin = userValidLogin(email);
+  const validSignUp = generateCustomerUserValidSignUp(email);
+  const validLogin = generateCustomerUserValidLogin(email);
   let app: express.Application;
   let cookie: string;
   let user: UserModelType | null;
@@ -36,7 +41,7 @@ describe('User get me', () => {
     cookie = login.header['set-cookie'][0];
   });
   afterAll(async () => {
-    await deleteFromDbByEmail(email);
+    await deleteCustomerUserFromDbByEmail(email);
     await disconnectTestingDb();
   });
 

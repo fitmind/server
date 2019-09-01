@@ -3,26 +3,26 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import { NOT_FOUND, UNAUTHORIZED, OK } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import {
-  deleteExpertByEmail,
-  deleteListingFromTestById,
-  userValidSignUp,
-  userValidLogin,
-  generateListingForTesting,
-  generateExpertForTesting,
-  deleteUserById,
-  deleteBookingById,
-  approveListingInTesting,
-  generateBookingForTesting
-} from '../../../utils/testing-utils/testing-utils';
 import { ListingModelType } from '../../listing/listing.model';
 import UserModel, { UserModelType } from '../../user/user.model';
 import { ExpertModelType } from '../../expert/expert.model';
 import { BookingModelType } from '../booking.model';
+import {
+  deleteCustomerUserById,
+  generateCustomerUserValidLogin,
+  generateCustomerUserValidSignUp
+} from '../../../utils/testing-utils/customer-user-utils';
+import { deleteExpertByEmail, generateExpertForTesting } from '../../../utils/testing-utils/expert-user-utils';
+import {
+  approveListingInTesting,
+  deleteListingFromTestById,
+  generateListingForTesting
+} from '../../../utils/testing-utils/listing-utils';
+import { deleteBookingById, generateBookingForTesting } from '../../../utils/testing-utils/booking-utils';
 
 describe('Booking get as customer user', () => {
   let URL: string;
@@ -35,8 +35,8 @@ describe('Booking get as customer user', () => {
     expert: ExpertModelType,
     user: UserModelType,
     booking: BookingModelType;
-  const validSignUp = userValidSignUp(customerEmail);
-  const validLogin = userValidLogin(customerEmail);
+  const validSignUp = generateCustomerUserValidSignUp(customerEmail);
+  const validLogin = generateCustomerUserValidLogin(customerEmail);
 
   beforeAll(async done => {
     await setTestingDbConnection();
@@ -58,7 +58,7 @@ describe('Booking get as customer user', () => {
   afterAll(async done => {
     await deleteExpertByEmail(expertEmail);
     await deleteListingFromTestById(listing.id);
-    await deleteUserById(user._id);
+    await deleteCustomerUserById(user._id);
     await deleteBookingById(booking.id);
     await disconnectTestingDb();
     done();

@@ -3,24 +3,24 @@ import express from 'express';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import CONFIG from '../../../config/config';
 import { OK, UNAUTHORIZED, BAD_REQUEST, NOT_FOUND } from 'http-status-codes';
+import ExpertModel from '../expert.model';
 import {
   deleteExpertByEmail,
-  generateExpertLogin,
-  generateExpertValidSignUp
-} from '../../../utils/testing-utils/testing-utils';
-import ExpertModel from '../expert.model';
+  generateExpertUserValidSignUp,
+  generateExpertValidLogin
+} from '../../../utils/testing-utils/expert-user-utils';
 
 describe('expert login', () => {
   let app = createApp(express());
   const URL = CONFIG.routes.expert.login;
   const SIGN_URL = CONFIG.routes.expert.register;
   const email = 'expertregister@mail.com';
-  const validSignUp = generateExpertValidSignUp(email);
-  const validLogin = generateExpertLogin(email);
+  const validSignUp = generateExpertUserValidSignUp(email);
+  const validLogin = generateExpertValidLogin(email);
 
   beforeAll(async done => {
     await setTestingDbConnection();

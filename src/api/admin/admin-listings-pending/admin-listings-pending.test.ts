@@ -3,19 +3,14 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import { NOT_FOUND, OK, UNAUTHORIZED } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import {
-  createAdmin,
-  deleteAdminByEmail,
-  generateAdminValidLogin,
-  generateListingForTesting,
-  deleteListingFromTestById
-} from '../../../utils/testing-utils/testing-utils';
+import { createAdmin, deleteAdminByEmail, generateAdminValidLogin } from '../../../utils/testing-utils/admin-utils';
 import ListingModel, { ListingModelType } from '../../listing/listing.model';
 import { includes } from 'ramda';
+import { deleteListingFromTestById, generateListingForTesting } from '../../../utils/testing-utils/listing-utils';
 
 describe('Admin pending expert', () => {
   const URL = CONFIG.routes.admin.listingsPending;

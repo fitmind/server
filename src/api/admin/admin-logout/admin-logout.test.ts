@@ -6,8 +6,8 @@ import { OK } from 'http-status-codes';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
-import { createAdmin, deleteAdminByEmail, generateAdminValidLogin } from '../../../utils/testing-utils/testing-utils';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
+import { createAdmin, deleteAdminByEmail, generateAdminValidLogin } from '../../../utils/testing-utils/admin-utils';
 
 describe('admin Logout', () => {
   const URL = CONFIG.routes.admin.logout;

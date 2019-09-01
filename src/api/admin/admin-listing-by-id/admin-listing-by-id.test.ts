@@ -3,18 +3,13 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import { NOT_FOUND, OK, UNAUTHORIZED, BAD_REQUEST } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import {
-  createAdmin,
-  deleteAdminByEmail,
-  deleteListingFromTestById,
-  generateAdminValidLogin,
-  generateListingForTesting
-} from '../../../utils/testing-utils/testing-utils';
+import { createAdmin, deleteAdminByEmail, generateAdminValidLogin } from '../../../utils/testing-utils/admin-utils';
 import { ListingModelType } from '../../listing/listing.model';
+import { deleteListingFromTestById, generateListingForTesting } from '../../../utils/testing-utils/listing-utils';
 
 describe('Admin get listing by id', () => {
   let URL = '';

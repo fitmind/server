@@ -1,18 +1,18 @@
 import express from 'express';
-import {
-  deleteExpertByEmail,
-  generateExpertLogin,
-  generateExpertValidSignUp
-} from '../../../utils/testing-utils/testing-utils';
 import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import CONFIG from '../../../config/config';
 import { UNAUTHORIZED, BAD_REQUEST, OK, NOT_FOUND } from 'http-status-codes';
 import ExpertModel, { ExpertModelType } from '../expert.model';
+import {
+  deleteExpertByEmail,
+  generateExpertUserValidSignUp,
+  generateExpertValidLogin
+} from '../../../utils/testing-utils/expert-user-utils';
 
 describe('expert update', () => {
   const URL = CONFIG.routes.expert.me;
@@ -20,8 +20,8 @@ describe('expert update', () => {
   const LOGIN_URL = CONFIG.routes.expert.login;
   let app: express.Application;
   const email = 'updateexpert@gmail.com';
-  const validSignUp = generateExpertValidSignUp(email);
-  const validLogin = generateExpertLogin(email);
+  const validSignUp = generateExpertUserValidSignUp(email);
+  const validLogin = generateExpertValidLogin(email);
   let login, cookie: string;
   const updateFirstName = 'Jose';
   const validUpdate = {
@@ -65,7 +65,6 @@ describe('expert update', () => {
         .send({ ...validUpdate, name: updateFirstName });
       expect(res.status).toEqual(OK);
       const expert = (await ExpertModel.findOne({ email })) as ExpertModelType;
-      console.log(expert);
       expect(expert.name).toEqual(updateFirstName);
       done();
     });

@@ -6,8 +6,8 @@ import { BAD_REQUEST, NOT_FOUND, UNAUTHORIZED, OK } from 'http-status-codes';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
-import { createAdmin, deleteAdminByEmail, generateAdminValidLogin } from '../../../utils/testing-utils/testing-utils';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
+import { createAdmin, deleteAdminByEmail, generateAdminValidLogin } from '../../../utils/testing-utils/admin-utils';
 import ExpertModel from '../../expert/expert.model';
 
 describe('Admin Login', () => {

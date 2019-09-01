@@ -3,12 +3,12 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import { BAD_REQUEST, OK } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import { generateListingValidBody, deleteListingFromTestById } from '../../../utils/testing-utils/testing-utils';
 import ListingModel, { ListingModelType } from '../listing.model';
+import { deleteListingFromTestById, generateListingValidBody } from '../../../utils/testing-utils/listing-utils';
 
 describe('Get listing by ID', () => {
   let URL: string;

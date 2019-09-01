@@ -4,18 +4,13 @@ import { includes } from 'ramda';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import { NOT_FOUND, OK, UNAUTHORIZED } from 'http-status-codes';
 import CONFIG, { ApprovedStatus } from '../../../config/config';
-import {
-  createAdmin,
-  deleteAdminByEmail,
-  deleteExpertByEmail,
-  generateAdminValidLogin,
-  generateExpertValidSignUp
-} from '../../../utils/testing-utils/testing-utils';
+import { createAdmin, deleteAdminByEmail, generateAdminValidLogin } from '../../../utils/testing-utils/admin-utils';
 import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
+import { deleteExpertByEmail, generateExpertUserValidSignUp } from '../../../utils/testing-utils/expert-user-utils';
 
 describe('Admin pending expert', () => {
   const URL = CONFIG.routes.admin.expertsPending;
@@ -33,10 +28,10 @@ describe('Admin pending expert', () => {
     await createAdmin(email, password);
     await request(app)
       .post(CONFIG.routes.expert.register)
-      .send(generateExpertValidSignUp(expert1Email));
+      .send(generateExpertUserValidSignUp(expert1Email));
     await request(app)
       .post(CONFIG.routes.expert.register)
-      .send(generateExpertValidSignUp(expert2Email));
+      .send(generateExpertUserValidSignUp(expert2Email));
     login = await request(app)
       .post(CONFIG.routes.admin.login)
       .send(validLogin);

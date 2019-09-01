@@ -3,26 +3,26 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import { NOT_FOUND, UNAUTHORIZED, OK } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import {
-  deleteExpertByEmail,
-  deleteListingFromTestById,
-  generateListingForTesting,
-  deleteUserById,
-  deleteBookingById,
-  approveListingInTesting,
-  generateBookingForTesting,
-  generateExpertValidSignUp,
-  generateExpertLogin,
-  generateUserForTesting
-} from '../../../utils/testing-utils/testing-utils';
 import { ListingModelType } from '../../listing/listing.model';
 import { UserModelType } from '../../user/user.model';
 import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
 import { BookingModelType } from '../booking.model';
+import { deleteCustomerUserById, generateUserForTesting } from '../../../utils/testing-utils/customer-user-utils';
+import {
+  deleteExpertByEmail,
+  generateExpertUserValidSignUp,
+  generateExpertValidLogin
+} from '../../../utils/testing-utils/expert-user-utils';
+import {
+  approveListingInTesting,
+  deleteListingFromTestById,
+  generateListingForTesting
+} from '../../../utils/testing-utils/listing-utils';
+import { deleteBookingById, generateBookingForTesting } from '../../../utils/testing-utils/booking-utils';
 
 describe('Booking get as expert user', () => {
   let URL: string;
@@ -35,8 +35,8 @@ describe('Booking get as expert user', () => {
     expert: ExpertModelType,
     user: UserModelType,
     booking: BookingModelType;
-  const validSignUp = generateExpertValidSignUp(expertEmail);
-  const validLogin = generateExpertLogin(expertEmail);
+  const validSignUp = generateExpertUserValidSignUp(expertEmail);
+  const validLogin = generateExpertValidLogin(expertEmail);
 
   beforeAll(async done => {
     await setTestingDbConnection();
@@ -44,11 +44,9 @@ describe('Booking get as expert user', () => {
       .post(CONFIG.routes.expert.register)
       .send(validSignUp);
     expert = (await ExpertModel.findOne({ email: expertEmail })) as ExpertModelType;
-    console.log(expert);
     login = await request(app)
       .post(CONFIG.routes.expert.login)
       .send(validLogin);
-    console.log(login.body);
     cookie = login.header['set-cookie'][0];
     user = (await generateUserForTesting(customerEmail)) as UserModelType;
     listing = await generateListingForTesting(expert.id);
@@ -60,7 +58,7 @@ describe('Booking get as expert user', () => {
   afterAll(async done => {
     await deleteExpertByEmail(expertEmail);
     await deleteListingFromTestById(listing.id);
-    await deleteUserById(user._id);
+    await deleteCustomerUserById(user._id);
     await deleteBookingById(booking.id);
     await disconnectTestingDb();
     done();

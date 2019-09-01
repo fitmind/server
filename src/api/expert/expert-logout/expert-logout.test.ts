@@ -6,12 +6,12 @@ import { OK } from 'http-status-codes';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import {
   deleteExpertByEmail,
-  generateExpertLogin,
-  generateExpertValidSignUp
-} from '../../../utils/testing-utils/testing-utils';
+  generateExpertUserValidSignUp,
+  generateExpertValidLogin
+} from '../../../utils/testing-utils/expert-user-utils';
 
 describe('expert Logout', () => {
   const URL = CONFIG.routes.expert.logout;
@@ -19,8 +19,8 @@ describe('expert Logout', () => {
   const LOGIN_URL = CONFIG.routes.expert.login;
   let app: express.Application;
   const email = 'expertlogout@email.com';
-  const validSignUp = generateExpertValidSignUp(email);
-  const validLogin = generateExpertLogin(email);
+  const validSignUp = generateExpertUserValidSignUp(email);
+  const validLogin = generateExpertValidLogin(email);
 
   beforeAll(async () => {
     app = createApp(express());

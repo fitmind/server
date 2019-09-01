@@ -9,28 +9,31 @@ import * as bcrypt from 'bcrypt';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
-import { deleteFromDbByEmail, userValidSignUp } from '../../../utils/testing-utils/testing-utils';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
+import {
+  deleteCustomerUserFromDbByEmail,
+  generateCustomerUserValidSignUp
+} from '../../../utils/testing-utils/customer-user-utils';
 
 const URL = CONFIG.routes.user.signUp;
 
 describe('User register test', () => {
   let app: express.Application;
   const email = 'registrationfitmind@gmail.com';
-  const validSignUp = userValidSignUp(email);
+  const validSignUp = generateCustomerUserValidSignUp(email);
 
   beforeAll(async () => {
     app = createApp(express());
     await setTestingDbConnection();
   });
   afterAll(async () => {
-    await deleteFromDbByEmail(email);
+    await deleteCustomerUserFromDbByEmail(email);
     await disconnectTestingDb();
   });
   describe('User register', () => {
     describe('valid user', () => {
       it('should allow the user to be registered and the password should be encrypted', async done => {
-        await deleteFromDbByEmail(email);
+        await deleteCustomerUserFromDbByEmail(email);
         const res = await request(app)
           .post(URL)
           .send(validSignUp);
