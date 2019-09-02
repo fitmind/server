@@ -4,18 +4,18 @@ import {
   disconnectTestingDb,
   setTestingDbConnection
 } from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
-import request from 'supertest';
 import { NOT_FOUND, UNAUTHORIZED, OK } from 'http-status-codes';
 import CONFIG from '../../../config/config';
 import { ListingModelType } from '../../listing/listing.model';
 import { UserModelType } from '../../user/user.model';
-import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
+import { ExpertModelType } from '../../expert/expert.model';
 import { BookingModelType } from '../booking.model';
 import { deleteCustomerUserById, generateUserForTesting } from '../../../utils/testing-utils/customer-user-utils';
 import {
   deleteExpertByEmail,
-  generateExpertUserValidSignUp,
-  generateExpertValidLogin
+  getExpertUserByMail,
+  loginExpertUser,
+  registerExpertUser
 } from '../../../utils/testing-utils/expert-user-utils';
 import {
   approveListingInTesting,
@@ -23,6 +23,7 @@ import {
   generateListingForTesting
 } from '../../../utils/testing-utils/listing-utils';
 import { deleteBookingById, generateBookingForTesting } from '../../../utils/testing-utils/booking-utils';
+import { getCookieFromHeader, getValidRequestWithCookie } from '../../../utils/testing-utils/testing-utils';
 
 describe('Booking get as expert user', () => {
   let URL: string;
@@ -35,23 +36,17 @@ describe('Booking get as expert user', () => {
     expert: ExpertModelType,
     user: UserModelType,
     booking: BookingModelType;
-  const validSignUp = generateExpertUserValidSignUp(expertEmail);
-  const validLogin = generateExpertValidLogin(expertEmail);
 
   beforeAll(async done => {
     await setTestingDbConnection();
-    await request(app)
-      .post(CONFIG.routes.expert.register)
-      .send(validSignUp);
-    expert = (await ExpertModel.findOne({ email: expertEmail })) as ExpertModelType;
-    login = await request(app)
-      .post(CONFIG.routes.expert.login)
-      .send(validLogin);
-    cookie = login.header['set-cookie'][0];
-    user = (await generateUserForTesting(customerEmail)) as UserModelType;
+    await registerExpertUser(app, expertEmail);
+    expert = await getExpertUserByMail(expertEmail);
+    login = await loginExpertUser(app, expertEmail);
+    cookie = getCookieFromHeader(login);
+    user = await generateUserForTesting(customerEmail);
     listing = await generateListingForTesting(expert.id);
     await approveListingInTesting(listing.id);
-    booking = (await generateBookingForTesting(user.id, listing.id, expert.id)) as BookingModelType;
+    booking = await generateBookingForTesting(user.id, listing.id, expert.id);
     URL = CONFIG.routes.bookings.getAsExpertById(booking.id);
     done();
   });
@@ -66,9 +61,7 @@ describe('Booking get as expert user', () => {
 
   describe('valid request', () => {
     it('should retrieve the booking for the user to see', async done => {
-      const res = await request(app)
-        .get(URL)
-        .set('Cookie', [cookie]);
+      const res = await getValidRequestWithCookie(app, URL, cookie);
       expect(res.status).toBe(OK);
       done();
     });
@@ -76,18 +69,14 @@ describe('Booking get as expert user', () => {
 
   describe('invalid request', () => {
     it('should return 401 if the authentication failed', async done => {
-      const res = await request(app)
-        .get(URL)
-        .set('Cookie', [`${CONFIG.cookies.user}=wrong_token`]);
+      const res = await getValidRequestWithCookie(app, URL, 'wrong-cookie');
       expect(res.status).toBe(UNAUTHORIZED);
       done();
     });
 
     it('should return 404 if the booking doesnt exist', async done => {
       await deleteBookingById(booking.id);
-      const res = await request(app)
-        .get(URL)
-        .set('Cookie', [cookie]);
+      const res = await getValidRequestWithCookie(app, URL, cookie);
       expect(res.status).toBe(NOT_FOUND);
       done();
     });
