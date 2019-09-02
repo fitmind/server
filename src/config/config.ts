@@ -71,6 +71,7 @@ const CONFIG = {
     bookings: {
       new: (id: string) => `/bookings/new/${id}`,
       getAsCustomerById: (id: string) => `/bookings/user/${id}`,
+      deleteAsCustomerById: (id: string) => `/bookings/user/${id}`,
       getAsExpertById: (id: string) => `/bookings/expert/${id}`
     }
   },

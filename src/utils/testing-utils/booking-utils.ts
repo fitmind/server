@@ -21,3 +21,7 @@ export const deleteBookingById = async (id: string) => {
 export const getBookingByCustomerId = async (id: string) => {
   return (await BookingModel.findOne({ customer: id })) as BookingModelType;
 };
+
+export const getBookingById = async (id: string) => {
+  return BookingModel.findById(id);
+};
