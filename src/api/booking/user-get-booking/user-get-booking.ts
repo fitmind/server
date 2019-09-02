@@ -10,22 +10,16 @@ const userGetBooking = async (req: RequestWithUser, res: Response, next: NextFun
   try {
     const booking = await getBookingDefaultReturn(bookingId);
     if (!booking) {
-      setImmediate(() => {
-        next(new HttpException(NOT_FOUND, 'Could not find booking'));
-      });
+      next(new HttpException(NOT_FOUND, 'Could not find booking'));
     } else {
       if (booking.customer.id !== userId) {
-        setImmediate(() => {
-          next(new HttpException(BAD_REQUEST, 'Booking does not belong to the user'));
-        });
+        next(new HttpException(BAD_REQUEST, 'Booking does not belong to the user'));
       } else {
         res.status(OK).json(booking);
       }
     }
   } catch (e) {
-    setImmediate(() => {
-      next(new HttpException(NOT_FOUND, 'Error retrieving the booking'));
-    });
+    next(new HttpException(NOT_FOUND, 'Error retrieving the booking'));
   }
 };
 

@@ -9,9 +9,7 @@ const userRegister = async (req: Request, res: Response, next: NextFunction) => 
   const email = req.body.email;
   const emailExists = await UserModel.findOne({ email });
   if (emailExists) {
-    setImmediate(() => {
-      next(new HttpException(CONFLICT, 'Email is already in use'));
-    });
+    next(new HttpException(CONFLICT, 'Email is already in use'));
   } else {
     const hashedPassword = await encryptPassword(req.body.password);
     try {
@@ -21,9 +19,7 @@ const userRegister = async (req: Request, res: Response, next: NextFunction) => 
       }
       res.sendStatus(CREATED);
     } catch (e) {
-      setImmediate(() => {
-        next(new HttpException(INTERNAL_SERVER_ERROR, 'Error saving the user'));
-      });
+      next(new HttpException(INTERNAL_SERVER_ERROR, 'Error saving the user'));
     }
   }
 };

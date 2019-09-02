@@ -9,15 +9,11 @@ import ExpertModel from '../expert.model';
 const expertLogin = async ({ body: { email, password } }: Request, res: Response, next: NextFunction) => {
   ExpertModel.findOne({ email }).then(async expert => {
     if (!expert) {
-      setImmediate(() => {
-        next(new HttpException(NOT_FOUND, 'Email not found'));
-      });
+      next(new HttpException(NOT_FOUND, 'Email not found'));
     } else {
       const isPasswordMatching = await bcrypt.compare(password, expert.password);
       if (!isPasswordMatching) {
-        setImmediate(() => {
-          next(new HttpException(UNAUTHORIZED, 'Passwords dont match'));
-        });
+        next(new HttpException(UNAUTHORIZED, 'Passwords dont match'));
       } else {
         const token = createUserToken(expert._id);
         res.cookie(CONFIG.cookies.expert, token, {

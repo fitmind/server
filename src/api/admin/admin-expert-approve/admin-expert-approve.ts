@@ -8,19 +8,15 @@ import { ApprovedStatus } from '../../../config/config';
 const adminExpertApprove = async (req: RequestWithAdminInterface, res: Response, next: NextFunction) => {
   const id = req.params.expertId as string;
   if (!id || id.length !== 24) {
-    setImmediate(() => {
-      next(new HttpException(BAD_REQUEST, 'Expert id is invalid'));
-    });
-    return;
-  }
-  try {
-    const approvedStatus = req.body.approved ? ApprovedStatus.APPROVED : ApprovedStatus.DENIED;
-    await ExpertModel.findByIdAndUpdate(id, { approvedStatus });
-    res.sendStatus(OK);
-  } catch (e) {
-    setImmediate(() => {
+    next(new HttpException(BAD_REQUEST, 'Expert id is invalid'));
+  } else {
+    try {
+      const approvedStatus = req.body.approved ? ApprovedStatus.APPROVED : ApprovedStatus.DENIED;
+      await ExpertModel.findByIdAndUpdate(id, { approvedStatus });
+      res.sendStatus(OK);
+    } catch (e) {
       next(new HttpException(NOT_FOUND, 'Could not update the expert'));
-    });
+    }
   }
 };
 

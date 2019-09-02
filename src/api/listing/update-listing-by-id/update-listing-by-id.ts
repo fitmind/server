@@ -12,23 +12,17 @@ const updateListingById = async (req: RequestWithExpert, res: Response, next: Ne
   try {
     const listing = (await ListingModel.findById(listingId)) as ListingModelType;
     if (listing.createdByExpert.toString() !== expertId.toString()) {
-      setImmediate(() => {
-        next(new HttpException(UNAUTHORIZED, 'Listings can only be updated by its creator'));
-      });
+      next(new HttpException(UNAUTHORIZED, 'Listings can only be updated by its creator'));
     } else {
       try {
         const updated = (await ListingModel.findByIdAndUpdate(listingId, req.body)) as ListingModelType;
         res.status(OK).json({ message: `Listing with ID: ${updated._id} updated successfully` });
       } catch (e) {
-        setImmediate(() => {
-          next(new HttpException(INTERNAL_SERVER_ERROR, 'Error updating the Listing'));
-        });
+        next(new HttpException(INTERNAL_SERVER_ERROR, 'Error updating the Listing'));
       }
     }
   } catch (e) {
-    setImmediate(() => {
-      next(new HttpException(BAD_REQUEST, 'Could not find a listing with that ID'));
-    });
+    next(new HttpException(BAD_REQUEST, 'Could not find a listing with that ID'));
   }
 };
 

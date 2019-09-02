@@ -8,18 +8,14 @@ import ListingModel from '../../listing/listing.model';
 const adminListingApprove = async (req: RequestWithAdminInterface, res: Response, next: NextFunction) => {
   const id = req.params.listingId as string;
   if (!id || id.length !== 24) {
-    setImmediate(() => {
-      next(new HttpException(BAD_REQUEST, 'Listing id is invalid'));
-    });
+    next(new HttpException(BAD_REQUEST, 'Listing id is invalid'));
   } else {
     try {
       const approvedStatus = req.body.approved ? ApprovedStatus.APPROVED : ApprovedStatus.DENIED;
       await ListingModel.findByIdAndUpdate(id, { approvedStatus });
       res.sendStatus(OK);
     } catch (e) {
-      setImmediate(() => {
-        next(new HttpException(NOT_FOUND, 'Could not update the expert'));
-      });
+      next(new HttpException(NOT_FOUND, 'Could not update the expert'));
     }
   }
 };

@@ -10,23 +10,17 @@ const userDeleteBooking = async (req: RequestWithUser, res: Response, next: Next
   try {
     const booking = await BookingModel.findById(bookingId);
     if (!booking) {
-      setImmediate(() => {
-        next(new HttpException(NOT_FOUND, 'Could not find booking'));
-      });
+      next(new HttpException(NOT_FOUND, 'Could not find booking'));
     } else {
       if (booking.customer.toString() !== userId.toString()) {
-        setImmediate(() => {
-          next(new HttpException(BAD_REQUEST, 'Booking does not belong to the user'));
-        });
+        next(new HttpException(BAD_REQUEST, 'Booking does not belong to the user'));
       } else {
         await BookingModel.findByIdAndDelete(bookingId);
         res.sendStatus(OK);
       }
     }
   } catch (e) {
-    setImmediate(() => {
-      next(new HttpException(NOT_FOUND, 'Error retrieving the booking'));
-    });
+    next(new HttpException(NOT_FOUND, 'Error retrieving the booking'));
   }
 };
 
