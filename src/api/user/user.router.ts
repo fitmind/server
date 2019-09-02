@@ -11,10 +11,13 @@ import updateUserMe from './user-update/user-update';
 
 const userRouter = express.Router();
 
-userRouter.post('/register', typeValidationMiddleware(userRegisterDto), userRegister);
-userRouter.post('/login', typeValidationMiddleware(userLoginDto), userLogin);
+export const userLoginMValidate = typeValidationMiddleware(userLoginDto);
+export const userRegisterValidate = typeValidationMiddleware(userRegisterDto);
+
+userRouter.post('/register', userRegisterValidate, userRegister);
+userRouter.post('/login', userLoginMValidate, userLogin);
 userRouter.get('/me', userAuthMiddleware, getUserMe);
-userRouter.put('/me', userAuthMiddleware, typeValidationMiddleware(userRegisterDto), updateUserMe);
+userRouter.put('/me', userAuthMiddleware, userRegisterValidate, updateUserMe);
 userRouter.post('/logout', userLogout);
 
 export default userRouter;

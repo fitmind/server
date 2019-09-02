@@ -3,20 +3,20 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
-import request from 'supertest';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import { CONFLICT, CREATED, BAD_REQUEST } from 'http-status-codes';
 import * as bcrypt from 'bcrypt';
-import CONFIG from '../../../config/config';
-import ExpertModel, { ExpertModelType } from '../expert.model';
-import { deleteExpertByEmail, generateExpertValidSignUp } from '../../../utils/testing-utils/testing-utils';
-
-const URL = CONFIG.routes.expert.register;
+import {
+  deleteExpertByEmail,
+  generateExpertUserValidSignUp,
+  getExpertUserByMail,
+  registerExpertUser
+} from '../../../utils/testing-utils/expert-user-utils';
 
 describe('expert register test', () => {
   let app: express.Application;
   const email = 'expert1212register@gmail.com';
-  const validSignUp = generateExpertValidSignUp(email);
+  const validSignUp = generateExpertUserValidSignUp(email);
 
   beforeAll(async () => {
     app = createApp(express());
@@ -31,12 +31,10 @@ describe('expert register test', () => {
     describe('valid user', () => {
       it('should allow the user to be registered and the password should be encrypted', async done => {
         await deleteExpertByEmail(email);
-        const res = await request(app)
-          .post(URL)
-          .send(validSignUp);
+        const res = await registerExpertUser(app, email);
 
         expect(res.status).toEqual(CREATED);
-        const createdUser = (await ExpertModel.findOne({ email })) as ExpertModelType;
+        const createdUser = await getExpertUserByMail(email);
         const isPasswordMatching = await bcrypt.compare(validSignUp.password, createdUser.password);
         expect(isPasswordMatching).toBeTruthy();
         done();
@@ -51,16 +49,12 @@ describe('expert register test', () => {
           description: 13,
           password: 12
         };
-        const res = await request(app)
-          .post(URL)
-          .send(invalidSignUp);
+        const res = await registerExpertUser(app, email, invalidSignUp);
         expect(res.status).toEqual(BAD_REQUEST);
         done();
       });
       it('should return conflict if the email already exists', async done => {
-        const res = await request(app)
-          .post(URL)
-          .send(validSignUp);
+        const res = await registerExpertUser(app, email);
         expect(res.status).toEqual(CONFLICT);
         done();
       });

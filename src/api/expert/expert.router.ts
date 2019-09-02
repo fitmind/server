@@ -12,10 +12,14 @@ import getExpertMe from './expert-me/expert-me';
 
 const expertRouter = express.Router();
 
-expertRouter.post('/register', typeValidationMiddleware(expertRegisterDto), expertRegister);
-expertRouter.post('/login', typeValidationMiddleware(expertLoginDto), expertLogin);
+const expertRegisterValidation = typeValidationMiddleware(expertRegisterDto);
+const expertLoginValidation = typeValidationMiddleware(expertLoginDto);
+const expertUpdateValidation = typeValidationMiddleware(expertUpdateDto);
+
+expertRouter.post('/register', expertRegisterValidation, expertRegister);
+expertRouter.post('/login', expertLoginValidation, expertLogin);
 expertRouter.post('/logout', expertLogout);
-expertRouter.put('/me', expertAuthMiddleware, typeValidationMiddleware(expertUpdateDto), updateExpert);
+expertRouter.put('/me', expertAuthMiddleware, expertUpdateValidation, updateExpert);
 expertRouter.get('/me', expertAuthMiddleware, getExpertMe);
 
 export default expertRouter;

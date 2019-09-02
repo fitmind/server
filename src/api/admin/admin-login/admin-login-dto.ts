@@ -5,7 +5,7 @@ class adminLoginDto {
   public email: string;
 
   @IsString()
-  @Length(6, 25)
+  @Length(5, 25)
   public password: string;
 }
 

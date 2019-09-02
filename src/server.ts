@@ -6,7 +6,7 @@ import 'regenerator-runtime/runtime';
 import express from 'express';
 import createApp from './App';
 import mongoose from 'mongoose';
-import { createAdmin } from './utils/testing-utils/testing-utils';
+import { createAdmin } from './utils/testing-utils/admin-utils';
 
 const CONCURRENCY = process.env.WEB_CONCURRENCY || 1;
 console.log('----------------------------');

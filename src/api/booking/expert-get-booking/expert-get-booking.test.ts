@@ -3,26 +3,27 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
-import request from 'supertest';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import { NOT_FOUND, UNAUTHORIZED, OK } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import {
-  deleteExpertByEmail,
-  deleteListingFromTestById,
-  generateListingForTesting,
-  deleteUserById,
-  deleteBookingById,
-  approveListingInTesting,
-  generateBookingForTesting,
-  generateExpertValidSignUp,
-  generateExpertLogin,
-  generateUserForTesting
-} from '../../../utils/testing-utils/testing-utils';
 import { ListingModelType } from '../../listing/listing.model';
 import { UserModelType } from '../../user/user.model';
-import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
+import { ExpertModelType } from '../../expert/expert.model';
 import { BookingModelType } from '../booking.model';
+import { deleteCustomerUserById, generateUserForTesting } from '../../../utils/testing-utils/customer-user-utils';
+import {
+  deleteExpertByEmail,
+  getExpertUserByMail,
+  loginExpertUser,
+  registerExpertUser
+} from '../../../utils/testing-utils/expert-user-utils';
+import {
+  approveListingInTesting,
+  deleteListingFromTestById,
+  generateListingForTesting
+} from '../../../utils/testing-utils/listing-utils';
+import { deleteBookingById, generateBookingForTesting } from '../../../utils/testing-utils/booking-utils';
+import { getCookieFromHeader, getValidRequestWithCookie } from '../../../utils/testing-utils/testing-utils';
 
 describe('Booking get as expert user', () => {
   let URL: string;
@@ -35,32 +36,24 @@ describe('Booking get as expert user', () => {
     expert: ExpertModelType,
     user: UserModelType,
     booking: BookingModelType;
-  const validSignUp = generateExpertValidSignUp(expertEmail);
-  const validLogin = generateExpertLogin(expertEmail);
 
   beforeAll(async done => {
     await setTestingDbConnection();
-    await request(app)
-      .post(CONFIG.routes.expert.register)
-      .send(validSignUp);
-    expert = (await ExpertModel.findOne({ email: expertEmail })) as ExpertModelType;
-    console.log(expert);
-    login = await request(app)
-      .post(CONFIG.routes.expert.login)
-      .send(validLogin);
-    console.log(login.body);
-    cookie = login.header['set-cookie'][0];
-    user = (await generateUserForTesting(customerEmail)) as UserModelType;
+    await registerExpertUser(app, expertEmail);
+    expert = await getExpertUserByMail(expertEmail);
+    login = await loginExpertUser(app, expertEmail);
+    cookie = getCookieFromHeader(login);
+    user = await generateUserForTesting(customerEmail);
     listing = await generateListingForTesting(expert.id);
     await approveListingInTesting(listing.id);
-    booking = (await generateBookingForTesting(user.id, listing.id, expert.id)) as BookingModelType;
+    booking = await generateBookingForTesting(user.id, listing.id, expert.id);
     URL = CONFIG.routes.bookings.getAsExpertById(booking.id);
     done();
   });
   afterAll(async done => {
     await deleteExpertByEmail(expertEmail);
     await deleteListingFromTestById(listing.id);
-    await deleteUserById(user._id);
+    await deleteCustomerUserById(user._id);
     await deleteBookingById(booking.id);
     await disconnectTestingDb();
     done();
@@ -68,9 +61,7 @@ describe('Booking get as expert user', () => {
 
   describe('valid request', () => {
     it('should retrieve the booking for the user to see', async done => {
-      const res = await request(app)
-        .get(URL)
-        .set('Cookie', [cookie]);
+      const res = await getValidRequestWithCookie(app, URL, cookie);
       expect(res.status).toBe(OK);
       done();
     });
@@ -78,18 +69,14 @@ describe('Booking get as expert user', () => {
 
   describe('invalid request', () => {
     it('should return 401 if the authentication failed', async done => {
-      const res = await request(app)
-        .get(URL)
-        .set('Cookie', [`${CONFIG.cookies.user}=wrong_token`]);
+      const res = await getValidRequestWithCookie(app, URL, 'wrong-cookie');
       expect(res.status).toBe(UNAUTHORIZED);
       done();
     });
 
     it('should return 404 if the booking doesnt exist', async done => {
       await deleteBookingById(booking.id);
-      const res = await request(app)
-        .get(URL)
-        .set('Cookie', [cookie]);
+      const res = await getValidRequestWithCookie(app, URL, cookie);
       expect(res.status).toBe(NOT_FOUND);
       done();
     });

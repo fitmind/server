@@ -3,20 +3,22 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
-import request from 'supertest';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import { BAD_REQUEST, OK, UNAUTHORIZED } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import {
-  generateListingValidBody,
-  generateListingForTesting,
-  deleteExpertByEmail,
-  generateExpertLogin,
-  generateExpertValidSignUp,
-  deleteListingFromTestById
-} from '../../../utils/testing-utils/testing-utils';
 import { ListingModelType } from '../listing.model';
-import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
+import {
+  deleteExpertByEmail,
+  getExpertUserByMail,
+  loginExpertUser,
+  registerExpertUser
+} from '../../../utils/testing-utils/expert-user-utils';
+import {
+  deleteListingFromTestById,
+  generateListingForTesting,
+  generateListingValidBody
+} from '../../../utils/testing-utils/listing-utils';
+import { getCookieFromHeader, putValidRequestWithCookie } from '../../../utils/testing-utils/testing-utils';
 
 describe('Update listing by ID', () => {
   let URL: string;
@@ -30,25 +32,17 @@ describe('Update listing by ID', () => {
 
   beforeAll(async done => {
     await setTestingDbConnection();
-    await request(app)
-      .post(CONFIG.routes.expert.register)
-      .send(generateExpertValidSignUp(expertEmail));
-    const expert = (await ExpertModel.findOne({ email: expertEmail })) as ExpertModelType;
-    const login = await request(app)
-      .post(CONFIG.routes.expert.login)
-      .send(generateExpertLogin(expertEmail));
-    cookie = login.header['set-cookie'][0];
+    await registerExpertUser(app, expertEmail);
+    const expert = await getExpertUserByMail(expertEmail);
+    const login = await loginExpertUser(app, expertEmail);
+    cookie = getCookieFromHeader(login);
 
-    listing = (await generateListingForTesting(expert._id)) as ListingModelType;
+    listing = await generateListingForTesting(expert.id);
 
     // generating user 2 so I can send an incorrect cookie in the request to test
-    await request(app)
-      .post(CONFIG.routes.expert.register)
-      .send(generateExpertValidSignUp(expertBadEmail));
-    const login2 = await request(app)
-      .post(CONFIG.routes.expert.login)
-      .send(generateExpertLogin(expertBadEmail));
-    cookie2 = login2.header['set-cookie'][0];
+    await registerExpertUser(app, expertBadEmail);
+    const login2 = await loginExpertUser(app, expertBadEmail);
+    cookie2 = getCookieFromHeader(login2);
 
     URL = CONFIG.routes.listing.updateById(listing.id);
     done();
@@ -64,29 +58,20 @@ describe('Update listing by ID', () => {
   describe('invalid request', () => {
     it('should return BAD_REQUEST if the param id is wrong', async done => {
       const badUrl = CONFIG.routes.listing.updateById('123');
-      const res = await request(app)
-        .put(badUrl)
-        .set('Cookie', [cookie])
-        .send(listingValidBody);
+      const res = await putValidRequestWithCookie(app, badUrl, cookie, listingValidBody);
       expect(res.status).toBe(BAD_REQUEST);
       done();
     });
 
     it('should return BAD_REQUEST if the param id passed does not exist', async done => {
       const badUrl = CONFIG.routes.listing.updateById('5d668256beeef0141567dxxx');
-      const res = await request(app)
-        .put(badUrl)
-        .set('Cookie', [cookie])
-        .send(listingValidBody);
+      const res = await putValidRequestWithCookie(app, badUrl, cookie, listingValidBody);
       expect(res.status).toBe(BAD_REQUEST);
       done();
     });
 
     it('should return UNAUTHORIZED if the listing does not belongs to the expert', async done => {
-      const res = await request(app)
-        .put(URL)
-        .set('Cookie', [cookie2])
-        .send(listingValidBody);
+      const res = await putValidRequestWithCookie(app, URL, 'bad-cookie', listingValidBody);
       expect(res.status).toBe(UNAUTHORIZED);
       done();
     });
@@ -94,10 +79,7 @@ describe('Update listing by ID', () => {
 
   describe('valid request', () => {
     it('should retrieve a 200 if the listing was updated successfully', async done => {
-      const res = await request(app)
-        .put(URL)
-        .set('Cookie', [cookie])
-        .send(listingValidBody);
+      const res = await putValidRequestWithCookie(app, URL, cookie, listingValidBody);
       expect(res.status).toBe(OK);
       done();
     });

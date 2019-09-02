@@ -3,12 +3,16 @@ import createApp from '../../../App';
 import {
   disconnectTestingDb,
   setTestingDbConnection
-} from '../../../utils/testing-db-connection/testing-db-connection';
+} from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
 import request from 'supertest';
 import { BAD_REQUEST, OK } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import { generateListingValidBody, deleteListingFromTestById } from '../../../utils/testing-utils/testing-utils';
-import ListingModel, { ListingModelType } from '../listing.model';
+import { ListingModelType } from '../listing.model';
+import {
+  deleteListingFromTestById,
+  generateListingForTesting,
+  generateValidListingForTesting
+} from '../../../utils/testing-utils/listing-utils';
 
 describe('Get listing by ID', () => {
   let URL: string;
@@ -17,11 +21,8 @@ describe('Get listing by ID', () => {
 
   beforeAll(async done => {
     await setTestingDbConnection();
-    validListing = await ListingModel.create({
-      ...generateListingValidBody(),
-      approvedStatus: CONFIG.ApprovedStatus.APPROVED
-    });
-    invalidListing = await ListingModel.create(generateListingValidBody());
+    validListing = await generateValidListingForTesting();
+    invalidListing = await generateListingForTesting();
     URL = CONFIG.routes.listing.getById(validListing.id);
     done();
   });
