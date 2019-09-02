@@ -52,7 +52,6 @@ describe('Delete booking as an expert', () => {
     await approveListingInTesting(listing.id);
     booking = await generateBookingForTesting(user.id, listing.id, expert.id);
     URL = CONFIG.routes.bookings.deleteAsExpertById(booking.id);
-    console.log(URL);
     done();
   });
   afterAll(async done => {
