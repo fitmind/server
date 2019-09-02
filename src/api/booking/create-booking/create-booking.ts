@@ -13,13 +13,9 @@ const createBooking = async (req: RequestWithUser, res: Response, next: NextFunc
   try {
     const listing = (await ListingModel.findById(listingId)) as ListingModelType;
     if (!listing) {
-      setImmediate(() => {
-        next(new HttpException(NOT_FOUND, 'Listing not found'));
-      });
+      next(new HttpException(NOT_FOUND, 'Listing not found'));
     } else if (listing.approvedStatus !== CONFIG.ApprovedStatus.APPROVED) {
-      setImmediate(() => {
-        next(new HttpException(BAD_REQUEST, 'Not possible to create bookings on not approved listings'));
-      });
+      next(new HttpException(BAD_REQUEST, 'Not possible to create bookings on not approved listings'));
     } else {
       const booking = await BookingModel.create({
         time: req.body.time,
@@ -30,9 +26,7 @@ const createBooking = async (req: RequestWithUser, res: Response, next: NextFunc
       res.status(CREATED).json({ message: `Booking with ID: ${booking.id} created` });
     }
   } catch (e) {
-    setImmediate(() => {
-      next(new HttpException(INTERNAL_SERVER_ERROR, 'Error creating the listing'));
-    });
+    next(new HttpException(INTERNAL_SERVER_ERROR, 'Error creating the listing'));
   }
 };
 

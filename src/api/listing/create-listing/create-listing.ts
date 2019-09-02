@@ -10,9 +10,7 @@ const createListing = async (req: RequestWithExpert, res: Response, next: NextFu
     await ListingModel.create({ ...req.body, createdByExpert: expertId });
     res.sendStatus(CREATED);
   } catch (e) {
-    setImmediate(() => {
-      next(new HttpException(INTERNAL_SERVER_ERROR, 'Error creating the listing'));
-    });
+    next(new HttpException(INTERNAL_SERVER_ERROR, 'Error creating the listing'));
   }
 };
 

@@ -7,9 +7,7 @@ healthRouter.get('/', (req: Request, res: Response) => {
 });
 
 healthRouter.get('/error', (req: Request, res: Response, next: NextFunction) => {
-  setImmediate(() => {
-    next(new Error('App is unhealthy :('));
-  });
+  next(new Error('App is unhealthy :('));
 });
 
 export default healthRouter;

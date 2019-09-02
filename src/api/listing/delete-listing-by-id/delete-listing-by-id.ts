@@ -11,23 +11,17 @@ const deleteListingById = async (req: RequestWithExpert, res: Response, next: Ne
   try {
     const listing = (await ListingModel.findById(listingId)) as ListingModelType;
     if (listing.createdByExpert.toString() !== expertId.toString()) {
-      setImmediate(() => {
-        next(new HttpException(UNAUTHORIZED, 'Listings can only be eliminated by the person who created them'));
-      });
+      next(new HttpException(UNAUTHORIZED, 'Listings can only be eliminated by the person who created them'));
     } else {
       try {
         const deleted = (await ListingModel.findByIdAndDelete(listingId)) as ListingModelType;
         res.status(OK).json({ message: `Listing with ID: ${deleted._id} deleted successfully` });
       } catch (e) {
-        setImmediate(() => {
-          next(new HttpException(INTERNAL_SERVER_ERROR, 'Error deleting the Listing'));
-        });
+        next(new HttpException(INTERNAL_SERVER_ERROR, 'Error deleting the Listing'));
       }
     }
   } catch (e) {
-    setImmediate(() => {
-      next(new HttpException(BAD_REQUEST, 'Could not find a listing with that ID'));
-    });
+    next(new HttpException(BAD_REQUEST, 'Could not find a listing with that ID'));
   }
 };
 

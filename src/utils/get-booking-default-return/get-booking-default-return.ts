@@ -14,7 +14,7 @@ const defaultPopulate = [
 ];
 
 const getBookingDefaultReturn = async (bookingId: string) => {
-  return await BookingModel.findById(bookingId)
+  return BookingModel.findById(bookingId)
     .populate({
       path: 'customer',
       select: defaultPopulate

@@ -7,18 +7,14 @@ import ListingModel from '../../listing/listing.model';
 const adminGetListingById = async (req: RequestWithAdminInterface, res: Response, next: NextFunction) => {
   const id = req.params.id as string;
   if (!id || id.length !== 24) {
-    setImmediate(() => {
-      next(new HttpException(BAD_REQUEST, 'Listing id is invalid'));
-    });
-    return;
-  }
-  try {
-    const listing = await ListingModel.findById(id);
-    res.status(OK).json(listing);
-  } catch (e) {
-    setImmediate(() => {
+    next(new HttpException(BAD_REQUEST, 'Listing id is invalid'));
+  } else {
+    try {
+      const listing = await ListingModel.findById(id);
+      res.status(OK).json(listing);
+    } catch (e) {
       next(new HttpException(NOT_FOUND, 'Could not find listing'));
-    });
+    }
   }
 };
 

@@ -2,20 +2,21 @@ import { NextFunction, Response } from 'express';
 import { NOT_FOUND, BAD_REQUEST, OK } from 'http-status-codes';
 import HttpException from '../../../utils/http-exception/http-exception';
 import RequestWithUser from '../../../interfaces/request-with-user.interface';
-import getBookingDefaultReturn from '../../../utils/get-booking-default-return/get-booking-default-return';
+import BookingModel from '../booking.model';
 
-const userGetBooking = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+const userDeleteBooking = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   const bookingId = req.params.bookingId;
   const userId = req.user ? req.user.id : '';
   try {
-    const booking = await getBookingDefaultReturn(bookingId);
+    const booking = await BookingModel.findById(bookingId);
     if (!booking) {
       next(new HttpException(NOT_FOUND, 'Could not find booking'));
     } else {
-      if (booking.customer.id !== userId) {
+      if (booking.customer.toString() !== userId.toString()) {
         next(new HttpException(BAD_REQUEST, 'Booking does not belong to the user'));
       } else {
-        res.status(OK).json(booking);
+        await BookingModel.findByIdAndDelete(bookingId);
+        res.sendStatus(OK);
       }
     }
   } catch (e) {
@@ -23,4 +24,4 @@ const userGetBooking = async (req: RequestWithUser, res: Response, next: NextFun
   }
 };
 
-export default userGetBooking;
+export default userDeleteBooking;

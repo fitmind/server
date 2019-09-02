@@ -9,9 +9,7 @@ const expertRegister = async (req: Request, res: Response, next: NextFunction) =
   const email = req.body.email;
   const emailExists = await ExpertModel.findOne({ email });
   if (emailExists) {
-    setImmediate(() => {
-      next(new HttpException(CONFLICT, 'Email is already in use'));
-    });
+    next(new HttpException(CONFLICT, 'Email is already in use'));
   } else {
     const hashedPassword = await encryptPassword(req.body.password);
     try {
