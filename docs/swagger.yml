@@ -481,6 +481,8 @@ paths:
   /listings/new:
     post:
       summary: creates a new listing
+      security:
+        - expertCookieAuth: []
       requestBody:
         description: data needed to create a new listing
         required: true
@@ -523,6 +525,8 @@ paths:
           description: Internal Server Error
     delete:
       summary: deletes a listing
+      security:
+        - expertCookieAuth: []
       description: listings deletion - the listing will have to belong to the expertId in the cookie
       tags:
         - Listing
@@ -537,8 +541,10 @@ paths:
           description: Listing ID could not be found
         500:
           description: Internal Server Error
-    patch:
+    put:
       summary: updates a listing
+      security:
+        - expertCookieAuth: []
       description: listings updating - the listing will have to belong to the expertId in the cookie
       parameters:
         - $ref: '#/components/parameters/listingId'
@@ -553,43 +559,45 @@ paths:
           description: Listing ID could not be found
         500:
           description: Internal Server Error
-  /listings/{expertise}:
-    get:
-      summary: retrieves all the listings from certain expertise only
-      description: retrieves an array of listings
-      parameters:
-        - $ref: '#/components/parameters/expertise'
-      tags:
-        - Listing
-      responses:
-        201:
-          description: Array containing the listings by expertise
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ListingsArray"
-        404:
-          description: Listing ID could not be found
-        500:
-          description: Internal Server Error
-  /listings/all:
-    get:
-      summary: retrieves all the listings chronologically
-      description: retrieves an array of listings
-      tags:
-        - Listing
-      responses:
-        201:
-          description: Array containing the listings
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ListingsArray"
-        500:
-          description: Internal Server Error
-  /bookings/new:
+  # /listings/{expertise}:
+  #   get:
+  #     summary: retrieves all the listings from certain expertise only
+  #     description: retrieves an array of listings
+  #     parameters:
+  #     - $ref: '#/components/parameters/expertise'
+  #     tags:
+  #       - Listing
+  #     responses:
+  #       201:
+  #           description: Array containing the listings by expertise
+  #           content:
+  #             application/json:
+  #               schema:
+  #                 $ref: "#/components/schemas/ListingsArray"
+  #       404:
+  #         description: Listing ID could not be found
+  #       500:
+  #         description: Internal Server Error
+  # /listings/all:
+  #   get:
+  #     summary: retrieves all the listings chronologically
+  #     description: retrieves an array of listings
+  #     tags:
+  #       - Listing
+  #     responses:
+  #       201:
+  #           description: Array containing the listings
+  #           content:
+  #             application/json:
+  #               schema:
+  #                 $ref: "#/components/schemas/ListingsArray"
+  #       500:
+  #         description: Internal Server Error
+  /bookings/new/{listingId}:
     post:
       summary: creates a new booking
+      parameters:
+        - $ref: '#/components/parameters/listingId'
       security:
         - userCookieAuth: []
       requestBody:
@@ -604,32 +612,7 @@ paths:
         - Booking
       responses:
         201:
-          description: Object containing the booking that has just been created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ListingReturnedFiltered"
-        400:
-          description: The provided information is invalid or insufficient
-        401:
-          description: Unauthorised
-        500:
-          description: Internal Server Error
-  /bookings/availability/{listingId}:
-    get:
-      summary: gets future availability for bookings
-      parameters:
-        - $ref: '#/components/parameters/listingId'
-      description: booking availability retrieval
-      tags:
-        - Booking
-      responses:
-        201:
-          description: Array containing all the possible avaiability dates for upcoming bookings
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/UpcomingBookingHoursArray"
+          description: Status returned when the booking was created
         400:
           description: The provided information is invalid or insufficient
         401:
@@ -647,19 +630,21 @@ paths:
       tags:
         - Booking
       responses:
-        201:
+        200:
           description: Object containing the booking
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/bookingReturned"
+        400:
+          description: The booking that is trying to be deleted does not belong to the user
         404:
           description: booking ID could not be found
         500:
           description: Internal Server Error
     delete:
       summary: deletes a booking
-      description: booking deletion - the listing will have to belong to the userId in the cookie
+      description: booking deletion
       security:
         - userCookieAuth: []
       tags:
@@ -675,23 +660,6 @@ paths:
           description: Booking ID could not be found
         500:
           description: Internal Server Error
-    patch:
-      summary: updates the booking via the user side and not the expert side as it requires the cookie
-      parameters:
-        - $ref: '#/components/parameters/bookingId'
-      security:
-        - userCookieAuth: []
-      tags:
-        - Booking
-      responses:
-        200:
-          description: Booking updated successfully
-        400:
-          description: The user ID in the cookie does not match with the user id in the listing
-        404:
-          description: Listing ID could not be found
-        500:
-          description: Internal Server Error
   /bookings/expert/{bookingId}:
     get:
       summary: retrieves a booking - can only be accessed by the expert
@@ -703,12 +671,14 @@ paths:
       tags:
         - Booking
       responses:
-        201:
+        200:
           description: Object containing the booking
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/bookingReturned"
+        400:
+          description: The booking that is trying to be deleted does not belong to the expert
         404:
           description: booking ID could not be found
         500:
@@ -731,24 +701,6 @@ paths:
           description: Booking ID could not be found
         500:
           description: Internal Server Error
-    patch:
-      summary: updates the booking via the expert side
-      parameters:
-        - $ref: '#/components/parameters/bookingId'
-      security:
-        - expertCookieAuth: []
-      tags:
-        - Booking
-      responses:
-        200:
-          description: Booking updated successfully
-        400:
-          description: The expert ID in the cookie does not match with the user id in the listing
-        404:
-          description: Listing ID could not be found
-        500:
-          description: Internal Server Error
-
 components:
   schemas:
     MongoId:
@@ -1008,18 +960,28 @@ components:
     ListingCreationData:
       type: object
       description: Listing data to be submitted for creation
+      required: ['name', 'price', 'pictureUrl', 'createdByExpert', 'expertiseArea', 'postCode', 'description']
       properties:
         name:
           type: string
+          minLength: 2
+          maxLength: 20
         price:
           type: number
-        listingPictureUrl:
+          minimum: 0
+        pictureUrl:
           type: string
           format: uri
         description:
           type: string
+          minLength: 0
+          maxLength: 300
         createdByExpert:
-          $ref: "#/components/schemas/ExpertReturned"
+          $ref: "#/components/schemas/MongoId"
+        postCode:
+          type: string
+          minLength: 4
+          maxLength: 8
         expertiseArea:
           $ref: "#/components/schemas/Expertise"
     ListingsArray:
@@ -1124,11 +1086,7 @@ components:
       properties:
         time:
           type: string
-          format: date
-        createdByUser:
-          $ref: '#/components/schemas/MongoId'
-        listing:
-          $ref: '#/components/schemas/MongoId'
+          format: date-time
     bookingReturned:
       type: object
       description: booking returned
@@ -1170,7 +1128,7 @@ components:
     listingId:
       in: path
       required: true
-      description: retrieves a expert with filtered data by its ID
+      description: valid ID of a listing
       name: listingId
       schema:
         $ref: '#/components/schemas/MongoId'

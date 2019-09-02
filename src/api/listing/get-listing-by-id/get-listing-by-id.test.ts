@@ -7,8 +7,12 @@ import {
 import request from 'supertest';
 import { BAD_REQUEST, OK } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import ListingModel, { ListingModelType } from '../listing.model';
-import { deleteListingFromTestById, generateListingValidBody } from '../../../utils/testing-utils/listing-utils';
+import { ListingModelType } from '../listing.model';
+import {
+  deleteListingFromTestById,
+  generateListingForTesting,
+  generateValidListingForTesting
+} from '../../../utils/testing-utils/listing-utils';
 
 describe('Get listing by ID', () => {
   let URL: string;
@@ -17,11 +21,8 @@ describe('Get listing by ID', () => {
 
   beforeAll(async done => {
     await setTestingDbConnection();
-    validListing = await ListingModel.create({
-      ...generateListingValidBody(),
-      approvedStatus: CONFIG.ApprovedStatus.APPROVED
-    });
-    invalidListing = await ListingModel.create(generateListingValidBody());
+    validListing = await generateValidListingForTesting();
+    invalidListing = await generateListingForTesting();
     URL = CONFIG.routes.listing.getById(validListing.id);
     done();
   });

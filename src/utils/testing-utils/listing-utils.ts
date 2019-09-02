@@ -17,6 +17,13 @@ export const generateListingForTesting = async (expertId?: string, approvedStatu
   return await ListingModel.create({ ...generateListingValidBody(expertId, approvedStatus) });
 };
 
+export const generateValidListingForTesting = async () => {
+  return await ListingModel.create({
+    ...generateListingValidBody(),
+    approvedStatus: CONFIG.ApprovedStatus.APPROVED
+  });
+};
+
 export const approveListingForTesting = async (listingId: string) => {
   await ListingModel.findByIdAndUpdate(listingId, { approvedStatus: CONFIG.ApprovedStatus.APPROVED });
 };

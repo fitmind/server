@@ -54,6 +54,12 @@ export const postValidRequestWithoutData = async (app: express.Application, url:
     .set('Cookie', [cookie]);
 };
 
+export const deleteValidRequestWithCookie = async (app: express.Application, url: string, cookie: string) => {
+  return request(app)
+    .delete(url)
+    .set('Cookie', [cookie]);
+};
+
 export const putValidRequestWithCookie = async (app: express.Application, url: string, cookie: string, data: any) => {
   return request(app)
     .put(url)
