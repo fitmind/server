@@ -4,32 +4,32 @@ import {
   disconnectTestingDb,
   setTestingDbConnection
 } from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
-import request from 'supertest';
 import { NOT_FOUND, OK, UNAUTHORIZED } from 'http-status-codes';
 import CONFIG from '../../../config/config';
-import { createAdmin, deleteAdminByEmail, generateAdminValidLogin } from '../../../utils/testing-utils/admin-utils';
-import ListingModel, { ListingModelType } from '../../listing/listing.model';
+import { createAdmin, deleteAdminByEmail, loginAdminUser } from '../../../utils/testing-utils/admin-utils';
+import { ListingModelType } from '../../listing/listing.model';
 import { includes } from 'ramda';
-import { deleteListingFromTestById, generateListingForTesting } from '../../../utils/testing-utils/listing-utils';
+import {
+  deleteListingFromTestById,
+  generateListingForTesting,
+  approveListingForTesting
+} from '../../../utils/testing-utils/listing-utils';
+import { getCookieFromHeader, getValidRequestWithCookie } from '../../../utils/testing-utils/testing-utils';
 
 describe('Admin pending expert', () => {
   const URL = CONFIG.routes.admin.listingsPending;
   let app = createApp(express());
   const email = 'adminexpertpending@gmail.com';
-  const password = 'Testing123!';
   let cookie: string, login, approvedListing: ListingModelType, pendingListing: ListingModelType;
-  const validLogin = generateAdminValidLogin(email, password);
 
   beforeAll(async done => {
     await setTestingDbConnection();
-    await createAdmin(email, password);
-    login = await request(app)
-      .post(CONFIG.routes.admin.login)
-      .send(validLogin);
-    cookie = login.header['set-cookie'][0];
-    pendingListing = await ListingModel.create(generateListingForTesting());
-    approvedListing = await ListingModel.create(generateListingForTesting());
-    await ListingModel.findByIdAndUpdate(approvedListing.id, { approvedStatus: CONFIG.ApprovedStatus.APPROVED });
+    await createAdmin(email);
+    login = await loginAdminUser(app, email);
+    cookie = getCookieFromHeader(login);
+    pendingListing = await generateListingForTesting();
+    approvedListing = await generateListingForTesting();
+    await approveListingForTesting(approvedListing.id);
     done();
   });
   afterAll(async done => {
@@ -42,9 +42,7 @@ describe('Admin pending expert', () => {
 
   describe('valid request', () => {
     it('should allow the admin retrieve the experts in pending status', async done => {
-      const res = await request(app)
-        .get(URL)
-        .set('Cookie', [cookie]);
+      const res = await getValidRequestWithCookie(app, URL, cookie);
       const ids = res.body.listings.map((listing: ListingModelType) => listing._id);
       expect(includes(approvedListing.id, ids)).toBeFalsy();
       expect(includes(pendingListing.id, ids)).toBeTruthy();
@@ -54,18 +52,14 @@ describe('Admin pending expert', () => {
   });
 
   it('should return 401 if the authentication failed', async done => {
-    const res = await request(app)
-      .get(URL)
-      .set('Cookie', [`${CONFIG.cookies.admin}=wrong_token`]);
+    const res = await getValidRequestWithCookie(app, URL, 'wrong-cookie');
     expect(res.status).toBe(UNAUTHORIZED);
     done();
   });
 
   it('should return 404 if it was not possible to find the admin', async done => {
     await deleteAdminByEmail(email);
-    const res = await request(app)
-      .get(URL)
-      .set('Cookie', [cookie]);
+    const res = await getValidRequestWithCookie(app, URL, cookie);
     expect(res.status).toBe(NOT_FOUND);
     done();
   });

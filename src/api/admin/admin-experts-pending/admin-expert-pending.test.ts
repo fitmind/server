@@ -5,37 +5,38 @@ import {
   disconnectTestingDb,
   setTestingDbConnection
 } from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
-import request from 'supertest';
 import { NOT_FOUND, OK, UNAUTHORIZED } from 'http-status-codes';
-import CONFIG, { ApprovedStatus } from '../../../config/config';
-import { createAdmin, deleteAdminByEmail, generateAdminValidLogin } from '../../../utils/testing-utils/admin-utils';
-import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
-import { deleteExpertByEmail, generateExpertUserValidSignUp } from '../../../utils/testing-utils/expert-user-utils';
+import CONFIG from '../../../config/config';
+import {
+  createAdmin,
+  createApprovedExpert,
+  deleteAdminByEmail,
+  loginAdminUser
+} from '../../../utils/testing-utils/admin-utils';
+import { ExpertModelType } from '../../expert/expert.model';
+import {
+  deleteExpertByEmail,
+  getExpertUserByMail,
+  registerExpertUser
+} from '../../../utils/testing-utils/expert-user-utils';
+import { getCookieFromHeader, getValidRequestWithCookie } from '../../../utils/testing-utils/testing-utils';
 
 describe('Admin pending expert', () => {
   const URL = CONFIG.routes.admin.expertsPending;
   let app = createApp(express());
   const email = 'adminexpertpending@gmail.com';
-  const password = 'Testing123!';
   const expert1Email = 'expert1@gmail.com';
   const expert2Email = 'expert2@gmail.com';
   const approvedExpertEmail = 'approved@gmail.com';
   let cookie: string, login;
-  const validLogin = generateAdminValidLogin(email, password);
 
   beforeAll(async done => {
     await setTestingDbConnection();
-    await createAdmin(email, password);
-    await request(app)
-      .post(CONFIG.routes.expert.register)
-      .send(generateExpertUserValidSignUp(expert1Email));
-    await request(app)
-      .post(CONFIG.routes.expert.register)
-      .send(generateExpertUserValidSignUp(expert2Email));
-    login = await request(app)
-      .post(CONFIG.routes.admin.login)
-      .send(validLogin);
-    cookie = login.header['set-cookie'][0];
+    await createAdmin(email);
+    await registerExpertUser(app, expert1Email);
+    await registerExpertUser(app, expert2Email);
+    login = await loginAdminUser(app, email);
+    cookie = getCookieFromHeader(login);
     done();
   });
   afterAll(async done => {
@@ -49,15 +50,10 @@ describe('Admin pending expert', () => {
 
   describe('valid request', () => {
     it('should allow the admin retrieve the experts in pending status', async done => {
-      const approvedExpert = (await ExpertModel.create({
-        email: approvedExpertEmail,
-        approvedStatus: ApprovedStatus.APPROVED
-      })) as ExpertModelType;
-      const expert1 = (await ExpertModel.find({ email: expert1Email }))[0];
-      const expert2 = (await ExpertModel.find({ email: expert2Email }))[0];
-      const res = await request(app)
-        .get(URL)
-        .set('Cookie', [cookie]);
+      const approvedExpert = await createApprovedExpert(approvedExpertEmail);
+      const expert1 = await getExpertUserByMail(expert1Email);
+      const expert2 = await getExpertUserByMail(expert2Email);
+      const res = await getValidRequestWithCookie(app, URL, cookie);
       expect(res.status).toEqual(OK);
       const ids = res.body.experts.map((expert: ExpertModelType) => expert._id);
       expect(includes(expert1.id, ids)).toBeTruthy();
@@ -68,18 +64,14 @@ describe('Admin pending expert', () => {
   });
 
   it('should return 401 if the authentication failed', async done => {
-    const res = await request(app)
-      .get(URL)
-      .set('Cookie', [`${CONFIG.cookies.admin}=wrong_token`]);
+    const res = await getValidRequestWithCookie(app, URL, 'bad-cookie');
     expect(res.status).toBe(UNAUTHORIZED);
     done();
   });
 
   it('should return 404 if it was not possible to find the admin', async done => {
     await deleteAdminByEmail(email);
-    const res = await request(app)
-      .get(URL)
-      .set('Cookie', [cookie]);
+    const res = await getValidRequestWithCookie(app, URL, cookie);
     expect(res.status).toBe(NOT_FOUND);
     done();
   });

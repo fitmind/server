@@ -4,29 +4,20 @@ import {
   disconnectTestingDb,
   setTestingDbConnection
 } from '../../../utils/testing-utils/testing-db-connection/testing-db-connection';
-import request from 'supertest';
-import CONFIG from '../../../config/config';
 import { OK, UNAUTHORIZED, BAD_REQUEST, NOT_FOUND } from 'http-status-codes';
-import ExpertModel from '../expert.model';
 import {
   deleteExpertByEmail,
-  generateExpertUserValidSignUp,
-  generateExpertValidLogin
+  loginExpertUser,
+  registerExpertUser
 } from '../../../utils/testing-utils/expert-user-utils';
 
 describe('expert login', () => {
   let app = createApp(express());
-  const URL = CONFIG.routes.expert.login;
-  const SIGN_URL = CONFIG.routes.expert.register;
   const email = 'expertregister@mail.com';
-  const validSignUp = generateExpertUserValidSignUp(email);
-  const validLogin = generateExpertValidLogin(email);
 
   beforeAll(async done => {
     await setTestingDbConnection();
-    await request(app)
-      .post(SIGN_URL)
-      .send(validSignUp);
+    await registerExpertUser(app, email);
     done();
   });
 
@@ -38,9 +29,7 @@ describe('expert login', () => {
 
   describe('valid login', () => {
     it('returns OK on valid login', async done => {
-      const res = await request(app)
-        .post(URL)
-        .send(validLogin);
+      const res = await loginExpertUser(app, email);
       expect(res.status).toEqual(OK);
       done();
     });
@@ -48,24 +37,19 @@ describe('expert login', () => {
 
   describe('invalid login', () => {
     it('should return BAD_REQUEST if data is invalid', async done => {
-      const res = await request(app)
-        .post(URL)
-        .send({ badField: '' });
+      const res = await loginExpertUser(app, email, { bad: 'field' });
       expect(res.status).toEqual(BAD_REQUEST);
       done();
     });
-    it('should return unauthorised if passwords dont match', async done => {
-      const res = await request(app)
-        .post(URL)
-        .send({ email, password: 'not-right' });
+    it('should return unauthorized if passwords dont match', async done => {
+      const res = await loginExpertUser(app, email, { email, password: 'badPassword' });
       expect(res.status).toEqual(UNAUTHORIZED);
       done();
     });
     it('should return NOT_FOUND if the user doesnt exist', async done => {
-      await ExpertModel.remove({ email });
-      const res = await request(app)
-        .post(URL)
-        .send({ email: 'notfound@mail.com', password: 'Testing123!' });
+      await deleteExpertByEmail(email);
+      const notFound = { email: 'notfound@mail.com', password: 'Testing123!' };
+      const res = await loginExpertUser(app, email, notFound);
       expect(res.status).toEqual(NOT_FOUND);
       done();
     });

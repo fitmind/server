@@ -1,6 +1,7 @@
 import request from 'supertest';
 import CONFIG from '../../config/config';
 import express from 'express';
+import ExpertModel from '../../api/expert/expert.model';
 
 export const userTestEmail = 'diego@testing.com';
 export const userTestPassword = 'ValidPassword123!';
@@ -36,9 +37,21 @@ export const getValidRequestWithCookie = async (app: express.Application, url: s
 
 export const postValidRequestWithCookie = async (app: express.Application, url: string, cookie: string, data: any) => {
   return request(app)
-    .put(url)
+    .post(url)
     .set('Cookie', [cookie])
     .send(data);
+};
+
+export const postValidRequest = async (app: express.Application, url: string, data: any) => {
+  return request(app)
+    .post(url)
+    .send(data);
+};
+
+export const postValidRequestWithoutData = async (app: express.Application, url: string, cookie: string) => {
+  return request(app)
+    .post(url)
+    .set('Cookie', [cookie]);
 };
 
 export const putValidRequestWithCookie = async (app: express.Application, url: string, cookie: string, data: any) => {
@@ -46,4 +59,8 @@ export const putValidRequestWithCookie = async (app: express.Application, url: s
     .put(url)
     .set('Cookie', [cookie])
     .send(data);
+};
+
+export const deleteExpertById = async (id: string) => {
+  await ExpertModel.findByIdAndDelete(id);
 };
