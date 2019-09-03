@@ -13,7 +13,6 @@ const createBooking = async (req: RequestWithUser, res: Response, next: NextFunc
   const listingId = req.params.listingId;
   try {
     const listing = (await ListingModel.findById(listingId)) as ListingModelType;
-    console.log(listing);
     if (!listing) {
       next(new HttpException(NOT_FOUND, 'Listing not found'));
     } else if (listing.approvedStatus !== CONFIG.ApprovedStatus.APPROVED) {

@@ -89,7 +89,6 @@ describe('Create Booking', () => {
       date.setSeconds(0);
       date.setMilliseconds(0);
       const inValidBooking = { time: date };
-      console.log(inValidBooking);
       const res = await postValidRequestWithCookie(app, URL, cookie, inValidBooking);
       expect(res.status).toBe(BAD_REQUEST);
       done();
@@ -104,7 +103,6 @@ describe('Create Booking', () => {
       date.setSeconds(0);
       date.setMilliseconds(0);
       const inValidBooking = { time: date };
-      console.log(inValidBooking);
       const res = await postValidRequestWithCookie(app, URL, cookie, inValidBooking);
       expect(res.status).toBe(BAD_REQUEST);
       done();
