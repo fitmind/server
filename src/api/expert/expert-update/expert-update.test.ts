@@ -30,7 +30,7 @@ describe('expert update', () => {
     pictureUrl: testingPictureUrl,
     isAnExpertIn: ['PERSONAL_COACH'],
     weeklyAvailability: {
-      monday: ['06:00', '06:30'],
+      monday: ['06:00'],
       tuesday: [],
       wednesday: [],
       thursday: [],

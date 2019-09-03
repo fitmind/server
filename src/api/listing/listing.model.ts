@@ -7,7 +7,6 @@ const ListingSchema = new mongoose.Schema({
   description: String,
   pictureUrl: String,
   price: String,
-  duration: Number,
   createdTimeStamp: { type: Date, default: Date.now },
   approvedStatus: { type: String, default: ApprovedStatus.PENDING },
   expertiseArea: String,

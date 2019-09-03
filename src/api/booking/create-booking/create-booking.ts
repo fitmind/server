@@ -13,22 +13,22 @@ const createBooking = async (req: RequestWithUser, res: Response, next: NextFunc
   const listingId = req.params.listingId;
   try {
     const listing = (await ListingModel.findById(listingId)) as ListingModelType;
+    console.log(listing);
     if (!listing) {
       next(new HttpException(NOT_FOUND, 'Listing not found'));
     } else if (listing.approvedStatus !== CONFIG.ApprovedStatus.APPROVED) {
       next(new HttpException(BAD_REQUEST, 'Not possible to create bookings on not approved listings'));
     } else {
-      // Need to check for all availabilities in the next month and checking
-      // todo: need to book all the places depending on the duration of the listing
+      // Need to check for all availabilities in the next month
       const expert = (await ExpertModel.findById(listing.createdByExpert)) as ExpertModelType;
       const allBookings = await BookingModel.find({ expert: expert.id });
       const bookings = allBookings.map(booking => booking.time);
-      const weeklyAvailabilities = expert.weeklyAvailability;
-      const availability = getAvailabilities(weeklyAvailabilities, bookings);
+      const availability = getAvailabilities(expert.weeklyAvailability, bookings);
       const availabilityTimes = availability.map(date => new Date(date).getTime());
       const date = new Date(req.body.time);
       date.setSeconds(0);
       date.setMilliseconds(0);
+
       if (!availabilityTimes.includes(date.getTime())) {
         next(new HttpException(BAD_REQUEST, 'Not possible to create a booking at that time'));
       } else {

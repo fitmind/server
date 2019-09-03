@@ -5,7 +5,6 @@ import { testingPictureUrl } from './testing-utils';
 export const generateListingValidBody = (expertId?: string, approvedStatus?: string) => ({
   name: 'listing name',
   price: '100.00',
-  duration: 1,
   description: 'some listing desc',
   pictureUrl: testingPictureUrl,
   expertiseArea: CONFIG.expertise.LIFE_COACH,
