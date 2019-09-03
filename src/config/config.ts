@@ -65,6 +65,7 @@ const CONFIG = {
     listing: {
       new: '/listings/new',
       getById: (id: string) => `/listings/${id}`,
+      getAvailabilityById: (id: string) => `/listings/availability/${id}`,
       deleteById: (id: string) => `/listings/${id}`,
       updateById: (id: string) => `/listings/${id}`
     },

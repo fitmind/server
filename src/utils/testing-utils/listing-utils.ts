@@ -5,6 +5,7 @@ import { testingPictureUrl } from './testing-utils';
 export const generateListingValidBody = (expertId?: string, approvedStatus?: string) => ({
   name: 'listing name',
   price: '100.00',
+  duration: 1,
   description: 'some listing desc',
   pictureUrl: testingPictureUrl,
   expertiseArea: CONFIG.expertise.LIFE_COACH,
@@ -17,9 +18,9 @@ export const generateListingForTesting = async (expertId?: string, approvedStatu
   return await ListingModel.create({ ...generateListingValidBody(expertId, approvedStatus) });
 };
 
-export const generateValidListingForTesting = async () => {
+export const generateValidListingForTesting = async (expertId?: string) => {
   return await ListingModel.create({
-    ...generateListingValidBody(),
+    ...generateListingValidBody(expertId),
     approvedStatus: CONFIG.ApprovedStatus.APPROVED
   });
 };
@@ -36,14 +37,6 @@ export const approveListingInTesting = async (id: string) => {
   await ListingModel.findByIdAndUpdate(id, { approvedStatus: CONFIG.ApprovedStatus.APPROVED });
 };
 
-export const ListingCreationData = (expertId: string) => ({
-  name: 'Listing name',
-  description: 'some long string',
-  pictureUrl: testingPictureUrl,
-  expertiseArea: 'PERSONAL_COACH',
-  createdByExpert: expertId
-});
-
-export const getListingById = async (id: string) => {
+export const getListingFromDbById = async (id: string) => {
   return (await ListingModel.findById(id)) as ListingModelType;
 };

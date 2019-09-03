@@ -1,7 +1,8 @@
 export default interface ListingInterface {
   id: string;
   name: string;
-  price: number;
+  price: string;
+  duration: number;
   description: string;
   pictureUrl: string;
   createdTimeStamp: string;

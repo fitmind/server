@@ -11,18 +11,6 @@ export const getCookieFromHeader = (login: any) => {
   return login.header['set-cookie'][0];
 };
 
-export const generateDateInThePast = (days: number): Date => {
-  let pastDate = new Date();
-  pastDate.setDate(pastDate.getDate() - days);
-  return pastDate;
-};
-
-export const generateDateInTheFuture = (days: number): Date => {
-  let pastDate = new Date();
-  pastDate.setDate(pastDate.getDate() + days);
-  return pastDate;
-};
-
 export const requestWithWrongCookie = async (app: express.Application, url: string) => {
   return request(app)
     .get(url)
