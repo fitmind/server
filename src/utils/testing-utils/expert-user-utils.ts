@@ -1,25 +1,8 @@
-import { testingPictureUrl, userTestEmail, userTestPassword } from './testing-utils';
+import { testingPictureUrl, userTestEmail, userTestPassword, validWeeklyAvailability } from './testing-utils';
 import ExpertModel, { ExpertModelType } from '../../api/expert/expert.model';
 import express from 'express';
 import request from 'supertest';
 import CONFIG from '../../config/config';
-
-const monday = ['08:00', '09:00', '10:00'];
-const tuesday = ['08:00', '07:00', '08:00', '09:00'];
-const wednesday = ['06:00', '07:00', '08:00', '09:00'];
-const thursday = ['08:00', '16:00', '17:00', '18:00', '19:00'];
-const friday = ['08:00', '20:00', '21:00', '22:00', '23:00', '00:00'];
-const saturday = ['01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00'];
-const sunday = ['08:00'];
-const weeklyAvailability = {
-  monday,
-  tuesday,
-  wednesday,
-  thursday,
-  friday,
-  saturday,
-  sunday
-};
 
 export const generateExpertUserValidSignUp = (email = userTestEmail) => ({
   name: 'Diego Romero',
@@ -28,7 +11,7 @@ export const generateExpertUserValidSignUp = (email = userTestEmail) => ({
   password: userTestPassword,
   pictureUrl: testingPictureUrl,
   isAnExpertIn: ['PERSONAL_COACH'],
-  weeklyAvailability
+  weeklyAvailability: validWeeklyAvailability
 });
 
 export const registerExpertUser = async (app: express.Application, email: string, customSignUp?: any) => {

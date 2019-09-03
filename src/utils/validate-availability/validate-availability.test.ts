@@ -1,4 +1,5 @@
 import { ValidAvailability } from './validate-availability';
+import { validWeeklyAvailability } from '../testing-utils/testing-utils';
 
 describe('validate availability', () => {
   const validExpertise = new ValidAvailability();
@@ -13,23 +14,7 @@ describe('validate availability', () => {
 
   describe('validate function', () => {
     it('should return true if all the hours in the dates are valid', () => {
-      const monday = ['08:00', '09:00', '10:00'];
-      const tuesday = ['08:00', '07:00', '08:00', '09:00'];
-      const wednesday = ['06:00', '07:00', '08:00', '09:00'];
-      const thursday = ['08:00', '16:00', '17:00', '18:00', '19:00'];
-      const friday = ['08:00', '20:00', '21:00', '22:00', '23:00', '00:00'];
-      const saturday = ['01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00'];
-      const sunday = ['08:00'];
-      const valid = {
-        monday,
-        tuesday,
-        wednesday,
-        thursday,
-        friday,
-        saturday,
-        sunday
-      };
-      expect(validExpertise.validate(valid, validationArguments)).toBeTruthy();
+      expect(validExpertise.validate(validWeeklyAvailability, validationArguments)).toBeTruthy();
     });
     describe('is invalid', () => {
       it('should return false when any of the values coming in is not a valid time', () => {
