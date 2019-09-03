@@ -11,7 +11,7 @@ import { ListingModelType } from '../../listing/listing.model';
 import {
   deleteListingFromTestById,
   generateListingForTesting,
-  getListingById
+  getListingFromDbById
 } from '../../../utils/testing-utils/listing-utils';
 import { getCookieFromHeader, putValidRequestWithCookie } from '../../../utils/testing-utils/testing-utils';
 
@@ -42,14 +42,14 @@ describe('Admin listing approve', () => {
     it('should change the listing approval status to APPROVED if is true', async done => {
       const res = await putValidRequestWithCookie(app, URL, cookie, validApproval);
       expect(res.status).toBe(OK);
-      const l = await getListingById(listing.id);
+      const l = await getListingFromDbById(listing.id);
       expect(l.approvedStatus).toEqual(CONFIG.ApprovedStatus.APPROVED);
       done();
     });
     it('should change the expert approval status to DENIED if false', async done => {
       const res = await putValidRequestWithCookie(app, URL, cookie, { approved: false });
       expect(res.status).toBe(OK);
-      const l = await getListingById(listing.id);
+      const l = await getListingFromDbById(listing.id);
       expect(l.approvedStatus).toEqual(CONFIG.ApprovedStatus.DENIED);
       done();
     });

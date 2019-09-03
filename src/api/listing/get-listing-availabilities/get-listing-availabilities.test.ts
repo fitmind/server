@@ -17,18 +17,18 @@ import { ExpertModelType } from '../../expert/expert.model';
 import { generateExpertForTesting } from '../../../utils/testing-utils/expert-user-utils';
 import { deleteExpertById } from '../../../utils/testing-utils/testing-utils';
 
-describe('Get listing by ID', () => {
+describe('Get listing availability by ID', () => {
   let URL: string;
   let app = createApp(express());
   let validListing: ListingModelType, invalidListing: ListingModelType, expert: ExpertModelType;
-  const expertEmail = 'getlistingbyidexpert@gmail.com';
+  const expertEmail = 'listing.availability@gmail.com';
 
   beforeAll(async done => {
     await setTestingDbConnection();
     expert = await generateExpertForTesting(expertEmail);
     validListing = await generateValidListingForTesting(expert.id);
     invalidListing = await generateListingForTesting();
-    URL = CONFIG.routes.listing.getById(validListing.id);
+    URL = CONFIG.routes.listing.getAvailabilityById(validListing.id);
     done();
   });
   afterAll(async done => {
