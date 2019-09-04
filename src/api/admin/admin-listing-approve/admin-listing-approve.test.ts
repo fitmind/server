@@ -40,6 +40,10 @@ describe('Admin listing approve', () => {
 
   describe('valid request', () => {
     it('should change the listing approval status to APPROVED if is true', async done => {
+      console.log('----------------------------');
+      console.log(`NODE ENV: ${process.env.NODE_ENV}`);
+      console.log('----------------------------');
+
       const res = await putValidRequestWithCookie(app, URL, cookie, validApproval);
       expect(res.status).toBe(OK);
       console.log(res.body);
