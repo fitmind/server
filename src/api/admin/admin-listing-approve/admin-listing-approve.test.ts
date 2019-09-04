@@ -42,6 +42,7 @@ describe('Admin listing approve', () => {
     it('should change the listing approval status to APPROVED if is true', async done => {
       const res = await putValidRequestWithCookie(app, URL, cookie, validApproval);
       expect(res.status).toBe(OK);
+      console.log(res.body);
       const l = await getListingFromDbById(listing.id);
       expect(l.approvedStatus).toEqual(CONFIG.ApprovedStatus.APPROVED);
       done();
@@ -49,6 +50,7 @@ describe('Admin listing approve', () => {
     it('should change the expert approval status to DENIED if false', async done => {
       const res = await putValidRequestWithCookie(app, URL, cookie, { approved: false });
       expect(res.status).toBe(OK);
+      console.log(res.body);
       const l = await getListingFromDbById(listing.id);
       expect(l.approvedStatus).toEqual(CONFIG.ApprovedStatus.DENIED);
       done();
