@@ -1,4 +1,0 @@
-- need to update swagger as creating a booking is slightly different, the listing id is in the url and the user id is in the token, just the time is needed in the body of the request
-- need to add delete booking from
-- need to add to tests to check that they are being called with the right middleware
-- Before the booking is created the availability should be checked

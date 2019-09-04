@@ -7,9 +7,11 @@ import ListingModel, { ListingModelType } from '../../listing/listing.model';
 import CONFIG from '../../../config/config';
 import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
 import { getAvailabilities } from '../../../utils/get-availabilities/get-availabilities';
+import sendEmail, { EMAILS } from '../../../utils/send-email/send-email';
+import { UserModelType } from '../../user/user.model';
 
 const createBooking = async (req: RequestWithUser, res: Response, next: NextFunction) => {
-  const userId = req.user ? req.user.id : '';
+  const user = req.user as UserModelType;
   const listingId = req.params.listingId;
   try {
     const listing = (await ListingModel.findById(listingId)) as ListingModelType;
@@ -33,10 +35,15 @@ const createBooking = async (req: RequestWithUser, res: Response, next: NextFunc
       } else {
         const booking = await BookingModel.create({
           time: req.body.time,
-          customer: userId,
+          customer: user.id,
           listing: listingId,
           expert: listing.createdByExpert
         });
+        if (process.env.NODE_ENV !== 'test') {
+          const subject = `Fitmind: You have an upcoming ${booking.time.toString()}`;
+          sendEmail(EMAILS.BOOKING_CONFIRMATION, [expert.email], subject);
+          sendEmail(EMAILS.BOOKING_CONFIRMATION, [user.email], subject);
+        }
         res.status(CREATED).json({ message: `Booking with ID: ${booking.id} created` });
       }
     }
