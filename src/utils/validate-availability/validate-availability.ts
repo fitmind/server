@@ -29,6 +29,6 @@ export class ValidAvailability implements ValidatorConstraintInterface {
   }
 
   public defaultMessage(args: ValidationArguments) {
-    return 'All the days of the week need to be included and they can only be the available every half hours as a string';
+    return 'All the days of the week need to be included and they can only be the available every hour as a string';
   }
 }

@@ -1,9 +1,10 @@
 import { NextFunction, Response } from 'express';
 import { BAD_REQUEST, NOT_FOUND, OK } from 'http-status-codes';
 import HttpException from '../../../utils/http-exception/http-exception';
-import ExpertModel from '../../expert/expert.model';
+import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
 import RequestWithAdminInterface from '../../../interfaces/request-with-admin.interface';
 import { ApprovedStatus } from '../../../config/config';
+import sendEmail, { EMAILS } from '../../../utils/send-email/send-email';
 
 const adminExpertApprove = async (req: RequestWithAdminInterface, res: Response, next: NextFunction) => {
   const id = req.params.expertId as string;
@@ -12,7 +13,13 @@ const adminExpertApprove = async (req: RequestWithAdminInterface, res: Response,
   } else {
     try {
       const approvedStatus = req.body.approved ? ApprovedStatus.APPROVED : ApprovedStatus.DENIED;
-      await ExpertModel.findByIdAndUpdate(id, { approvedStatus });
+      const expert = (await ExpertModel.findByIdAndUpdate(id, { approvedStatus })) as ExpertModelType;
+      if (process.env.NODE_ENV !== 'test' && approvedStatus === ApprovedStatus.APPROVED) {
+        sendEmail(EMAILS.EXPERT_APPROVE, [expert.email]);
+      }
+      if (process.env.NODE_ENV !== 'test' && approvedStatus === ApprovedStatus.DENIED) {
+        sendEmail(EMAILS.EXPERT_DENIED, [expert.email]);
+      }
       res.sendStatus(OK);
     } catch (e) {
       next(new HttpException(NOT_FOUND, 'Could not update the expert'));

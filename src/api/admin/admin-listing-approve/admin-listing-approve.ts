@@ -3,7 +3,9 @@ import { BAD_REQUEST, NOT_FOUND, OK } from 'http-status-codes';
 import HttpException from '../../../utils/http-exception/http-exception';
 import RequestWithAdminInterface from '../../../interfaces/request-with-admin.interface';
 import { ApprovedStatus } from '../../../config/config';
-import ListingModel from '../../listing/listing.model';
+import ListingModel, { ListingModelType } from '../../listing/listing.model';
+import sendEmail, { EMAILS } from '../../../utils/send-email/send-email';
+import ExpertModel, { ExpertModelType } from '../../expert/expert.model';
 
 const adminListingApprove = async (req: RequestWithAdminInterface, res: Response, next: NextFunction) => {
   const id = req.params.listingId as string;
@@ -12,7 +14,14 @@ const adminListingApprove = async (req: RequestWithAdminInterface, res: Response
   } else {
     try {
       const approvedStatus = req.body.approved ? ApprovedStatus.APPROVED : ApprovedStatus.DENIED;
-      await ListingModel.findByIdAndUpdate(id, { approvedStatus });
+      const listing = (await ListingModel.findByIdAndUpdate(id, { approvedStatus })) as ListingModelType;
+      const expert = (await ExpertModel.findById(listing.createdByExpert)) as ExpertModelType;
+      if (process.env.NODE_ENV !== 'test' && approvedStatus === ApprovedStatus.APPROVED) {
+        sendEmail(EMAILS.LISTING_APPROVE, [expert.email]);
+      }
+      if (process.env.NODE_ENV !== 'test' && approvedStatus === ApprovedStatus.DENIED) {
+        sendEmail(EMAILS.LISTING_DENIED, [expert.email]);
+      }
       res.sendStatus(OK);
     } catch (e) {
       next(new HttpException(NOT_FOUND, 'Could not update the expert'));
