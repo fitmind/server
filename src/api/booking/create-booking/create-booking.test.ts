@@ -30,7 +30,15 @@ describe('Create Booking', () => {
   const expertEmail = 'createbookingexpert@mail.com';
   const customerEmail = 'createbookinguser@mail.com';
   let cookie: string, login, listing: ListingModelType, expert: ExpertModelType, user: UserModelType;
-  const validBooking = { time: '2019-08-30T17:08:28.203Z' };
+
+  // The test expert user always has 8AM as an allowed time to make bookings in order to make the tests pass
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  date.setHours(2);
+  date.setMinutes(0);
+  date.setSeconds(0);
+  date.setMilliseconds(0);
+  const validBooking = { time: date };
 
   beforeAll(async done => {
     await setTestingDbConnection();
@@ -59,12 +67,47 @@ describe('Create Booking', () => {
       const booking = await getBookingByCustomerId(user.id);
       expect(booking.expert.toString()).toEqual(expert.id.toString());
       expect(booking.listing.toString()).toEqual(listing.id.toString());
-      await deleteBookingById(booking.id);
       done();
     });
   });
 
   describe('invalid request', () => {
+    it('should return 400 if trying to create a booking on top of an existing one', async done => {
+      const res = await postValidRequestWithCookie(app, URL, cookie, validBooking);
+      expect(res.status).toBe(BAD_REQUEST);
+      const booking = await getBookingByCustomerId(user.id);
+      await deleteBookingById(booking.id);
+      done();
+    });
+
+    it('should return 400 if trying to create a booking outside the valid times set by the expert', async done => {
+      // The test expert user always has 2PM unavailable
+      const date = new Date();
+      date.setDate(date.getDate() + 1);
+      date.setHours(8); // 14 hours for some strange reason
+      date.setMinutes(0);
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+      const inValidBooking = { time: date };
+      const res = await postValidRequestWithCookie(app, URL, cookie, inValidBooking);
+      expect(res.status).toBe(BAD_REQUEST);
+      done();
+    });
+
+    it('should return 400 if trying to create a booking in the past', async done => {
+      // The test expert user always has 2PM unavailable
+      const date = new Date();
+      date.setDate(date.getDate() - 2);
+      date.setHours(2); // 14 hours for some strange reason
+      date.setMinutes(0);
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+      const inValidBooking = { time: date };
+      const res = await postValidRequestWithCookie(app, URL, cookie, inValidBooking);
+      expect(res.status).toBe(BAD_REQUEST);
+      done();
+    });
+
     it('should return 401 if the authentication failed', async done => {
       const res = await postValidRequestWithCookie(app, URL, 'wrong-cookie', validBooking);
       expect(res.status).toBe(UNAUTHORIZED);

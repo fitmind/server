@@ -1,4 +1,4 @@
-import { IsNumber, IsPositive, IsString, IsUrl, Length, Max } from 'class-validator';
+import { IsString, IsUrl, Length } from 'class-validator';
 
 class createListingDto {
   @IsString()
@@ -8,11 +8,6 @@ class createListingDto {
   @IsString()
   @Length(4, 8)
   public price: string;
-
-  @IsNumber()
-  @IsPositive()
-  @Max(4)
-  public duration: number;
 
   @IsString()
   @IsUrl()
