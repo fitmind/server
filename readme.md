@@ -4,16 +4,7 @@
 
 ## Check Swagger UI
 
-Here you will be able to see the API documentation
-
-Run serve locally
-
-```bash
-yarn serve:static
-```
-
-- On the command you should have a local URL which will serve static files
-- click on swagger.html
+[API Documentation](https://app.swaggerhub.com/apis/Diego-Romero/Fitmind/1.0.0)
 
 ## You will have to generate a .env files to run the MongoDB Databases, PORT, etc..
 
