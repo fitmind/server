@@ -1,4 +1,5 @@
-import { IsString, IsUrl, Length } from 'class-validator';
+import { IsString, IsUrl, Length, Validate } from 'class-validator';
+import { ValidExpertiseGetListings } from '../../../utils/validate-expertise-get-listings/validate-expertise-get-listings';
 
 class createListingDto {
   @IsString()
@@ -18,6 +19,7 @@ class createListingDto {
   public description: string;
 
   @IsString()
+  @Validate(ValidExpertiseGetListings)
   public expertiseArea: string;
 
   @IsString()

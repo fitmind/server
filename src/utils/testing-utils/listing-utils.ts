@@ -1,13 +1,24 @@
-import CONFIG from '../../config/config';
 import ListingModel, { ListingModelType } from '../../api/listing/listing.model';
 import { testingPictureUrl } from './testing-utils';
+import CONFIG from '../../config/config';
 
-export const generateListingValidBody = (expertId?: string, approvedStatus?: string) => ({
+export function getRandomPrice(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return `${Math.floor(Math.random() * (max - min + 1)) + min}.00`;
+}
+
+export const generateListingValidBody = (
+  expertId?: string,
+  approvedStatus?: string,
+  expertise?: string,
+  price?: string
+) => ({
   name: 'listing name',
-  price: '100.00',
   description: 'some listing desc',
   pictureUrl: testingPictureUrl,
-  expertiseArea: CONFIG.expertise.LIFE_COACH,
+  price: price || '150.00',
+  expertiseArea: expertise || CONFIG.expertise.LIFE_COACH,
   postCode: 'NW13LR',
   createdByExpert: expertId,
   approvedStatus
