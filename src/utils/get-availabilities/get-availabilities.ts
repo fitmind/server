@@ -34,7 +34,7 @@ const options = { hour: '2-digit', minute: '2-digit', hour12: false };
 
 export const getAvailabilities = (weeklyAvailability: WeeklyAvailability, futureBookings?: Date[]) => {
   const nextMonthDates = generateDatesInTheNextMonth();
-  return nextMonthDates.filter(date => {
+  const filtered = nextMonthDates.filter(date => {
     const day = daysArray[date.getDay()];
     // @ts-ignore
     const availabilityForTheDay: string[] = weeklyAvailability[day];
@@ -45,7 +45,8 @@ export const getAvailabilities = (weeklyAvailability: WeeklyAvailability, future
       if (mapped.includes(date.getTime())) return false;
     }
     // if the current date being looped is in the non available list, return false in this filter func
-    if (availabilityForTheDay.includes(dateTime)) return false;
-    else return true;
+    return availabilityForTheDay.includes(dateTime);
   });
+
+  return filtered;
 };
