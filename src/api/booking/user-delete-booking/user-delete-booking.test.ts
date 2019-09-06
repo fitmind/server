@@ -12,6 +12,7 @@ import { ExpertModelType } from '../../expert/expert.model';
 import { BookingModelType } from '../booking.model';
 import {
   deleteCustomerUserById,
+  deleteCustomerUserFromDbByEmail,
   getCustomerUserByEmail,
   loginCustomerUser,
   registerCustomerUser
@@ -97,6 +98,7 @@ describe('Delete booking as a customer', () => {
       const badCookie = getCookieFromHeader(badLogin);
       const res = await deleteValidRequestWithCookie(app, URL, badCookie);
       expect(res.status).toBe(BAD_REQUEST);
+      await deleteCustomerUserFromDbByEmail(badCustomer);
       done();
     });
   });
