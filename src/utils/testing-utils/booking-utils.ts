@@ -1,10 +1,22 @@
 import BookingModel, { BookingModelType } from '../../api/booking/booking.model';
 
+const generateDateTomorrow = () => {
+  const dateTomorrow = new Date();
+  dateTomorrow.setMinutes(dateTomorrow.getMinutes() + 1440);
+  return dateTomorrow;
+};
+
+export const generateDateYesterday = () => {
+  const date = new Date();
+  date.setMinutes(date.getMinutes() - 1440);
+  return date;
+};
+
 export const generateBookingForTesting = async (
   userId: string,
   listingId: string,
   expertId: string,
-  time: string = '2019-08-31T11:00:14.407Z'
+  time: Date = generateDateTomorrow()
 ) => {
   return (await BookingModel.create({
     time: time,

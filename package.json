@@ -20,8 +20,7 @@
     "prettier:watch": "onchange '**/*.{ts,js,css,html}' -- prettier --write {{changed}}",
     "prettier:all": "prettier --write '**/*.{ts,js,css,html}'",
     "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint --fix src/**/*.ts",
-    "serve:static": "serve"
+    "lint:fix": "eslint --fix src/**/*.ts"
   },
   "author": "Diego Romero <diego.romero@capitalone.com>",
   "license": "UNLICENSED",
@@ -96,7 +95,6 @@
     "onchange": "^6.0.0",
     "prettier": "1.18.2",
     "pretty-quick": "^1.11.1",
-    "serve": "^11.0.2",
     "ts-jest": "^24.0.2",
     "ts-node": "8.2.0",
     "typescript": "3.5.1"
