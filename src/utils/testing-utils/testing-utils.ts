@@ -59,6 +59,42 @@ export const deleteExpertById = async (id: string) => {
   await ExpertModel.findByIdAndDelete(id);
 };
 
+const allAvailables = [
+  '01:00',
+  '02:00',
+  '03:00',
+  '04:00',
+  '05:00',
+  '06:00',
+  '07:00',
+  '08:00',
+  '09:00',
+  '10:00',
+  '11:00',
+  '12:00',
+  '13:00',
+  '14:00',
+  '15:00',
+  '16:00',
+  '17:00',
+  '18:00',
+  '19:00',
+  '20:00',
+  '21:00',
+  '22:00',
+  '23:00',
+  '00:00'
+];
+export const allWeekAvailable = {
+  monday: allAvailables,
+  tuesday: allAvailables,
+  wednesday: allAvailables,
+  thursday: allAvailables,
+  friday: allAvailables,
+  saturday: allAvailables,
+  sunday: allAvailables
+};
+
 const monday = ['08:00', '09:00', '10:00'];
 const tuesday = ['08:00', '07:00', '08:00', '09:00'];
 const wednesday = ['06:00', '07:00', '08:00', '09:00'];

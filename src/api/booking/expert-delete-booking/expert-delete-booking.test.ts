@@ -96,6 +96,7 @@ describe('Delete booking as an expert', () => {
       const badCookie = getCookieFromHeader(badLogin);
       const res = await deleteValidRequestWithCookie(app, URL, badCookie);
       expect(res.status).toBe(BAD_REQUEST);
+      await deleteExpertByEmail(badExpert);
       done();
     });
   });
