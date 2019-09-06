@@ -63,10 +63,10 @@ describe('Create Booking', () => {
   describe('valid request', () => {
     it('should create a new booking in the DB with all the ids', async done => {
       const res = await postValidRequestWithCookie(app, URL, cookie, validBooking);
-      expect(res.status).toBe(CREATED);
       console.log('----------------');
       console.log('res.body');
       console.log(res.body);
+      expect(res.status).toBe(CREATED);
       const booking = await getBookingByCustomerId(user.id);
       expect(booking.expert.toString()).toEqual(expert.id.toString());
       expect(booking.listing.toString()).toEqual(listing.id.toString());
