@@ -4,6 +4,7 @@ import { pick } from 'ramda';
 import { ExpertModelType } from '../expert.model';
 import WeeklyAvailability from '../../../interfaces/weeklyAvailability.interface';
 import RequestWithExpert from '../../../interfaces/request-with-expert.interface';
+import BookingModel, { BookingModelType } from '../../booking/booking.model';
 
 interface FilteredExpert {
   id: string;
@@ -18,8 +19,15 @@ interface FilteredExpert {
 export const filterExpertMe = (expert: ExpertModelType): FilteredExpert =>
   pick(['id', 'name', 'email', 'description', 'isAnExpertIn', 'weeklyAvailability', 'approvedStatus'], expert);
 
-const getExpertMe = (req: RequestWithExpert, res: Response) => {
-  res.status(OK).json(filterExpertMe(req.expert as ExpertModelType));
+const getExpertMe = async (req: RequestWithExpert, res: Response) => {
+  const expert = req.expert as ExpertModelType;
+  const bookings = await BookingModel.find({ expert: expert.id });
+  let now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const pastBookings = bookings.filter((booking: BookingModelType) => new Date(booking.time) < now);
+  const futureBookings = bookings.filter((booking: BookingModelType) => new Date(booking.time) > now);
+  const expertFiltered = filterExpertMe(expert);
+  res.status(OK).json({ ...expertFiltered, pastBookings, futureBookings });
 };
 
 export default getExpertMe;
