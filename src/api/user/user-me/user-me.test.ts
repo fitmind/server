@@ -44,12 +44,13 @@ describe('User get me', () => {
   });
 
   describe('valid request', () => {
-    it('should return a 200 along with an authorization cookie', async done => {
+    it('should return a 200 along with the body', async done => {
       const res = await request(app)
         .get(URL)
         .set('Cookie', [cookie]);
       expect(res.status).toEqual(OK);
-      expect(JSON.stringify(res.body)).toEqual(JSON.stringify(filterUserMe(user as UserModelType)));
+      const expectedBody = { ...filterUserMe(user as UserModelType), pastBookings: [], futureBookings: [] };
+      expect(JSON.stringify(res.body)).toEqual(JSON.stringify(expectedBody));
       done();
     });
   });

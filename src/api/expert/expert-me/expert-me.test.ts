@@ -45,7 +45,8 @@ describe('Expert get me', () => {
     it('should return a 200 along with the filtered expert', async done => {
       const res = await getValidRequestWithCookie(app, URL, cookie);
       expect(res.status).toEqual(OK);
-      expect(JSON.stringify(res.body)).toEqual(JSON.stringify(filterExpertMe(expert as ExpertModelType)));
+      const expectedBody = { ...filterExpertMe(expert as ExpertModelType), pastBookings: [], futureBookings: [] };
+      expect(JSON.stringify(res.body)).toEqual(JSON.stringify(expectedBody));
       done();
     });
   });

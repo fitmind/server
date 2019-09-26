@@ -20,7 +20,7 @@ const userLogin = async (req: Request, res: Response, next: NextFunction) => {
           maxAge: CONFIG.authTokenExpiryDate,
           httpOnly: true
         });
-        res.status(CREATED).json({ message: 'logged in successfully' });
+        res.sendStatus(CREATED);
       }
     }
   });

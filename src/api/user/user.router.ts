@@ -8,7 +8,6 @@ import userAuthMiddleware from '../../middleware/user-auth-middleware/user-auth-
 import getUserMe from './user-me/user-me';
 import userLogout from './user-logout/user-logout';
 import updateUserMe from './user-update/user-update';
-import userDashboard from './user-dashboard/user-dashboard';
 
 const userRouter = express.Router();
 
@@ -18,7 +17,6 @@ export const userRegisterValidate = typeValidationMiddleware(userRegisterDto);
 userRouter.post('/register', userRegisterValidate, userRegister);
 userRouter.post('/login', userLoginMValidate, userLogin);
 userRouter.get('/me', userAuthMiddleware, getUserMe);
-userRouter.get('/dashboard', userAuthMiddleware, userDashboard);
 userRouter.put('/me', userAuthMiddleware, userRegisterValidate, updateUserMe);
 userRouter.post('/logout', userLogout);
 

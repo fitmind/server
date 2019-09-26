@@ -3,6 +3,8 @@ import { OK } from 'http-status-codes';
 import RequestWithUser from '../../../interfaces/request-with-user.interface';
 import { pick } from 'ramda';
 import { UserModelType } from '../user.model';
+import BookingModel, { BookingModelType } from '../../booking/booking.model';
+import CONFIG from '../../../config/config';
 
 interface FilteredUser {
   id: string;
@@ -15,8 +17,28 @@ interface FilteredUser {
 export const filterUserMe = (user: UserModelType): FilteredUser =>
   pick(['id', 'name', 'email', 'description', 'interestedInExpertiseAreas'], user);
 
-const getUserMe = (req: RequestWithUser, res: Response) => {
-  res.status(OK).json(filterUserMe(req.user as UserModelType));
+const getUserMe = async (req: RequestWithUser, res: Response) => {
+  const user = req.user as UserModelType;
+  const bookings = await BookingModel.find({ customer: user.id })
+    .populate({
+      path: 'customer',
+      select: CONFIG.defaultBookingPopulate
+    })
+    .populate({
+      path: 'listing',
+      select: CONFIG.defaultBookingPopulate
+    })
+    .populate({
+      path: 'expert',
+      select: CONFIG.defaultBookingPopulate
+    });
+  let now = new Date();
+  now.setHours(0, 0, 0, 0);
+  const pastBookings = bookings.filter((booking: BookingModelType) => new Date(booking.time) < now);
+  const futureBookings = bookings.filter((booking: BookingModelType) => new Date(booking.time) > now);
+  const filteredUser = filterUserMe(user);
+
+  res.status(OK).json({ ...filteredUser, pastBookings, futureBookings });
 };
 
 export default getUserMe;
