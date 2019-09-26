@@ -4,6 +4,7 @@ import RequestWithUser from '../../../interfaces/request-with-user.interface';
 import { pick } from 'ramda';
 import { UserModelType } from '../user.model';
 import BookingModel, { BookingModelType } from '../../booking/booking.model';
+import CONFIG from '../../../config/config';
 
 interface FilteredUser {
   id: string;
@@ -18,7 +19,19 @@ export const filterUserMe = (user: UserModelType): FilteredUser =>
 
 const getUserMe = async (req: RequestWithUser, res: Response) => {
   const user = req.user as UserModelType;
-  const bookings = await BookingModel.find({ customer: user.id });
+  const bookings = await BookingModel.find({ customer: user.id })
+    .populate({
+      path: 'customer',
+      select: CONFIG.defaultBookingPopulate
+    })
+    .populate({
+      path: 'listing',
+      select: CONFIG.defaultBookingPopulate
+    })
+    .populate({
+      path: 'expert',
+      select: CONFIG.defaultBookingPopulate
+    });
   let now = new Date();
   now.setHours(0, 0, 0, 0);
   const pastBookings = bookings.filter((booking: BookingModelType) => new Date(booking.time) < now);

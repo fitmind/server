@@ -78,7 +78,19 @@ const CONFIG = {
       getAsExpertById: (id: string) => `/bookings/expert/${id}`
     }
   },
-  emailSource: 'hello.fitmind@gmail.com'
+  emailSource: 'hello.fitmind@gmail.com',
+  defaultBookingPopulate: [
+    'id',
+    'name',
+    'pictureUrl',
+    'description',
+    'approvedStatus',
+    'createdTimeStamp',
+    'email',
+    'price',
+    'expertiseArea',
+    'postCode'
+  ]
 };
 
 export default CONFIG;
