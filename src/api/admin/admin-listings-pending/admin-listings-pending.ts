@@ -8,7 +8,7 @@ const adminListingsPending = async (req: Request, res: Response) => {
     path: 'createdByExpert',
     select: CONFIG.defaultBookingPopulate
   });
-  res.status(OK).json({ listings });
+  res.status(OK).json(listings);
 };
 
 export default adminListingsPending;

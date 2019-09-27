@@ -26,6 +26,10 @@ describe('.env', () => {
     expect(process.env['CLIENT_ORIGIN']).toBeDefined();
   });
 
+  it('should have a ADMIN_ORIGIN', () => {
+    expect(process.env['ADMIN_ORIGIN']).toBeDefined();
+  });
+
   it('should have a ADMIN_EMAIL', () => {
     expect(process.env['ADMIN_EMAIL']).toBeDefined();
   });
