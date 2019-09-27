@@ -55,7 +55,7 @@ describe('Admin pending expert', () => {
       const expert2 = await getExpertUserByMail(expert2Email);
       const res = await getValidRequestWithCookie(app, URL, cookie);
       expect(res.status).toEqual(OK);
-      const ids = res.body.experts.map((expert: ExpertModelType) => expert._id);
+      const ids = res.body.map((expert: ExpertModelType) => expert._id);
       expect(includes(expert1.id, ids)).toBeTruthy();
       expect(includes(expert2.id, ids)).toBeTruthy();
       expect(includes(approvedExpert.id, ids)).toBeFalsy();

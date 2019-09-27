@@ -43,7 +43,7 @@ describe('Admin pending expert', () => {
   describe('valid request', () => {
     it('should allow the admin retrieve the experts in pending status', async done => {
       const res = await getValidRequestWithCookie(app, URL, cookie);
-      const ids = res.body.listings.map((listing: ListingModelType) => listing._id);
+      const ids = res.body.map((listing: ListingModelType) => listing._id);
       expect(includes(approvedListing.id, ids)).toBeFalsy();
       expect(includes(pendingListing.id, ids)).toBeTruthy();
       expect(res.status).toBe(OK);

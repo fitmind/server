@@ -7,7 +7,7 @@ import { omit } from 'ramda';
 const adminExpertsPending = async (req: Request, res: Response) => {
   const experts = await ExpertModel.find({ approvedStatus: CONFIG.ApprovedStatus.PENDING });
   const filtered = experts.map(expert => omit(['password'], expert));
-  res.status(OK).json({ experts: filtered });
+  res.status(OK).json(filtered);
 };
 
 export default adminExpertsPending;
