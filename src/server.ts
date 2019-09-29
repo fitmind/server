@@ -37,10 +37,13 @@ mongoose
       const adminExists = await AdminModel.find({ email: adminEmail });
       if (!adminExists.length) {
         try {
-          await createAdmin(adminEmail as string, process.env.ADMIN_PASSWORD as string);
+          const admin = await createAdmin(adminEmail as string, process.env.ADMIN_PASSWORD as string);
+          console.log(`New Admin Created: ${admin}`);
         } catch (e) {
           console.error(`Error creating admin user ${e}`);
         }
+      } else {
+        console.log(`admin already exists, not creating a new one`);
       }
     });
   })
