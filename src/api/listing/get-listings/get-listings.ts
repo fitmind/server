@@ -29,7 +29,12 @@ const getListings = async (req: Request, res: Response, next: NextFunction) => {
     conditions.expertiseArea = expertise;
   }
   try {
-    const listings = await ListingModel.find(conditions, projection, options).sort({ createdTimeStamp: 'descending' });
+    const listings = await ListingModel.find(conditions, projection, options)
+      .populate({
+        path: 'createdByExpert',
+        select: CONFIG.defaultBookingPopulate
+      })
+      .sort({ createdTimeStamp: 'descending' });
     res.status(OK).json(listings);
   } catch (e) {
     next(new HttpException(INTERNAL_SERVER_ERROR, 'Error retrieving the listings'));
