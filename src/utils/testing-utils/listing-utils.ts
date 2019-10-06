@@ -8,16 +8,11 @@ export function getRandomPrice(min: number, max: number) {
   return `${Math.floor(Math.random() * (max - min + 1)) + min}.00`;
 }
 
-export const generateListingValidBody = (
-  expertId?: string,
-  approvedStatus?: string,
-  expertise?: string,
-  price?: string
-) => ({
+export const generateListingValidBody = (expertId?: string, approvedStatus?: string, expertise?: string) => ({
   name: 'listing name',
   description: 'some listing desc',
   pictureUrl: testingPictureUrl,
-  price: price || '150.00',
+  price: 150,
   expertiseArea: expertise || CONFIG.expertise.LIFE_COACH,
   postCode: 'NW13LR',
   createdByExpert: expertId,
