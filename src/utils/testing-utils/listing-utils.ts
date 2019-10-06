@@ -5,14 +5,19 @@ import CONFIG from '../../config/config';
 export function getRandomPrice(min: number, max: number) {
   min = Math.ceil(min);
   max = Math.floor(max);
-  return `${Math.floor(Math.random() * (max - min + 1)) + min}.00`;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export const generateListingValidBody = (expertId?: string, approvedStatus?: string, expertise?: string) => ({
+export const generateListingValidBody = (
+  expertId?: string,
+  approvedStatus?: string,
+  expertise?: string,
+  price?: number
+) => ({
   name: 'listing name',
   description: 'some listing desc',
   pictureUrl: testingPictureUrl,
-  price: 150,
+  price: price || 150,
   expertiseArea: expertise || CONFIG.expertise.LIFE_COACH,
   postCode: 'NW13LR',
   createdByExpert: expertId,
