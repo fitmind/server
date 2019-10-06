@@ -1,4 +1,4 @@
-import { IsString, IsUrl, Length, Validate } from 'class-validator';
+import { IsNumber, IsString, IsUrl, Length, Max, Min, Validate } from 'class-validator';
 import { ValidExpertiseGetListings } from '../../../utils/validate-expertise-get-listings/validate-expertise-get-listings';
 
 class createListingDto {
@@ -6,9 +6,10 @@ class createListingDto {
   @Length(2, 40)
   public name: string;
 
-  @IsString()
-  @Length(4, 8)
-  public price: string;
+  @IsNumber()
+  @Min(1)
+  @Max(4000)
+  public price: number;
 
   @IsString()
   @IsUrl()
