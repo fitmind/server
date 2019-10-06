@@ -20,10 +20,10 @@ const getListings = async (req: Request, res: Response, next: NextFunction) => {
   let options = { skip: size * (pageNumber - 1), limit };
   let conditions: Conditions = { approvedStatus: CONFIG.ApprovedStatus.APPROVED };
   if (min_price) {
-    conditions.price = { ...conditions.price, $gte: min_price };
+    conditions.price = { ...conditions.price, $gte: parseInt(min_price) };
   }
   if (max_price) {
-    conditions.price = { ...conditions.price, $lte: max_price };
+    conditions.price = { ...conditions.price, $lte: parseInt(max_price) };
   }
   if (expertise) {
     conditions.expertiseArea = expertise;

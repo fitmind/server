@@ -15,7 +15,7 @@ class expertRegisterDto {
   public password: string;
 
   @IsString()
-  @Length(0, 300)
+  @Length(0, 800)
   public description: string;
 
   @IsString()

@@ -1,13 +1,14 @@
-import { IsString, IsUrl, Length } from 'class-validator';
+import { IsNumber, IsString, IsUrl, Length, Max, Min } from 'class-validator';
 
 class updateListingDto {
   @IsString()
   @Length(2, 20)
   public name: string;
 
-  @IsString()
-  @Length(4, 8)
-  public price: string;
+  @IsNumber()
+  @Min(1)
+  @Max(4000)
+  public price: number;
 
   @IsString()
   @IsUrl()

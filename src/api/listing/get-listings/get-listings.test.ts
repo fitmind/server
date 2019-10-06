@@ -25,12 +25,7 @@ describe('get listings', () => {
     expert = (await createApprovedExpert(expertEmail)) as ExpertModelType;
     const expertises = Object.keys(CONFIG.expertise);
     const listingsArray = expertises.map(expertise => {
-      return generateListingValidBody(
-        expert.id,
-        CONFIG.ApprovedStatus.APPROVED,
-        expertise,
-        getRandomPrice(140, 160).toString()
-      );
+      return generateListingValidBody(expert.id, CONFIG.ApprovedStatus.APPROVED, expertise, getRandomPrice(140, 160));
     });
     await ListingModel.insertMany([
       ...listingsArray,
@@ -82,7 +77,7 @@ describe('get listings', () => {
         expert.id,
         CONFIG.ApprovedStatus.APPROVED,
         CONFIG.ApprovedStatus.APPROVED,
-        getRandomPrice(140, 149).toString()
+        getRandomPrice(140, 149)
       );
       await ListingModel.create(insertBelow150);
       await ListingModel.updateMany({ createdByExpert: expert.id }, { approvedStatus: CONFIG.ApprovedStatus.APPROVED });
@@ -98,7 +93,7 @@ describe('get listings', () => {
         expert.id,
         CONFIG.ApprovedStatus.APPROVED,
         CONFIG.ApprovedStatus.APPROVED,
-        getRandomPrice(151, 160).toString()
+        getRandomPrice(151, 160)
       );
       await ListingModel.create(insertAbove150);
       await ListingModel.updateMany({ createdByExpert: expert.id }, { approvedStatus: CONFIG.ApprovedStatus.APPROVED });
@@ -115,7 +110,7 @@ describe('get listings', () => {
         expert.id,
         CONFIG.ApprovedStatus.APPROVED,
         CONFIG.ApprovedStatus.APPROVED,
-        getRandomPrice(155, 160).toString()
+        getRandomPrice(155, 160)
       );
       await ListingModel.create(insertAbove150);
       await ListingModel.updateMany({ createdByExpert: expert.id }, { approvedStatus: CONFIG.ApprovedStatus.APPROVED });
